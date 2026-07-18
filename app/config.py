@@ -1,4 +1,4 @@
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
@@ -6,9 +6,16 @@ class Settings(BaseSettings):
     app_version: str = "0.1.0"
 
     api_key: str
+    api_port: int = 8008
 
-    class Config:
-        env_file = ".env"
+    supla_client_id: str
+    supla_client_secret: str
+    supla_redirect_uri: str
+
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        extra="ignore",
+    )
 
 
 settings = Settings()

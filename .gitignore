@@ -16,10 +16,12 @@ config/*
 data/*
 !data/.gitkeep
 
+# Logs
+*.log
 logs/*
 !logs/.gitkeep
 
-# Templates cache
+# Pytest
 .pytest_cache/
 
 # IDE
@@ -28,3 +30,18 @@ logs/*
 
 # OS
 .DS_Store
+
+# Distribution
+build/
+dist/
+*.egg-info/
+
+# Coverage
+.coverage
+htmlcov/
+
+# Mypy
+.mypy_cache/
+
+# Ruff
+.ruff_cache/
