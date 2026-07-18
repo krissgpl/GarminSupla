@@ -5,6 +5,8 @@ class Settings(BaseSettings):
     app_name: str = "GarminSupla"
     app_version: str = "0.1.0"
 
+    api_key: str
+
     class Config:
         env_file = ".env"
 

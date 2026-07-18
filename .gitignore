@@ -1,16 +1,30 @@
+# Python
 __pycache__/
-*.pyc
-*.pyo
-*.pyd
+*.py[cod]
 
+# Virtual environments
+.venv/
+venv/
+
+# Environment
 .env
 
-.vscode
+# Runtime data
+config/*
+!config/.gitkeep
 
-.idea
+data/*
+!data/.gitkeep
 
-.pytest_cache
+logs/*
+!logs/.gitkeep
 
-.mypy_cache
+# Templates cache
+.pytest_cache/
 
-.coverage
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
