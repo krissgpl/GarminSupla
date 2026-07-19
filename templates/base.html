@@ -29,27 +29,27 @@
 
 <body>
 
-<div class="container min-vh-100 d-flex flex-column">
+<div class="container d-flex flex-column py-2">
 
-    <header class="py-5 text-center">
-        <h1 class="display-5 fw-semibold">
+    <header class="pt-3 pt-lg-4 pb-2 pb-lg-3 text-center">
+        <h1 class="display-5 fw-semibold app-title">
             <i class="bi bi-smartwatch me-2"></i>
             GarminSupla
         </h1>
 
-        <p class="text-muted">
+        <p class="text-muted mb-0">
             Garmin Connect IQ integration for SUPLA
         </p>
     </header>
 
-    <main class="flex-grow-1 d-flex align-items-center justify-content-center">
+    <main class="flex-grow-1 d-flex justify-content-center align-items-start align-items-lg-center">
 
         {% block content %}
         {% endblock %}
 
     </main>
 
-    <footer class="py-4 text-center text-muted small">
+    <footer class="py-2 text-center text-muted small">
         Version {{ version }}
     </footer>
 
