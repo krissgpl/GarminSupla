@@ -69,6 +69,6 @@ async def setup_submit(
     setup_service.save_server(form)
 
     return RedirectResponse(
-        url="/setup/oauth",
+        url="/oauth/login",
         status_code=303,
     )

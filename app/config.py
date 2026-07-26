@@ -11,6 +11,7 @@ class AppSettings(BaseSettings):
     supla_client_id: str
     supla_client_secret: str
     supla_redirect_uri: str
+    supla_scope: str
 
     model_config = SettingsConfigDict(
         env_file=".env",

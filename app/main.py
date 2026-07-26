@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 
 from app.config import settings
-from app.routers import gate, health, setup
+from app.routers import gate, health, oauth, setup, supla
 
 app = FastAPI(
     title=settings.app_name,
@@ -23,4 +23,12 @@ app.include_router(
 
 app.include_router(
     setup.router,
+)
+
+app.include_router(
+    oauth.router,
+)
+
+app.include_router(
+    supla.router,
 )
