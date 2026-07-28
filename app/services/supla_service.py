@@ -2,6 +2,7 @@ from app.clients.supla_client import SuplaClient
 from app.stores.settings_store import SettingsStore
 from app.models.supla import GateChannel
 from app.models.settings import SelectedGate
+from app.models.api import GateSummary
 from app.services.oauth_service import OAuthService
 
 
@@ -65,3 +66,13 @@ class SuplaService:
         self._settings_store.save(settings)
 
         return selected_gate
+
+    def get_available_gates(self) -> list[GateSummary]:
+        return [
+            GateSummary(
+                id=gate.id,
+                caption=gate.caption or f"Gate {gate.id}",
+                sensor_channel_id=gate.sensor_channel_id,
+            )
+            for gate in self.get_gate_channels()
+        ]

@@ -122,7 +122,7 @@ class OAuthService:
         **kwargs,
     ) -> T:
         """Execute a SUPLA API operation with automatic OAuth token refresh."""
-        
+
         access_token = self.get_access_token()
 
         try:

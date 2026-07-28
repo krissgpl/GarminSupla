@@ -4,6 +4,11 @@ import httpx
 
 from app.config import settings
 from app.models.oauth import OAuthToken
+from app.exceptions import (
+    ApiError,
+    TokenExchangeError,
+    UnauthorizedError,
+)
 
 
 class SuplaClient:
@@ -21,6 +26,14 @@ class SuplaClient:
         """Build an absolute URL for the configured SUPLA server."""
         return f"{self._server.rstrip('/')}/{path.lstrip('/')}"
 
+    def _raise_for_status(self, response: httpx.Response) -> None:
+        try:
+            response.raise_for_status()
+        except httpx.HTTPStatusError as exc:
+            if exc.response.status_code == 401:
+                raise UnauthorizedError() from exc
+            raise
+    
     def build_authorize_url(
         self,
         state: str,
@@ -102,12 +115,7 @@ class SuplaClient:
             return OAuthToken.model_validate(response.json())
 
         except httpx.HTTPStatusError as exc:
-            if exc.response.status_code == 400:
-                raise TokenExchangeError(
-                    "Failed to refresh access token."
-                ) from exc
-
-            raise TokenExchangeError(
+            raise RefreshTokenError(
                 "Failed to refresh access token."
             ) from exc
 
@@ -128,7 +136,7 @@ class SuplaClient:
             },
         )
 
-        response.raise_for_status()
+        self._raise_for_status(response)
 
         return response.json()
 
@@ -144,6 +152,6 @@ class SuplaClient:
             },
         )
 
-        response.raise_for_status()
+        self._raise_for_status(response)
 
         return response.json()
