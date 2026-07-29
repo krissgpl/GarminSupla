@@ -3,7 +3,7 @@ from fastapi import APIRouter
 from app.services.supla_service import SuplaService
 
 router = APIRouter(
-    prefix="/api",
+    prefix="/supla",
     tags=["SUPLA"],
 )
 

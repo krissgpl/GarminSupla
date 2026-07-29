@@ -1,28 +1,55 @@
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
+from app.core.exception_handlers import register_exception_handlers
 
 from app.config import settings
-from app.routers import gate, health, oauth, setup, supla, setup_api
+
+from app.routers.api import (
+    gate,
+    health,
+    setup,
+    supla,
+)
+
+from app.routers.web import (
+    oauth,
+    setup as web_setup,
+    select_gate,
+)
 
 app = FastAPI(
     title=settings.app_name,
     version=settings.app_version,
 )
 
+register_exception_handlers(app)
+
 app.mount("/static", StaticFiles(directory="static"), name="static")
+
+API_PREFIX = "/api/v1"
 
 app.include_router(
     health.router,
-    prefix="/api/v1",
+    prefix=API_PREFIX,
 )
 
 app.include_router(
     gate.router,
-    prefix="/api/v1",
+    prefix=API_PREFIX,
+)
+
+app.include_router(
+    supla.router,
+    prefix=API_PREFIX,
 )
 
 app.include_router(
     setup.router,
+    prefix=API_PREFIX,
+)
+
+app.include_router(
+    web_setup.router,
 )
 
 app.include_router(
@@ -30,9 +57,5 @@ app.include_router(
 )
 
 app.include_router(
-    supla.router,
-)
-
-app.include_router(
-    setup_api.router,
+    select_gate.router,
 )

@@ -2,7 +2,9 @@ from fastapi import APIRouter, Depends
 
 from app.auth import verify_api_key
 
-router = APIRouter(tags=["Gate"])
+router = APIRouter(
+    prefix="/gate",
+    tags=["Gate"])
 
 
 @router.get("/gate")

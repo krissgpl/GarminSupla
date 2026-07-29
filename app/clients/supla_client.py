@@ -6,6 +6,7 @@ from app.config import settings
 from app.models.oauth import OAuthToken
 from app.exceptions import (
     ApiError,
+    RefreshTokenError,
     TokenExchangeError,
     UnauthorizedError,
 )
