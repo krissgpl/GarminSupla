@@ -15,11 +15,18 @@
                     Choose the gate that will be controlled by your Garmin watch.
                 </p>
 
-                <div id="gate-list">
+                <div id="gate-content">
 
                     <div class="text-center py-5">
 
-                        <div class="spinner-border"></div>
+                        <div
+                            class="spinner-border"
+                            role="status"
+                        >
+                            <span class="visually-hidden">
+                                Loading...
+                            </span>
+                        </div>
 
                         <p class="mt-3 text-muted">
                             Loading available gates...
@@ -27,6 +34,17 @@
 
                     </div>
 
+                </div>
+
+                <div class="mt-4 d-flex justify-content-end">
+                    <button
+                        id="continue-btn"
+                        type="button"
+                        class="btn btn-primary"
+                        disabled
+                    >
+                        Continue
+                    </button>
                 </div>
 
             </div>

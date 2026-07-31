@@ -1,13 +1,61 @@
-async function apiGet(url) {
-    const response = await fetch(url);
+export class ApiError extends Error {
+    constructor(status, body) {
+        super(body?.message ?? "Request failed");
 
-    if (!response.ok) {
-        throw new Error(`HTTP ${response.status}`);
+        this.name = "ApiError";
+        this.status = status;
+        this.body = body;
+    }
+}
+
+async function apiRequest(
+    url,
+    options = {},
+) {
+
+    const response = await fetch(
+        url,
+        {
+            headers: {
+                "Content-Type": "application/json",
+                ...(options.headers ?? {}),
+            },
+            ...options,
+        },
+    );
+
+    let body = null;
+
+    try {
+        body = await response.json();
+    } catch {
+        // ignore non-JSON responses
     }
 
-    return await response.json();
+    if (!response.ok) {
+        throw new ApiError(
+            response.status,
+            body,
+        );
+    }
+
+    return body;
 }
 
 export async function getAvailableGates() {
-    return apiGet("/api/v1/setup/gates");
+    return apiRequest("/api/v1/setup/gates");
+}
+
+export async function selectGate(channelId) {
+
+    return apiRequest(
+        "/api/v1/setup/gate",
+        {
+            method: "POST",
+            body: JSON.stringify({
+                channel_id: channelId,
+            }),
+        },
+    );
+
 }
