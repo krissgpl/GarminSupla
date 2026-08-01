@@ -50,6 +50,14 @@ export async function getSetupStatus() {
 
 }
 
+export async function getWatchStatus() {
+
+    return apiRequest(
+        "/api/v1/setup/watch",
+    );
+
+}
+
 export async function getAvailableGates() {
     return apiRequest("/api/v1/setup/gates");
 }

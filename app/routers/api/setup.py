@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from app.models.api import SetupStatus, GateSummary, SelectGateRequest
+from app.models.api import SetupStatus, GateSummary, SelectGateRequest, WatchStatus
 from app.models.settings import SelectedGate
 from app.services.setup_service import SetupService
 
@@ -60,3 +60,12 @@ def select_gate(
     return setup_service.save_selected_gate(
         request.channel_id,
     )
+
+@router.get(
+    "/watch",
+    response_model=WatchStatus,
+)
+def get_watch_status() -> WatchStatus:
+    """Return Garmin watch setup status."""
+
+    return setup_service.get_watch_status()

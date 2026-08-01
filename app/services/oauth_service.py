@@ -64,7 +64,8 @@ class OAuthService:
     ) -> None:
         """Complete the OAuth authorization flow."""
 
-        oauth_state.validate(state)
+        if not oauth_state.validate(state):
+            raise ValueError("Invalid OAuth state.")
 
         settings = self._settings_store.load()
 

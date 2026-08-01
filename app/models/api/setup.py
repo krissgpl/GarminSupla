@@ -18,3 +18,11 @@ class SetupStatus(BaseModel):
     authorized: bool
     selected_gate: SelectedGate | None
     setup_completed: bool
+
+class WatchStatus(BaseModel):
+    configured: bool
+    id: str | None = None
+    name: str | None = None
+    enabled: bool = False
+    created_at: str | None = None
+    last_seen_at: str | None = None

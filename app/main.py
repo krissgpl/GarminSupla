@@ -1,18 +1,19 @@
-from fastapi import FastAPI
+from fastapi import Depends, FastAPI
 from fastapi.staticfiles import StaticFiles
 from app.core.exception_handlers import register_exception_handlers
+
+from app.api.admin_auth import require_admin
 
 from app.config import settings
 
 from app.routers.api import (
-    gate,
-    health,
     setup,
     supla,
     watch,
 )
 
 from app.routers.web import (
+    admin_auth,
     dashboard,
     oauth,
     setup as web_setup,
@@ -32,23 +33,19 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 API_PREFIX = "/api/v1"
 
 app.include_router(
-    health.router,
-    prefix=API_PREFIX,
-)
-
-app.include_router(
-    gate.router,
-    prefix=API_PREFIX,
+    admin_auth.router,
 )
 
 app.include_router(
     supla.router,
     prefix=API_PREFIX,
+    dependencies=[Depends(require_admin)],
 )
 
 app.include_router(
     setup.router,
     prefix=API_PREFIX,
+    dependencies=[Depends(require_admin)],
 )
 
 app.include_router(
@@ -58,6 +55,7 @@ app.include_router(
 
 app.include_router(
     web_setup.router,
+    dependencies=[Depends(require_admin)],
 )
 
 app.include_router(
@@ -66,12 +64,15 @@ app.include_router(
 
 app.include_router(
     select_gate.router,
+    dependencies=[Depends(require_admin)],
 )
 
 app.include_router(
     summary.router,
+    dependencies=[Depends(require_admin)],
 )
 
 app.include_router(
     dashboard.router,
+    dependencies=[Depends(require_admin)],
 )

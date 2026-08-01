@@ -8,6 +8,8 @@ class AppSettings(BaseSettings):
     api_key: str
     api_port: int = 8008
 
+    admin_session_secret: str
+
     supla_client_id: str
     supla_client_secret: str
     supla_redirect_uri: str

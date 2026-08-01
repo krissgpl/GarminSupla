@@ -1,7 +1,10 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from fastapi.responses import RedirectResponse
 
+from app.api.admin_auth import require_admin
+from app.models.admin import AdminAccount
 from app.services.oauth_service import OAuthService
+
 
 router = APIRouter(tags=["OAuth"])
 
@@ -9,12 +12,16 @@ oauth_service = OAuthService()
 
 
 @router.get("/oauth/login")
-def login() -> RedirectResponse:
-    """Redirect the user to the SUPLA authorization page."""
+def login(
+    admin: AdminAccount = Depends(require_admin),
+) -> RedirectResponse:
+    """Redirect the authenticated administrator to SUPLA authorization."""
 
     authorization_url = oauth_service.begin_authorization()
 
-    return RedirectResponse(url=authorization_url)
+    return RedirectResponse(
+        url=authorization_url,
+    )
 
 
 @router.get("/oauth/callback")

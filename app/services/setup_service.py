@@ -1,5 +1,5 @@
 from app.services.supla_service import SuplaService
-from app.models.api import SetupStatus, GateSummary
+from app.models.api import SetupStatus, GateSummary, WatchStatus
 from app.models.setup import SetupForm
 from app.models.settings import Settings, SelectedGate
 from app.stores.settings_store import SettingsStore
@@ -59,6 +59,27 @@ class SetupService:
             authorized=authorized,
         selected_gate=settings.supla.selected_gate,
         setup_completed=setup_completed,
+        )
+
+    def get_watch_status(self) -> WatchStatus:
+        """Return safe Garmin watch status information."""
+
+        settings = self._store.load()
+
+        watch = settings.watch
+
+        if watch is None:
+            return WatchStatus(
+               configured=False,
+           )
+
+        return WatchStatus(
+            configured=True,
+            id=watch.id,
+            name=watch.name,
+            enabled=watch.enabled,
+            created_at=watch.created_at,
+            last_seen_at=watch.last_seen_at,
         )
 
     def save_selected_gate(
