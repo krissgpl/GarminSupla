@@ -17,3 +17,4 @@ class SetupStatus(BaseModel):
     server: str
     authorized: bool
     selected_gate: SelectedGate | None
+    setup_completed: bool

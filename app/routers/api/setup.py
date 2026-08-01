@@ -24,16 +24,6 @@ def get_status() -> SetupStatus:
 @router.get(
     "/gates",
     response_model=list[GateSummary],
-)
-
-def get_available_gates() -> list[GateSummary]:
-    """Return available gate channels."""
-
-    return setup_service.get_available_gates()
-
-@router.get(
-    "/gates",
-    response_model=list[GateSummary],
     responses={
         401: {
             "description": "OAuth authorization expired",
@@ -56,3 +46,17 @@ def get_available_gates() -> list[GateSummary]:
     """Return available gate channels."""
 
     return setup_service.get_available_gates()
+
+@router.post(
+    "/gate",
+    response_model=SelectedGate,
+)
+
+def select_gate(
+    request: SelectGateRequest,
+) -> SelectedGate:
+    """Save the selected gate."""
+
+    return setup_service.save_selected_gate(
+        request.channel_id,
+    )

@@ -1,6 +1,7 @@
 import {
     ApiError,
     getAvailableGates,
+    selectGate,
 } from "./api.js";
 
 const state = {
@@ -27,41 +28,99 @@ function renderGateList() {
 
     const items = gates.map(gate => {
 
-        const active =
-            gate.id === state.selectedGateId
-                ? "active"
-                : "";
+    const isSelected =
+        gate.id === state.selectedGateId;
+
+    const active =
+        isSelected
+            ? "border-primary shadow"
+            : "";
+
+    const selected =
+        isSelected
+            ? ""
+            : "d-none";
 
         return `
             <div
-                class="list-group-item list-group-item-action gate-item ${active}"
+                class="card gate-card mb-3 border-2 ${active} gate-item"
                 role="button"
                 data-channel-id="${gate.id}"
             >
-                <div class="fw-semibold">
-                    ${gate.caption}
-                </div>
 
-                <small class="text-muted">
-                    Relay: ${gate.id}
-                    &nbsp;•&nbsp;
-                    Sensor: ${gate.sensor_channel_id}
-                </small>
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between align-items-start">
+
+                        <h5 class="fw-semibold mb-0">
+
+                            <i class="bi bi-door-open me-2"></i>
+
+                            ${gate.caption}
+
+                        </h5>
+
+                        <i
+                            class="bi bi-check-circle-fill text-primary ${selected}"
+                        ></i>
+
+                    </div>
+
+                    <div class="row mt-4">
+
+                        <div class="col-6">
+
+                            <small class="text-muted d-block">
+                                Relay ID
+                            </small>
+
+                            <strong>${gate.id}</strong>
+
+                        </div>
+
+                        <div class="col-6">
+
+                            <small class="text-muted d-block">
+                                Sensor ID
+                            </small>
+
+                            <strong>${gate.sensor_channel_id}</strong>
+
+                        </div>
+
+                    </div>
+
+                    <div class="d-flex align-items-center mt-4">
+
+                        <i
+                            class="bi bi-circle-fill text-secondary me-2"
+                        ></i>
+
+                        <div>
+
+                            <small class="text-muted d-block">
+                                Status
+                            </small>
+
+                            <strong>
+                                Unknown
+                            </strong>
+
+                        </div>
+
+                    </div>
+
             </div>
         `;
 
     }).join("");
 
-    const html = `
-        <div class="list-group">
-            ${items}
-        </div>
-    `;
+    const html = items;
 
     setContent(html);
 
     bindGateEvents();
-    
+
 }
 
 function bindGateEvents() {
@@ -76,13 +135,9 @@ function bindGateEvents() {
                     event.currentTarget.dataset.channelId
                 );
 
-                state.selectedGateId = Number(
-                    event.currentTarget.dataset.channelId
-                );
+                renderGateList();
 
                 updateContinueButton();
-
-                renderGateList();
 
             });
 
@@ -105,12 +160,52 @@ function bindContinueButton() {
     const button =
         document.getElementById("continue-btn");
 
-    button.addEventListener("click", () => {
+    button.addEventListener("click", async () => {
 
-        console.log(
-            "Selected gate:",
-            state.selectedGateId,
-        );
+        if (state.selectedGateId === null) {
+            return;
+        }
+
+        button.disabled = true;
+
+        const originalContent = button.innerHTML;
+
+        button.innerHTML = `
+            <span
+                class="spinner-border spinner-border-sm me-2"
+                aria-hidden="true"
+            ></span>
+            Saving...
+        `;
+
+        try {
+
+            await selectGate(
+                state.selectedGateId,
+            );
+
+            window.location.href = "/summary";
+
+        } catch (error) {
+
+            button.innerHTML = originalContent;
+
+            updateContinueButton();
+
+            if (
+                error instanceof ApiError &&
+                error.status === 401 &&
+                error.body?.error === "oauth_expired"
+            ) {
+                showOAuthExpired();
+                return;
+            }
+
+            showGenericError(
+                error.message,
+            );
+
+        }
 
     });
 
@@ -130,7 +225,7 @@ function showOAuthExpired() {
             </p>
 
             <a
-                href="/oauth/start"
+                href="/oauth/login"
                 class="btn btn-primary"
             >
                 Authorize again

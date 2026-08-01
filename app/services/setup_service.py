@@ -44,10 +44,21 @@ class SetupService:
 
         settings = self._store.load()
 
+        authorized = bool(
+            settings.supla.access_token
+        )
+
+        setup_completed = bool(
+            settings.supla.server
+            and authorized
+            and settings.supla.selected_gate
+        )
+
         return SetupStatus(
             server=settings.supla.server,
-            authorized=bool(settings.supla.access_token),
-            selected_gate=settings.supla.selected_gate,
+            authorized=authorized,
+        selected_gate=settings.supla.selected_gate,
+        setup_completed=setup_completed,
         )
 
     def save_selected_gate(

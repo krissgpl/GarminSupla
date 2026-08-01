@@ -42,6 +42,14 @@ async function apiRequest(
     return body;
 }
 
+export async function getSetupStatus() {
+
+    return apiRequest(
+        "/api/v1/setup",
+    );
+
+}
+
 export async function getAvailableGates() {
     return apiRequest("/api/v1/setup/gates");
 }
