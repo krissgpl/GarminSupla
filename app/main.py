@@ -9,6 +9,7 @@ from app.routers.api import (
     health,
     setup,
     supla,
+    watch,
 )
 
 from app.routers.web import (
@@ -47,6 +48,11 @@ app.include_router(
 
 app.include_router(
     setup.router,
+    prefix=API_PREFIX,
+)
+
+app.include_router(
+    watch.router,
     prefix=API_PREFIX,
 )
 
