@@ -1,6 +1,5 @@
 from app.config import settings as app_settings
 from app.clients.supla_client import SuplaClient
-from app.security.oauth_state import oauth_state
 from app.stores.settings_store import SettingsStore
 from app.models.oauth import OAuthToken
 from collections.abc import Callable
@@ -23,12 +22,13 @@ class OAuthService:
             store if store is not None else SettingsStore()
         )
 
-    def begin_authorization(self) -> str:
+    def begin_authorization(
+        self,
+        state: str,
+    ) -> str:
         """Build the SUPLA OAuth authorization URL."""
 
         settings = self._settings_store.load()
-
-        state = oauth_state.generate()
 
         client = SuplaClient(
             server=settings.supla.server,
@@ -60,12 +60,8 @@ class OAuthService:
     def complete_authorization(
         self,
         code: str,
-        state: str,
     ) -> None:
         """Complete the OAuth authorization flow."""
-
-        if not oauth_state.validate(state):
-            raise ValueError("Invalid OAuth state.")
 
         settings = self._settings_store.load()
 

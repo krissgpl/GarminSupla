@@ -6,6 +6,8 @@ from .supla import (
     UnauthorizedError,
 )
 
+from .admin import AdminAuthenticationRequired
+
 __all__ = [
     "ApiError",
     "RefreshTokenError",

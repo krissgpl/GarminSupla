@@ -2,7 +2,10 @@ from fastapi import Depends, FastAPI
 from fastapi.staticfiles import StaticFiles
 from app.core.exception_handlers import register_exception_handlers
 
-from app.api.admin_auth import require_admin
+from app.api.admin_auth import (
+    require_admin,
+    require_admin_web,
+)
 
 from app.config import settings
 
@@ -55,7 +58,7 @@ app.include_router(
 
 app.include_router(
     web_setup.router,
-    dependencies=[Depends(require_admin)],
+    dependencies=[Depends(require_admin_web)],
 )
 
 app.include_router(
@@ -64,15 +67,15 @@ app.include_router(
 
 app.include_router(
     select_gate.router,
-    dependencies=[Depends(require_admin)],
+    dependencies=[Depends(require_admin_web)],
 )
 
 app.include_router(
     summary.router,
-    dependencies=[Depends(require_admin)],
+    dependencies=[Depends(require_admin_web)],
 )
 
 app.include_router(
     dashboard.router,
-    dependencies=[Depends(require_admin)],
+    dependencies=[Depends(require_admin_web)],
 )

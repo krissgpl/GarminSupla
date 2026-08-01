@@ -1,7 +1,9 @@
-from fastapi import APIRouter, Depends
+import secrets
+
+from fastapi import APIRouter, Depends, Request
 from fastapi.responses import RedirectResponse
 
-from app.api.admin_auth import require_admin
+from app.api.admin_auth import require_admin_web
 from app.models.admin import AdminAccount
 from app.services.oauth_service import OAuthService
 
@@ -10,33 +12,82 @@ router = APIRouter(tags=["OAuth"])
 
 oauth_service = OAuthService()
 
+OAUTH_STATE_COOKIE = "garminsupla_oauth_state"
+OAUTH_STATE_MAX_AGE = 10 * 60
+
 
 @router.get("/oauth/login")
 def login(
-    admin: AdminAccount = Depends(require_admin),
+    admin: AdminAccount = Depends(require_admin_web),
 ) -> RedirectResponse:
     """Redirect the authenticated administrator to SUPLA authorization."""
 
-    authorization_url = oauth_service.begin_authorization()
+    state = secrets.token_urlsafe(32)
 
-    return RedirectResponse(
+    authorization_url = oauth_service.begin_authorization(
+        state=state,
+    )
+
+    response = RedirectResponse(
         url=authorization_url,
     )
+
+    response.set_cookie(
+        key=OAUTH_STATE_COOKIE,
+        value=state,
+        httponly=True,
+        secure=True,
+        samesite="lax",
+        max_age=OAUTH_STATE_MAX_AGE,
+        path="/oauth",
+    )
+
+    return response
 
 
 @router.get("/oauth/callback")
 def callback(
+    request: Request,
     code: str,
     state: str,
 ) -> RedirectResponse:
     """Handle the SUPLA OAuth callback."""
 
-    oauth_service.complete_authorization(
-        code=code,
-        state=state,
+    expected_state = request.cookies.get(
+        OAUTH_STATE_COOKIE
     )
 
-    return RedirectResponse(
+    if (
+        expected_state is None
+        or not secrets.compare_digest(
+            expected_state,
+            state,
+        )
+    ):
+        response = RedirectResponse(
+            url="/login",
+            status_code=303,
+        )
+
+        response.delete_cookie(
+            key=OAUTH_STATE_COOKIE,
+            path="/oauth",
+        )
+
+        return response
+
+    oauth_service.complete_authorization(
+        code=code,
+    )
+
+    response = RedirectResponse(
         url="/setup",
         status_code=303,
     )
+
+    response.delete_cookie(
+        key=OAUTH_STATE_COOKIE,
+        path="/oauth",
+    )
+
+    return response

@@ -2,6 +2,7 @@ from fastapi import HTTPException, Request, status
 
 from app.models.admin import AdminAccount
 from app.services.admin_auth_service import AdminAuthService
+from app.exceptions.admin import AdminAuthenticationRequired
 
 
 SESSION_COOKIE = "garminsupla_admin_session"
@@ -41,9 +42,14 @@ def require_admin(
 
     return admin
 
-def is_admin_authenticated(
+def require_admin_web(
     request: Request,
-) -> bool:
-    """Return True when the request has a valid administrator session."""
+) -> AdminAccount:
+    """Require administrator authentication for a web page."""
 
-    return get_current_admin(request) is not None
+    admin = get_current_admin(request)
+
+    if admin is None:
+        raise AdminAuthenticationRequired()
+
+    return admin

@@ -1,7 +1,8 @@
 from fastapi import FastAPI, Request
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, RedirectResponse
 
 from app.exceptions import (
+    AdminAuthenticationRequired,
     ApiError,
     RefreshTokenError,
     UnauthorizedError,
@@ -9,6 +10,16 @@ from app.exceptions import (
 
 
 def register_exception_handlers(app: FastAPI) -> None:
+
+    @app.exception_handler(AdminAuthenticationRequired)
+    async def admin_authentication_required_handler(
+        request: Request,
+        exc: AdminAuthenticationRequired,
+    ):
+        return RedirectResponse(
+            url="/login",
+            status_code=303,
+        )
 
     @app.exception_handler(RefreshTokenError)
     async def refresh_token_handler(
