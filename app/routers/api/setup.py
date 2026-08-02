@@ -1,4 +1,4 @@
-from fastapi import APIRouter,  Depends
+from fastapi import APIRouter, Depends, HTTPException, status
 
 from app.models.api import SetupStatus, GateSummary, SelectGateRequest, WatchStatus
 from app.models.settings import SelectedGate
@@ -7,12 +7,16 @@ from app.services.setup_service import SetupService
 from app.api.admin_auth import require_admin_csrf
 from app.models.admin import AdminAccount
 
+from app.models.api.pairing import PairingApproveRequest
+from app.services.pairing_service import PairingService
+
 router = APIRouter(
     prefix="/setup",
     tags=["Setup"],
 )
 
 setup_service = SetupService()
+pairing_service = PairingService()
 
 @router.get(
     "",
@@ -72,3 +76,25 @@ def get_watch_status() -> WatchStatus:
     """Return Garmin watch setup status."""
 
     return setup_service.get_watch_status()
+
+@router.post(
+    "/watch/pair",
+    status_code=status.HTTP_204_NO_CONTENT,
+)
+def approve_watch_pairing(
+    request: PairingApproveRequest,
+    admin: AdminAccount = Depends(
+        require_admin_csrf
+    ),
+) -> None:
+    """Approve Garmin watch pairing using its six-digit code."""
+
+    session = pairing_service.approve_pairing(
+        request.code
+    )
+
+    if session is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Pairing code not found or expired.",
+        )

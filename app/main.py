@@ -10,6 +10,7 @@ from app.api.admin_auth import (
 from app.config import settings
 
 from app.routers.api import (
+    pairing,
     setup,
     supla,
     watch,
@@ -59,6 +60,11 @@ app.include_router(
 app.include_router(
     web_setup.router,
     dependencies=[Depends(require_admin_web)],
+)
+
+app.include_router(
+    pairing.router,
+    prefix=API_PREFIX,
 )
 
 app.include_router(

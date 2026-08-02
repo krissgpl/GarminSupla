@@ -98,3 +98,17 @@ export async function selectGate(channelId) {
     );
 
 }
+
+export async function approveWatchPairing(code) {
+
+    return apiRequest(
+        "/api/v1/setup/watch/pair",
+        {
+            method: "POST",
+            body: JSON.stringify({
+                code: code,
+            }),
+        },
+    );
+
+}

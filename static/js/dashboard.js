@@ -1,5 +1,6 @@
 import {
     ApiError,
+    approveWatchPairing,
     getWatchStatus,
 } from "./api.js";
 
@@ -42,6 +43,13 @@ function renderWatch(watch) {
 
             </div>
         `;
+
+        document
+            .getElementById("configure-watch-btn")
+            .addEventListener(
+                "click",
+                renderPairingForm,
+            );
 
         return;
     }
@@ -99,10 +107,189 @@ function renderWatch(watch) {
             </div>
 
         </div>
+
+        <div class="border-top pt-3 mt-2">
+
+            <button
+                type="button"
+                class="btn btn-outline-primary"
+                id="replace-watch-btn"
+            >
+                <i class="bi bi-arrow-repeat me-2"></i>
+                Replace Watch
+            </button>
+
+            <p class="small text-muted mt-2 mb-0">
+                Your current watch will remain active
+                until the new watch completes pairing.
+            </p>
+
+        </div>
     `;
+
+    document
+        .getElementById("replace-watch-btn")
+        .addEventListener(
+            "click",
+            renderPairingForm,
+        );
 
 }
 
+function renderPairingForm() {
+
+    const content =
+        document.getElementById("watch-content");
+
+    content.innerHTML = `
+        <div class="mx-auto" style="max-width: 420px;">
+
+            <div class="text-center mb-4">
+                <i class="bi bi-smartwatch fs-1 text-primary"></i>
+
+                <h4 class="mt-3 mb-2">
+                    Pair Garmin Watch
+                </h4>
+
+                <p class="text-muted mb-0">
+                    Enter the 6-digit code displayed
+                    by GarminSupla on your watch.
+                </p>
+            </div>
+
+            <form id="pair-watch-form">
+
+                <div class="mb-3">
+                    <label
+                        for="pairing-code"
+                        class="form-label fw-semibold"
+                    >
+                        Pairing code
+                    </label>
+
+                    <input
+                        type="text"
+                        class="form-control form-control-lg text-center"
+                        id="pairing-code"
+                        inputmode="numeric"
+                        autocomplete="one-time-code"
+                        maxlength="6"
+                        pattern="[0-9]{6}"
+                        placeholder="000000"
+                        required
+                        autofocus
+                    >
+                </div>
+
+                <div
+                    id="pairing-error"
+                    class="alert alert-danger d-none"
+                ></div>
+
+                <div class="d-grid">
+                    <button
+                        type="submit"
+                        class="btn btn-primary btn-lg"
+                        id="pair-watch-btn"
+                    >
+                        <i class="bi bi-link-45deg me-2"></i>
+                        Pair Watch
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+    `;
+
+    document
+        .getElementById("pair-watch-form")
+        .addEventListener(
+            "submit",
+            handlePairingSubmit,
+        );
+}
+
+async function handlePairingSubmit(event) {
+
+    event.preventDefault();
+
+    const input =
+        document.getElementById("pairing-code");
+
+    const button =
+        document.getElementById("pair-watch-btn");
+
+    const errorBox =
+        document.getElementById("pairing-error");
+
+    const code = input.value.trim();
+
+    errorBox.classList.add("d-none");
+
+    if (!/^\d{6}$/.test(code)) {
+        errorBox.textContent =
+            "Enter a valid 6-digit pairing code.";
+
+        errorBox.classList.remove("d-none");
+        return;
+    }
+
+    button.disabled = true;
+
+    try {
+
+        await approveWatchPairing(code);
+
+        renderPairingApproved();
+
+    } catch (error) {
+
+        if (error instanceof ApiError) {
+
+            if (error.status === 404) {
+                errorBox.textContent =
+                    "Pairing code not found or expired.";
+            } else {
+                errorBox.textContent =
+                    error.message;
+            }
+
+        } else {
+            errorBox.textContent =
+                "Unable to pair Garmin watch.";
+        }
+
+        errorBox.classList.remove("d-none");
+        button.disabled = false;
+    }
+}
+
+function renderPairingApproved() {
+
+    const content =
+        document.getElementById("watch-content");
+
+    content.innerHTML = `
+        <div class="text-center py-3">
+
+            <i
+                class="bi bi-check-circle-fill
+                       fs-1 text-success"
+            ></i>
+
+            <h4 class="mt-3">
+                Pairing approved
+            </h4>
+
+            <p class="text-muted mb-0">
+                Complete the pairing process
+                on your Garmin watch.
+            </p>
+
+        </div>
+    `;
+}
 
 function showError(message) {
 
