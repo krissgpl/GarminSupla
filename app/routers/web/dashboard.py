@@ -41,9 +41,14 @@ async def dashboard(request: Request):
             status_code=303,
         )
 
+    csrf_token = request.cookies.get(
+        "garminsupla_csrf"
+    )
+
     return templates.TemplateResponse(
         "dashboard.html",
         {
             "request": request,
+            "csrf_token": csrf_token,
         },
     )

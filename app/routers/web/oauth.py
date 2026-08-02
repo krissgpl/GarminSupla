@@ -64,24 +64,17 @@ def callback(
             state,
         )
     ):
-        response = RedirectResponse(
-            url="/login",
-            status_code=303,
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Invalid OAuth state.",
         )
-
-        response.delete_cookie(
-            key=OAUTH_STATE_COOKIE,
-            path="/oauth",
-        )
-
-        return response
 
     oauth_service.complete_authorization(
         code=code,
     )
 
     response = RedirectResponse(
-        url="/setup",
+        url="/select-gate",
         status_code=303,
     )
 

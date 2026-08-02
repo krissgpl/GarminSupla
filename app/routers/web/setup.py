@@ -7,6 +7,7 @@ from app.config import settings
 from app.core.templates import templates
 from app.models.setup import SetupForm
 from app.services.setup_service import SetupService
+from app.api.admin_auth import verify_admin_csrf
 
 router = APIRouter()
 
@@ -16,6 +17,10 @@ setup_service = SetupService()
 @router.get("/setup", response_class=HTMLResponse)
 async def setup_page(request: Request):
     current = setup_service.load_settings()
+
+    csrf_token = request.cookies.get(
+        "garminsupla_csrf"
+    )
 
     return templates.TemplateResponse(
         request=request,
@@ -29,6 +34,7 @@ async def setup_page(request: Request):
                 "server": current.supla.server,
             },
             "errors": {},
+            "csrf_token": csrf_token,
         },
     )
 
@@ -37,7 +43,14 @@ async def setup_page(request: Request):
 async def setup_submit(
     request: Request,
     server: str = Form(...),
+    csrf_token: str = Form(...),
 ):
+
+    verify_admin_csrf(
+        request,
+        csrf_token,
+    )
+
     form_data = {
         "server": server,
     }
@@ -63,10 +76,17 @@ async def setup_submit(
                 "steps": 4,
                 "form": form_data,
                 "errors": errors,
+                "csrf_token": csrf_token,
             },
         )
 
-    setup_service.save_server(form)
+    saved_settings = setup_service.save_server(form)
+
+    if saved_settings.supla.access_token:
+        return RedirectResponse(
+            url="/select-gate",
+            status_code=303,
+        )
 
     return RedirectResponse(
         url="/oauth/login",

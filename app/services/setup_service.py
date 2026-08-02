@@ -28,7 +28,15 @@ class SetupService:
 
         settings = self._store.load()
 
-        settings.supla.server = str(form.server).rstrip("/")
+        new_server = str(form.server).rstrip("/")
+
+        if settings.supla.server != new_server:
+            settings.supla.server = new_server
+            settings.supla.access_token = None
+            settings.supla.refresh_token = None
+            settings.supla.selected_gate = None
+        else:
+            settings.supla.server = new_server
 
         self._store.save(settings)
 

@@ -8,16 +8,39 @@ export class ApiError extends Error {
     }
 }
 
+function getCookie(name) {
+    const prefix = `${encodeURIComponent(name)}=`;
+
+    for (const part of document.cookie.split(";")) {
+        const cookie = part.trim();
+
+        if (cookie.startsWith(prefix)) {
+            return decodeURIComponent(
+                cookie.substring(prefix.length),
+            );
+        }
+    }
+
+    return null;
+}
+
 async function apiRequest(
     url,
     options = {},
 ) {
+
+    const csrfToken = getCookie(
+        "garminsupla_csrf",
+    );
 
     const response = await fetch(
         url,
         {
             headers: {
                 "Content-Type": "application/json",
+                ...(csrfToken
+                    ? {"X-CSRF-Token": csrfToken}
+                    : {}),
                 ...(options.headers ?? {}),
             },
             ...options,

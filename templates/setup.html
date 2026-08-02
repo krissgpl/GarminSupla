@@ -21,6 +21,12 @@
 
                 <form method="post" novalidate>
 
+                <input
+                    type="hidden"
+                    name="csrf_token"
+                    value="{{ csrf_token }}"
+                >
+
                     <div class="mb-4">
                         <label
                             for="server"

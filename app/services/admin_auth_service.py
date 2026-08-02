@@ -1,3 +1,6 @@
+import hashlib
+import hmac
+
 from pwdlib import PasswordHash
 from itsdangerous import (
     BadSignature,
@@ -9,7 +12,7 @@ from app.config import settings
 from app.models.admin import AdminAccount
 from app.stores.admin_store import AdminStore
 
-
+CSRF_CONTEXT = b"garminsupla-admin-csrf"
 SESSION_SALT = "garminsupla-admin-session"
 SESSION_MAX_AGE = 8 * 60 * 60
 
@@ -96,3 +99,31 @@ class AdminAuthService:
             return None
 
         return admin
+
+    def create_csrf_token(
+        self,
+        session_token: str,
+    ) -> str:
+        """Create a CSRF token bound to an administrator session."""
+
+        return hmac.new(
+            key=settings.admin_session_secret.encode("utf-8"),
+            msg=CSRF_CONTEXT + session_token.encode("utf-8"),
+            digestmod=hashlib.sha256,
+        ).hexdigest()
+
+    def verify_csrf_token(
+        self,
+        session_token: str,
+        csrf_token: str,
+    ) -> bool:
+        """Verify a CSRF token bound to an administrator session."""
+
+        expected = self.create_csrf_token(
+            session_token
+        )
+
+        return hmac.compare_digest(
+            expected,
+            csrf_token,
+        )

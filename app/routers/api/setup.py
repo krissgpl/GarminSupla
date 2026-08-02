@@ -1,8 +1,11 @@
-from fastapi import APIRouter
+from fastapi import APIRouter,  Depends
 
 from app.models.api import SetupStatus, GateSummary, SelectGateRequest, WatchStatus
 from app.models.settings import SelectedGate
 from app.services.setup_service import SetupService
+
+from app.api.admin_auth import require_admin_csrf
+from app.models.admin import AdminAccount
 
 router = APIRouter(
     prefix="/setup",
@@ -51,9 +54,9 @@ def get_available_gates() -> list[GateSummary]:
     "/gate",
     response_model=SelectedGate,
 )
-
 def select_gate(
     request: SelectGateRequest,
+    admin: AdminAccount = Depends(require_admin_csrf),
 ) -> SelectedGate:
     """Save the selected gate."""
 
