@@ -48,3 +48,6 @@ htmlcov/
 
 # config
 data/config.json
+
+# Garmin Connect IQ
+connectiq/GarminSupla/bin/

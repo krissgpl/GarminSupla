@@ -5,16 +5,19 @@ from app.models.settings import WatchDevice
 
 from app.models.api.watch import (
     WatchConfig,
-    WatchGateConfig,
+    WatchItemConfig,
 )
-from app.stores.settings_store import SettingsStore
+
+from app.services.watch_config_service import (
+    WatchConfigService,
+)
 
 router = APIRouter(
     prefix="/watch",
     tags=["Watch"],
 )
 
-settings_store = SettingsStore()
+watch_config_service = WatchConfigService()
 
 @router.get("/me")
 def get_watch(
@@ -41,22 +44,26 @@ def get_watch_config(
 ) -> WatchConfig:
     """Return configuration for the authenticated Garmin watch."""
 
-    settings = settings_store.load()
+    settings = watch_config_service.get_settings()
 
-    gate = settings.supla.selected_gate
-
-    if gate is None:
-        return WatchConfig(
-            configured=False,
-            gate=None,
-            confirmation_required=True,
+    items = [
+        WatchItemConfig(
+            id=item.id,
+            type=item.type,
+            name=item.name,
+            status_enabled=item.status_enabled,
+            confirmation_required=(
+                item.confirmation_required
+            ),
         )
+        for item in sorted(
+            settings.watch_settings.items,
+            key=lambda item: item.order,
+        )
+        if item.enabled
+    ]
 
     return WatchConfig(
-        configured=True,
-        gate=WatchGateConfig(
-            name=gate.caption,
-            status_enabled=gate.sensor_channel_id is not None,
-        ),
-        confirmation_required=True,
+        configured=bool(items),
+        items=items,
     )
