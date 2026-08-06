@@ -34,7 +34,7 @@ class SuplaClient:
             if exc.response.status_code == 401:
                 raise UnauthorizedError() from exc
             raise
-    
+
     def build_authorize_url(
         self,
         state: str,
@@ -144,13 +144,20 @@ class SuplaClient:
     def get_channels(
         self,
         access_token: str,
+        include: str | None = None,
     ) -> list[dict]:
+        params = {}
+
+        if include:
+            params["include"] = include
+
         response = self._client.get(
             self._url("/api/v2.4.0/channels"),
             headers={
                 "Authorization": f"Bearer {access_token}",
                 "Accept": "application/json",
             },
+            params=params,
         )
 
         self._raise_for_status(response)
