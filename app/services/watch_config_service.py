@@ -5,11 +5,13 @@ from app.models.settings import (
     WatchItem,
 )
 from app.stores.settings_store import SettingsStore
+from app.services.supla_service import SuplaService
 
 
 class WatchConfigService:
     def __init__(self) -> None:
         self._settings_store = SettingsStore()
+        self._supla_service = SuplaService()
 
     def get_settings(self) -> Settings:
         settings = self._settings_store.load()
@@ -51,3 +53,63 @@ class WatchConfigService:
         settings.watch_settings.items.append(item)
 
         return True
+
+    def get_item_statuses(
+        self,
+        items: list[WatchItem],
+    ) -> dict[str, tuple[bool, str]]:
+        channels = self._supla_service.get_channels_with_state()
+
+        channels_by_id = {
+            channel.get("id"): channel
+            for channel in channels
+        }
+
+        statuses: dict[str, tuple[bool, str]] = {}
+
+        for item in items:
+            statuses[item.id] = self._get_item_status(
+                item,
+                channels_by_id,
+            )
+
+        return statuses
+
+    def _get_item_status(
+        self,
+        item: WatchItem,
+        channels_by_id: dict,
+    ) -> tuple[bool, str]:
+        if (
+            item.type != "gate"
+            or not item.status_enabled
+            or item.sensor_channel_id is None
+        ):
+            return False, "unknown"
+
+        sensor = channels_by_id.get(
+            item.sensor_channel_id
+        )
+
+        if sensor is None:
+            return False, "unknown"
+
+        connected = sensor.get("connected") is True
+
+        if not connected:
+            return False, "unknown"
+
+        state = sensor.get("state")
+
+        if not isinstance(state, dict):
+            return True, "unknown"
+
+        hi = state.get("hi")
+
+        if hi is True:
+            return True, "closed"
+
+        if hi is False:
+            return True, "opened"
+
+        return True, "unknown"

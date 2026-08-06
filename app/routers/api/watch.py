@@ -54,22 +54,40 @@ def get_watch_config(
 
     settings = watch_config_service.get_settings()
 
-    items = [
-        WatchItemConfig(
-            id=item.id,
-            type=item.type,
-            name=item.name,
-            status_enabled=item.status_enabled,
-            confirmation_required=(
-                item.confirmation_required
-            ),
-        )
+    enabled_items = [
+        item
         for item in sorted(
             settings.watch_settings.items,
             key=lambda item: item.order,
         )
         if item.enabled
     ]
+
+    statuses = watch_config_service.get_item_statuses(
+        enabled_items
+    )
+
+    items = []
+
+    for item in enabled_items:
+        connected, state = statuses.get(
+            item.id,
+            (False, "unknown"),
+        )
+
+        items.append(
+            WatchItemConfig(
+                id=item.id,
+                type=item.type,
+                name=item.name,
+                status_enabled=item.status_enabled,
+                confirmation_required=(
+                    item.confirmation_required
+                ),
+                connected=connected,
+                state=state,
+            )
+        )
 
     return WatchConfig(
         configured=bool(items),

@@ -1,4 +1,5 @@
 from enum import Enum
+from typing import Literal
 
 from pydantic import BaseModel, Field
 
@@ -14,6 +15,8 @@ class WatchItemConfig(BaseModel):
     name: str
     status_enabled: bool = False
     confirmation_required: bool = True
+    connected: bool = False
+    state: Literal["opened", "closed", "unknown"] = "unknown"
 
 
 class WatchConfig(BaseModel):
