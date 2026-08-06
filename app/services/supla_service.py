@@ -1,9 +1,10 @@
 from app.clients.supla_client import SuplaClient
-from app.stores.settings_store import SettingsStore
+from app.exceptions import GateStateUnavailableError
 from app.models.supla import GateChannel
 from app.models.settings import SelectedGate
 from app.models.api import GateSummary
 from app.services.oauth_service import OAuthService
+from app.stores.settings_store import SettingsStore
 
 
 class SuplaService:
@@ -83,12 +84,54 @@ class SuplaService:
             for gate in self.get_gate_channels()
         ]
 
-    def toggle_gate(
+    def execute_gate_action(
         self,
         channel_id: int,
-    ) -> None:
+        sensor_channel_id: int,
+    ) -> str:
+        channels = self.get_channels_with_state()
+
+        sensor = next(
+            (
+                channel
+                for channel in channels
+                if channel.get("id") == sensor_channel_id
+            ),
+            None,
+        )
+
+        if sensor is None:
+            raise GateStateUnavailableError(
+                f"Gate sensor channel {sensor_channel_id} not found."
+            )
+
+        if sensor.get("connected") is not True:
+            raise GateStateUnavailableError(
+                "Gate sensor is not connected."
+            )
+
+        state = sensor.get("state")
+
+        if not isinstance(state, dict):
+            raise GateStateUnavailableError(
+                "Gate state is unavailable."
+            )
+
+        hi = state.get("hi")
+
+        if hi is True:
+            action = "open"
+        elif hi is False:
+            action = "close"
+        else:
+            raise GateStateUnavailableError(
+                "Gate state is unavailable."
+            )
+
         self._oauth_service.execute_with_token_refresh(
             self._client().execute_channel_action,
             channel_id,
-            "open-close",
-       )
+            action,
+        )
+
+        return action

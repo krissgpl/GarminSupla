@@ -4,6 +4,7 @@ from fastapi.responses import JSONResponse, RedirectResponse
 from app.exceptions import (
     AdminAuthenticationRequired,
     ApiError,
+    GateStateUnavailableError,
     RefreshTokenError,
     UnauthorizedError,
 )
@@ -47,6 +48,19 @@ def register_exception_handlers(app: FastAPI) -> None:
             content={
                 "error": "unauthorized",
                 "message": "Unauthorized.",
+            },
+        )
+
+    @app.exception_handler(GateStateUnavailableError)
+    async def gate_state_unavailable_handler(
+        request: Request,
+        exc: GateStateUnavailableError,
+    ):
+        return JSONResponse(
+            status_code=409,
+            content={
+                "error": "gate_state_unavailable",
+                "message": str(exc),
             },
         )
 

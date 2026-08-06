@@ -16,3 +16,7 @@ class UnauthorizedError(SuplaClientError):
 
 class ApiError(SuplaClientError):
     """Unexpected response from the SUPLA API."""
+
+
+class GateStateUnavailableError(SuplaClientError):
+    """Gate state cannot be determined safely."""

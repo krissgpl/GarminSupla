@@ -65,12 +65,19 @@ class WatchActionService:
                 message="Unsupported action.",
             )
 
-        self._supla_service.toggle_gate(
+        if item.sensor_channel_id is None:
+            return WatchActionResponse(
+                success=False,
+                message="Gate sensor not configured.",
+            )
+
+        executed_action = self._supla_service.execute_gate_action(
             item.supla_id,
+            item.sensor_channel_id,
         )
 
         return WatchActionResponse(
             success=True,
-            message="Action accepted.",
+            message=f"Gate action executed: {executed_action}.",
             refresh_required=True,
         )
