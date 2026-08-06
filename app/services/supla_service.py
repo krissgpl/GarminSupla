@@ -28,6 +28,12 @@ class SuplaService:
             self._client().get_channels,
         )
 
+    def get_channels_with_state(self):
+        return self._oauth_service.execute_with_token_refresh(
+            self._client().get_channels,
+            "state,connected",
+        )
+
     def get_gate_channels(self) -> list[GateChannel]:
         channels = self.get_channels()
 
