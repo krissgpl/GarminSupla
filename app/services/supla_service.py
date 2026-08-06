@@ -76,3 +76,13 @@ class SuplaService:
             )
             for gate in self.get_gate_channels()
         ]
+
+    def toggle_gate(
+        self,
+        channel_id: int,
+    ) -> None:
+        self._oauth_service.execute_with_token_refresh(
+            self._client().execute_channel_action,
+            channel_id,
+            "open-close",
+       )

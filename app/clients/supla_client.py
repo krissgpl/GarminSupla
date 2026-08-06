@@ -156,3 +156,29 @@ class SuplaClient:
         self._raise_for_status(response)
 
         return response.json()
+
+    def execute_channel_action(
+        self,
+        access_token: str,
+        channel_id: int,
+        action: str,
+        params: dict | None = None,
+    ) -> None:
+        """Execute an action on a SUPLA channel."""
+
+        payload = dict(params or {})
+        payload["action"] = action
+
+        response = self._client.patch(
+            self._url(
+                f"/api/v2.4.0/channels/{channel_id}"
+            ),
+            headers={
+                "Authorization": f"Bearer {access_token}",
+                "Accept": "application/json",
+                "Content-Type": "application/json",
+            },
+            json=payload,
+        )
+
+        self._raise_for_status(response)
