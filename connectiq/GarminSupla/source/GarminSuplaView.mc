@@ -1,5 +1,6 @@
 import Toybox.Graphics;
 import Toybox.Lang;
+import Toybox.Timer;
 import Toybox.WatchUi;
 
 class GarminSuplaView extends WatchUi.View {
@@ -11,9 +12,11 @@ class GarminSuplaView extends WatchUi.View {
 	private var _itemName = null;
 	private var _statusEnabled = false;
 	private var _confirmationRequired = true;
+	private var _statusTimer;
 
     function initialize() {
         View.initialize();
+		_statusTimer = new Timer.Timer();
     }
 
     function setPairingCode(code) as Void {
@@ -180,6 +183,31 @@ class GarminSuplaView extends WatchUi.View {
 
 		WatchUi.requestUpdate();
 	}
+
+	function resetActionStatus() as Void {
+		_status = "Connected";
+
+		WatchUi.requestUpdate();
+	}
+
+	function setActionSending() as Void {
+        _status = "Sending...";
+        WatchUi.requestUpdate();
+    }
+
+    function setActionSuccess() as Void {
+        _status = "Action sent";
+
+		WatchUi.requestUpdate();
+
+		_statusTimer.stop();
+
+		_statusTimer.start(
+			method(:resetActionStatus),
+			2000,
+			false
+		);
+    }
 
 	function getItemId() {
         return _itemId;

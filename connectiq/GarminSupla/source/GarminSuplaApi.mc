@@ -650,6 +650,8 @@ class GarminSuplaApi {
             "POST " + url
         );
 
+		_view.setActionSending();
+
         Communications.makeWebRequest(
             url,
             params,
@@ -683,6 +685,8 @@ class GarminSuplaApi {
                 System.println(
                     "Watch action succeeded"
                 );
+
+				_view.setActionSuccess();
 
                 return;
             }
