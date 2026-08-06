@@ -26,7 +26,10 @@ class GarminSuplaApp extends Application.AppBase {
 
         return [
             view,
-            new GarminSuplaDelegate()
+            new GarminSuplaDelegate(
+                view,
+                api
+            )
         ];
     }
 }

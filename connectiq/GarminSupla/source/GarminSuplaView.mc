@@ -1,4 +1,5 @@
 import Toybox.Graphics;
+import Toybox.Lang;
 import Toybox.WatchUi;
 
 class GarminSuplaView extends WatchUi.View {
@@ -21,20 +22,20 @@ class GarminSuplaView extends WatchUi.View {
 
         WatchUi.requestUpdate();
     }
-	
+
 	function setPairingApproved() as Void {
 		_status = "Pairing approved";
 
 		WatchUi.requestUpdate();
 	}
-	
+
 	function setAuthenticated() as Void {
 
 		_pairingCode = null;
 		_status = "Watch connected";
 
 		WatchUi.requestUpdate();
-	}	
+	}
 
     function setError() as Void {
         _status = "Connection error";
@@ -145,7 +146,7 @@ class GarminSuplaView extends WatchUi.View {
 
     function onHide() as Void {
     }
-	
+
 	function setConfiguredItem(
 		itemId,
 		itemType,
@@ -179,4 +180,17 @@ class GarminSuplaView extends WatchUi.View {
 
 		WatchUi.requestUpdate();
 	}
+
+	function getItemId() {
+        return _itemId;
+    }
+
+    function getItemType() {
+        return _itemType;
+    }
+
+    function isConfirmationRequired() as Lang.Boolean {
+        return _confirmationRequired;
+    }
+
 }

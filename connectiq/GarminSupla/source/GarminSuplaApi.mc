@@ -53,7 +53,7 @@ class GarminSuplaApi {
 			token.toString()
 		);
 	}
-	
+
 	function verifyWatch(token as Lang.String) as Void {
 
 		var url =
@@ -83,7 +83,7 @@ class GarminSuplaApi {
 			method(:onVerifyWatchResponse)
 		);
 	}
-	
+
 	function loadConfig() as Void {
 
 		var token =
@@ -124,7 +124,7 @@ class GarminSuplaApi {
 			method(:onConfigResponse)
 		);
 	}
-	
+
 	function onConfigResponse(
 		responseCode as Lang.Number,
 		data as WebResponseData
@@ -237,7 +237,7 @@ class GarminSuplaApi {
 
 		_view.setError();
 	}
-	
+
 	function clearCredentials() as Void {
 
 		Application.Storage.deleteValue(
@@ -252,7 +252,7 @@ class GarminSuplaApi {
 			"Stored watch credentials cleared"
 		);
 	}
-	
+
 	function onVerifyWatchResponse(
 		responseCode as Lang.Number,
 		data as WebResponseData
@@ -474,7 +474,7 @@ class GarminSuplaApi {
 			method(:onConsumeResponse)
 		);
 	}
-	
+
 	function onConsumeResponse(
 		responseCode as Lang.Number,
 		data as WebResponseData
@@ -587,7 +587,7 @@ class GarminSuplaApi {
 					stopPolling();
 
 					_view.setPairingApproved();
-					
+
 					consumePairing();
 
 					return;
@@ -602,4 +602,108 @@ class GarminSuplaApi {
 		stopPolling();
 		_view.setError();
 	}
+
+	function executeAction(
+        itemId as Lang.String,
+        action as Lang.String
+    ) as Void {
+
+        var token =
+            Application.Storage.getValue(
+                "watch_token"
+            );
+
+        if (token == null) {
+            System.println(
+                "Cannot execute action: no watch token"
+            );
+
+            _view.setError();
+            return;
+        }
+
+        var url =
+            BASE_URL + "/watch/action";
+
+        var params = {
+            "item_id" => itemId,
+            "action" => action
+        };
+
+        var options = {
+            :method =>
+                Communications.HTTP_REQUEST_METHOD_POST,
+
+            :headers => {
+                "Authorization" =>
+                    "Bearer " + token.toString(),
+
+                "Content-Type" =>
+                    Communications.REQUEST_CONTENT_TYPE_JSON
+            },
+
+            :responseType =>
+                Communications.HTTP_RESPONSE_CONTENT_TYPE_JSON
+        };
+
+        System.println(
+            "POST " + url
+        );
+
+        Communications.makeWebRequest(
+            url,
+            params,
+            options,
+            method(:onActionResponse)
+        );
+    }
+
+    function onActionResponse(
+        responseCode as Lang.Number,
+        data as WebResponseData
+    ) as Void {
+
+        System.println(
+            "Watch action HTTP: "
+            + responseCode
+        );
+
+        System.println(
+            "Watch action response: "
+            + data
+        );
+
+        if (
+            responseCode == 200
+            && data instanceof Lang.Dictionary
+        ) {
+            var success = data["success"];
+
+            if (success == true) {
+                System.println(
+                    "Watch action succeeded"
+                );
+
+                return;
+            }
+        }
+
+        if (responseCode == 401) {
+            System.println(
+                "Watch token rejected while executing action"
+            );
+
+            clearCredentials();
+            startPairing();
+
+            return;
+        }
+
+        System.println(
+            "Watch action failed"
+        );
+
+        _view.setError();
+    }
+
 }
