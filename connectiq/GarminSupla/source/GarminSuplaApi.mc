@@ -158,56 +158,16 @@ class GarminSuplaApi {
 					+ " item(s)"
 				);
 
-				var item = items[0];
-
-				if (item instanceof Lang.Dictionary) {
-
-					var itemId =
-						item["id"];
-
-					var itemType =
-						item["type"];
-
-					var itemName =
-						item["name"];
-
-					var statusEnabled =
-						item["status_enabled"];
-
-					var confirmationRequired =
-						item["confirmation_required"];
-
-					if (
-						itemId != null
-						&& itemType != null
-						&& itemName != null
-					) {
-
-						System.println(
-							"First item: "
-							+ itemType.toString()
-							+ " / "
-							+ itemName.toString()
-						);
-
-						_view.setConfiguredItem(
-							itemId.toString(),
-							itemType.toString(),
-							itemName.toString(),
-							statusEnabled == true,
-							confirmationRequired == true
-						);
-
-						return;
-					}
-				}
-
 				System.println(
-					"Invalid watch item"
+					"Watch config first item: "
+					+ items[0]
 				);
 
-				_view.setError();
-			return;
+				_view.setConfiguredItems(
+					items
+				);
+
+				return;
 			}
 
 			System.println(

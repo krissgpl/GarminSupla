@@ -13,6 +13,10 @@ class GarminSuplaView extends WatchUi.View {
 	private var _statusEnabled = false;
 	private var _confirmationRequired = true;
 	private var _statusTimer;
+	private var _items = [];
+	private var _selectedIndex = 0;
+	private var _itemConnected = false;
+	private var _itemState = "unknown";
 
     function initialize() {
         View.initialize();
@@ -84,17 +88,25 @@ class GarminSuplaView extends WatchUi.View {
 
 			dc.drawText(
 				width / 2,
-				height * 0.50,
+				height * 0.48,
 				Graphics.FONT_SMALL,
-				_statusEnabled
-					? "Status available"
-					: "Status unavailable",
+				_itemConnected
+					? "Connected"
+					: "Offline",
 				Graphics.TEXT_JUSTIFY_CENTER
 			);
 
 			dc.drawText(
 				width / 2,
-				height * 0.65,
+				height * 0.58,
+				Graphics.FONT_MEDIUM,
+				_itemState.toUpper(),
+				Graphics.TEXT_JUSTIFY_CENTER
+			);
+
+			dc.drawText(
+				width / 2,
+				height * 0.72,
 				Graphics.FONT_TINY,
 				_status,
 				Graphics.TEXT_JUSTIFY_CENTER
@@ -150,31 +162,116 @@ class GarminSuplaView extends WatchUi.View {
     function onHide() as Void {
     }
 
-	function setConfiguredItem(
-		itemId,
-		itemType,
-		itemName,
-		statusEnabled,
-		confirmationRequired
+	function setConfiguredItems(
+		items
 	) as Void {
 
 		_pairingCode = null;
+		_items = items;
+		_selectedIndex = 0;
 
-		_itemId = itemId;
-		_itemType = itemType;
-		_itemName = itemName;
+		if (_items.size() == 0) {
+			setNotConfigured();
+			return;
+		}
 
-		_statusEnabled = statusEnabled;
-		_confirmationRequired = confirmationRequired;
+		System.println(
+			"View loaded "
+			+ _items.size()
+			+ " item(s)"
+		);
+
+		selectCurrentItem();
+	}
+
+	function selectCurrentItem() as Void {
+
+		if (_items.size() == 0) {
+			setNotConfigured();
+			return;
+		}
+
+		var item = _items[_selectedIndex];
+
+		if (!(item instanceof Lang.Dictionary)) {
+			setError();
+			return;
+		}
+
+		var itemId = item["id"];
+		var itemType = item["type"];
+		var itemName = item["name"];
+
+		if (
+			itemId == null
+			|| itemType == null
+			|| itemName == null
+		) {
+			setError();
+			return;
+		}
+
+		_itemId = itemId.toString();
+		_itemType = itemType.toString();
+		_itemName = itemName.toString();
+
+		_statusEnabled =
+			item["status_enabled"] == true;
+
+		_confirmationRequired =
+			item["confirmation_required"] == true;
+
+		_itemConnected =
+			item["connected"] == true;
+
+		var itemState = item["state"];
+
+		if (itemState != null) {
+			_itemState = itemState.toString();
+		} else {
+			_itemState = "unknown";
+		}
 
 		_status = "Connected";
 
 		WatchUi.requestUpdate();
 	}
 
+	function selectNextItem() as Void {
+
+		if (_items.size() <= 1) {
+			return;
+		}
+
+		_selectedIndex += 1;
+
+		if (_selectedIndex >= _items.size()) {
+			_selectedIndex = 0;
+		}
+
+		selectCurrentItem();
+	}
+
+	function selectPreviousItem() as Void {
+
+		if (_items.size() <= 1) {
+			return;
+		}
+
+		_selectedIndex -= 1;
+
+		if (_selectedIndex < 0) {
+			_selectedIndex = _items.size() - 1;
+		}
+
+		selectCurrentItem();
+	}
+
 	function setNotConfigured() as Void {
 
 		_pairingCode = null;
+		_items = [];
+
 		_itemId = null;
 		_itemType = null;
 		_itemName = null;

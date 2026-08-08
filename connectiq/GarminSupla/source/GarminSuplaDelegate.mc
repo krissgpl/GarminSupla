@@ -73,4 +73,14 @@ class GarminSuplaDelegate extends WatchUi.BehaviorDelegate {
         return true;
     }
 
+	function onDown() as Lang.Boolean {
+		_view.selectNextItem();
+		return true;
+	}
+
+	function onUp() as Lang.Boolean {
+		_view.selectPreviousItem();
+		return true;
+	}
+
 }
