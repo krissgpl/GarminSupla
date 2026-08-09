@@ -168,11 +168,14 @@ class GarminSuplaView extends WatchUi.View {
 
 		_pairingCode = null;
 		_items = items;
-		_selectedIndex = 0;
 
 		if (_items.size() == 0) {
 			setNotConfigured();
 			return;
+		}
+
+		if (_selectedIndex >= _items.size()) {
+			_selectedIndex = 0;
 		}
 
 		System.println(
@@ -233,6 +236,15 @@ class GarminSuplaView extends WatchUi.View {
 		}
 
 		_status = "Connected";
+
+		System.println(
+			"Selected item "
+			+ (_selectedIndex + 1)
+			+ "/"
+			+ _items.size()
+			+ ": "
+			+ _itemName
+		);
 
 		WatchUi.requestUpdate();
 	}
