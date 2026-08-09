@@ -17,15 +17,20 @@ class GarminSuplaApi {
         "https://garmin.krissg.ovh/api/v1";
 
     private const POLL_INTERVAL_MS = 3000;
+	private const CONFIG_REFRESH_INTERVAL_MS = 5000;
 
     private var _view;
     private var _pairingId = null;
     private var _pollTimer;
     private var _pollInProgress = false;
 
+	private var _configTimer;
+	private var _configInProgress = false;
+
     function initialize(view) {
         _view = view;
         _pollTimer = new Timer.Timer();
+		_configTimer = new Timer.Timer();
     }
 
 	function start() as Void {
@@ -86,6 +91,10 @@ class GarminSuplaApi {
 
 	function loadConfig() as Void {
 
+		 if (_configInProgress) {
+			return;
+		}
+
 		var token =
 			Application.Storage.getValue(
 				"watch_token"
@@ -117,12 +126,41 @@ class GarminSuplaApi {
 			"GET " + url
 		);
 
+		_configInProgress = true;
+
 		Communications.makeWebRequest(
 			url,
 			{},
 			options,
 			method(:onConfigResponse)
 		);
+	}
+
+	function scheduleNextConfigRefresh() as Void {
+
+		_configTimer.stop();
+
+		_configTimer.start(
+			method(:refreshConfig),
+			CONFIG_REFRESH_INTERVAL_MS,
+			false
+		);
+	}
+
+	function refreshConfig() as Void {
+
+		if (_configInProgress) {
+			scheduleNextConfigRefresh();
+			return;
+		}
+
+		loadConfig();
+	}
+
+	function stopConfigPolling() as Void {
+
+		_configTimer.stop();
+		_configInProgress = false;
 	}
 
 	function onConfigResponse(
@@ -134,6 +172,8 @@ class GarminSuplaApi {
 			"Watch config HTTP: "
 			+ responseCode
 		);
+
+		_configInProgress = false;
 
 		if (
 			responseCode == 200
@@ -167,6 +207,8 @@ class GarminSuplaApi {
 					items
 				);
 
+				scheduleNextConfigRefresh();
+
 				return;
 			}
 
@@ -176,6 +218,8 @@ class GarminSuplaApi {
 
 			_view.setNotConfigured();
 
+			scheduleNextConfigRefresh();
+
 			return;
 		}
 
@@ -184,6 +228,8 @@ class GarminSuplaApi {
 			System.println(
 				"Watch token rejected while loading config"
 			);
+
+			stopConfigPolling();
 
 			clearCredentials();
 			startPairing();
@@ -196,6 +242,8 @@ class GarminSuplaApi {
 		);
 
 		_view.setError();
+
+		scheduleNextConfigRefresh();
 	}
 
 	function clearCredentials() as Void {
@@ -255,6 +303,8 @@ class GarminSuplaApi {
 	}
 
     function startPairing() as Void {
+
+		stopConfigPolling();
 
         var url = BASE_URL + "/watch/pair";
 
