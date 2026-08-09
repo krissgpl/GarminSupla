@@ -17,6 +17,7 @@ class GarminSuplaView extends WatchUi.View {
 	private var _selectedIndex = 0;
 	private var _itemConnected = false;
 	private var _itemState = "unknown";
+	private var _itemIcon = "default";
 
     function initialize() {
         View.initialize();
@@ -68,6 +69,226 @@ class GarminSuplaView extends WatchUi.View {
 			+ _items.size().toString();
 	}
 
+	function drawSlidingGateIcon(
+		dc as Dc,
+		centerX,
+		centerY
+	) as Void {
+
+		dc.setColor(
+			Graphics.COLOR_WHITE,
+			Graphics.COLOR_TRANSPARENT
+		);
+
+		var gateWidth = 58;
+		var gateHeight = 26;
+
+		var left = centerX - (gateWidth / 2);
+		var top = centerY - (gateHeight / 2);
+		var bottom = centerY + (gateHeight / 2);
+
+		// Słupki
+		dc.drawLine(
+			left,
+			top - 4,
+			left,
+			bottom + 4
+		);
+
+		dc.drawLine(
+			left + gateWidth,
+			top - 4,
+			left + gateWidth,
+			bottom + 4
+		);
+
+		// Prowadnica
+		dc.drawLine(
+			left - 5,
+			bottom + 4,
+			left + gateWidth + 5,
+			bottom + 4
+		);
+
+		if (_itemState.equals("closed")) {
+
+			// Skrzydło zamknięte
+			dc.drawRectangle(
+				left + 4,
+				top,
+				gateWidth - 8,
+				gateHeight
+			);
+
+			// Pionowe elementy skrzydła
+			dc.drawLine(
+				left + 17,
+				top,
+				left + 17,
+				bottom
+			);
+
+			dc.drawLine(
+				left + 29,
+				top,
+				left + 29,
+				bottom
+			);
+
+			dc.drawLine(
+				left + 41,
+				top,
+				left + 41,
+				bottom
+			);
+
+			return;
+		}
+
+		if (_itemState.equals("opened")) {
+
+			// Otwarte światło przejazdu
+			// Skrzydło odsunięte w lewo
+			dc.drawRectangle(
+				left - 16,
+				top,
+				20,
+				gateHeight
+			);
+
+			dc.drawLine(
+				left - 9,
+				top,
+				left - 9,
+				bottom
+			);
+
+			return;
+		}
+
+		// UNKNOWN
+		dc.drawLine(
+			left + 8,
+			top + 4,
+			left + gateWidth - 8,
+			bottom - 4
+		);
+
+		dc.drawLine(
+			left + gateWidth - 8,
+			top + 4,
+			left + 8,
+			bottom - 4
+		);
+	}
+
+	function drawDoubleSwingGateIcon(
+		dc as Dc,
+		centerX,
+		centerY
+	) as Void {
+
+		dc.setColor(
+			Graphics.COLOR_WHITE,
+			Graphics.COLOR_TRANSPARENT
+		);
+
+		var gateWidth = 58;
+		var gateHeight = 26;
+
+		var left = centerX - (gateWidth / 2);
+		var right = centerX + (gateWidth / 2);
+		var top = centerY - (gateHeight / 2);
+		var bottom = centerY + (gateHeight / 2);
+		var middle = centerX;
+
+		// Słupki
+		dc.drawLine(
+			left,
+			top - 4,
+			left,
+			bottom + 4
+		);
+
+		dc.drawLine(
+			right,
+			top - 4,
+			right,
+			bottom + 4
+		);
+
+		if (_itemState.equals("closed")) {
+
+			// Lewe skrzydło
+			dc.drawRectangle(
+				left + 4,
+				top,
+				(gateWidth / 2) - 4,
+				gateHeight
+			);
+
+			// Prawe skrzydło
+			dc.drawRectangle(
+				middle,
+				top,
+				(gateWidth / 2) - 4,
+				gateHeight
+			);
+
+			return;
+		}
+
+		if (_itemState.equals("opened")) {
+
+			// Lewe skrzydło otwarte
+			dc.drawLine(
+				left + 4,
+				top,
+				middle - 10,
+				centerY
+			);
+
+			dc.drawLine(
+				left + 4,
+				bottom,
+				middle - 10,
+				centerY
+			);
+
+			// Prawe skrzydło otwarte
+			dc.drawLine(
+				right - 4,
+				top,
+				middle + 10,
+				centerY
+			);
+
+			dc.drawLine(
+				right - 4,
+				bottom,
+				middle + 10,
+				centerY
+			);
+
+			return;
+		}
+
+		// UNKNOWN
+		dc.drawLine(
+			left + 8,
+			top + 4,
+			right - 8,
+			bottom - 4
+		);
+
+		dc.drawLine(
+			right - 8,
+			top + 4,
+			left + 8,
+			bottom - 4
+		);
+	}
+
     function onUpdate(dc as Dc) as Void {
 
         dc.setColor(
@@ -112,7 +333,7 @@ class GarminSuplaView extends WatchUi.View {
 			// Nazwa itemu
 			dc.drawText(
 				width / 2,
-				height * 0.36,
+				height * 0.32,
 				Graphics.FONT_MEDIUM,
 				_itemName,
 				Graphics.TEXT_JUSTIFY_CENTER
@@ -138,17 +359,39 @@ class GarminSuplaView extends WatchUi.View {
 				Graphics.TEXT_JUSTIFY_CENTER
 			);
 
+			if (
+				_itemIcon != null
+				&& _itemIcon.equals("sliding_gate")
+			) {
+				drawSlidingGateIcon(
+					dc,
+					width / 2,
+					(height * 0.76).toNumber()
+				);
+			}
+
+			if (
+				_itemIcon != null
+				&& _itemIcon.equals("double_swing_gate")
+			) {
+				drawDoubleSwingGateIcon(
+					dc,
+					width / 2,
+					(height * 0.76).toNumber()
+				);
+			}
+
 			// 1/2, 2/2...
 			dc.drawText(
 				width / 2,
-				height * 0.78,
+				height * 0.82,
 				Graphics.FONT_SMALL,
 				getItemPositionText(),
 				Graphics.TEXT_JUSTIFY_CENTER
 			);
 
 			// Dolny chevron
-			var arrowBottomY = (height * 0.90).toNumber();
+			var arrowBottomY = (height * 0.94).toNumber();
 
 			dc.drawLine(
 				arrowX - 8,
@@ -287,6 +530,14 @@ class GarminSuplaView extends WatchUi.View {
 			_itemState = "unknown";
 		}
 
+		var itemIcon = item["icon"];
+
+		if (itemIcon != null) {
+			_itemIcon = itemIcon.toString();
+		} else {
+			_itemIcon = "default";
+		}
+
 		_status = "Connected";
 
 		System.println(
@@ -296,6 +547,8 @@ class GarminSuplaView extends WatchUi.View {
 			+ _items.size()
 			+ ": "
 			+ _itemName
+			+ " icon="
+			+ _itemIcon
 		);
 
 		WatchUi.requestUpdate();
