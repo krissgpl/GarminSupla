@@ -698,6 +698,8 @@ class GarminSuplaApi {
 
 				_view.setActionSuccess();
 
+				loadConfig();
+
                 return;
             }
         }

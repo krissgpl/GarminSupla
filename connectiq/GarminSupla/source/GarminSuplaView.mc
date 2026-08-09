@@ -91,7 +91,7 @@ class GarminSuplaView extends WatchUi.View {
 				height * 0.48,
 				Graphics.FONT_SMALL,
 				_itemConnected
-					? "Connected"
+					? "Online"
 					: "Offline",
 				Graphics.TEXT_JUSTIFY_CENTER
 			);
