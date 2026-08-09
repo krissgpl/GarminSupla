@@ -56,6 +56,18 @@ class GarminSuplaView extends WatchUi.View {
     function onShow() as Void {
     }
 
+	function getItemPositionText() as Lang.String {
+
+		if (_items.size() == 0) {
+			return "";
+		}
+
+		return
+			(_selectedIndex + 1).toString()
+			+ "/"
+			+ _items.size().toString();
+	}
+
     function onUpdate(dc as Dc) as Void {
 
         dc.setColor(
@@ -70,7 +82,7 @@ class GarminSuplaView extends WatchUi.View {
 
         dc.drawText(
 			width / 2,
-			height * 0.18,
+			height * 0.12,
 			Graphics.FONT_MEDIUM,
 			"GarminSupla",
 			Graphics.TEXT_JUSTIFY_CENTER
@@ -78,17 +90,38 @@ class GarminSuplaView extends WatchUi.View {
 
 		if (_itemName != null) {
 
+			var arrowX = width / 2;
+
+			// Górny chevron
+			var arrowTopY = (height * 0.27).toNumber();
+
+			dc.drawLine(
+				arrowX - 8,
+				arrowTopY + 6,
+				arrowX,
+				arrowTopY
+			);
+
+			dc.drawLine(
+				arrowX,
+				arrowTopY,
+				arrowX + 8,
+				arrowTopY + 6
+			);
+
+			// Nazwa itemu
 			dc.drawText(
 				width / 2,
-				height * 0.34,
+				height * 0.36,
 				Graphics.FONT_MEDIUM,
 				_itemName,
 				Graphics.TEXT_JUSTIFY_CENTER
 			);
 
+			// Online / Offline
 			dc.drawText(
 				width / 2,
-				height * 0.48,
+				height * 0.47,
 				Graphics.FONT_SMALL,
 				_itemConnected
 					? "Online"
@@ -96,20 +129,39 @@ class GarminSuplaView extends WatchUi.View {
 				Graphics.TEXT_JUSTIFY_CENTER
 			);
 
+			// CLOSED / OPENED / UNKNOWN
 			dc.drawText(
 				width / 2,
-				height * 0.58,
+				height * 0.57,
 				Graphics.FONT_MEDIUM,
 				_itemState.toUpper(),
 				Graphics.TEXT_JUSTIFY_CENTER
 			);
 
+			// 1/2, 2/2...
 			dc.drawText(
 				width / 2,
-				height * 0.72,
-				Graphics.FONT_TINY,
-				_status,
+				height * 0.78,
+				Graphics.FONT_SMALL,
+				getItemPositionText(),
 				Graphics.TEXT_JUSTIFY_CENTER
+			);
+
+			// Dolny chevron
+			var arrowBottomY = (height * 0.90).toNumber();
+
+			dc.drawLine(
+				arrowX - 8,
+				arrowBottomY,
+				arrowX,
+				arrowBottomY + 6
+			);
+
+			dc.drawLine(
+				arrowX,
+				arrowBottomY + 6,
+				arrowX + 8,
+				arrowBottomY
 			);
 
 			return;
