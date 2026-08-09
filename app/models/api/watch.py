@@ -13,6 +13,7 @@ class WatchItemConfig(BaseModel):
     id: str
     type: WatchItemType
     name: str
+    icon: str = "default"
     status_enabled: bool = False
     confirmation_required: bool = True
     connected: bool = False

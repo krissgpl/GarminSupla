@@ -16,6 +16,7 @@ class WatchItem(BaseModel):
     id: str
     type: Literal["gate", "scene"]
     name: str
+    icon: str = "default"
     supla_id: int
     order: int = 0
     confirmation_required: bool = True

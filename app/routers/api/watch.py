@@ -80,6 +80,7 @@ def get_watch_config(
                 id=item.id,
                 type=item.type,
                 name=item.name,
+                icon=item.icon,
                 status_enabled=item.status_enabled,
                 confirmation_required=(
                     item.confirmation_required
