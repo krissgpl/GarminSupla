@@ -1,7 +1,9 @@
 import {
     ApiError,
     approveWatchPairing,
+    getWatchItems,
     getWatchStatus,
+    updateWatchItems,
 } from "./api.js";
 
 
@@ -15,8 +17,422 @@ function formatDate(value) {
 
 }
 
+function formatConfirmation(value) {
+    return value
+        ? "Required"
+        : "Not required";
+}
 
-function renderWatch(watch) {
+function renderWatchItemIcon(icon) {
+
+    if (icon === "sliding_gate") {
+        return `
+            <svg
+                width="64"
+                height="40"
+                viewBox="0 0 64 40"
+                role="img"
+                aria-label="Sliding gate"
+                class="text-body"
+            >
+                <g
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                >
+                    <!-- posts -->
+                    <line x1="6" y1="5" x2="6" y2="35" />
+                    <line x1="58" y1="5" x2="58" y2="35" />
+
+                    <!-- rail -->
+                    <line x1="2" y1="34" x2="62" y2="34" />
+
+                    <!-- closed sliding leaf -->
+                    <rect
+                        x="10"
+                        y="9"
+                        width="44"
+                        height="20"
+                    />
+
+                    <line x1="21" y1="9" x2="21" y2="29" />
+                    <line x1="32" y1="9" x2="32" y2="29" />
+                    <line x1="43" y1="9" x2="43" y2="29" />
+                </g>
+            </svg>
+        `;
+    }
+
+    if (icon === "double_swing_gate") {
+        return `
+            <svg
+                width="64"
+                height="40"
+                viewBox="0 0 64 40"
+                role="img"
+                aria-label="Double swing gate"
+                class="text-body"
+            >
+                <g
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                >
+                    <!-- posts -->
+                    <line x1="6" y1="5" x2="6" y2="35" />
+                    <line x1="58" y1="5" x2="58" y2="35" />
+
+                    <!-- left leaf -->
+                    <rect
+                        x="10"
+                        y="9"
+                        width="22"
+                        height="20"
+                    />
+
+                    <!-- right leaf -->
+                    <rect
+                        x="32"
+                        y="9"
+                        width="22"
+                        height="20"
+                    />
+                </g>
+            </svg>
+        `;
+    }
+
+    return `
+        <i
+            class="bi bi-square fs-2 text-muted"
+            aria-label="Default icon"
+        ></i>
+    `;
+}
+
+function getWatchItemIconOptions(selectedIcon) {
+
+    const icons = [
+        ["default", "Default"],
+        ["sliding_gate", "Sliding gate"],
+        ["double_swing_gate", "Double swing gate"],
+    ];
+
+    return icons
+        .map(([value, label]) => `
+            <option
+                value="${value}"
+                ${
+                    value === selectedIcon
+                        ? "selected"
+                        : ""
+                }
+            >
+                ${label}
+            </option>
+        `)
+        .join("");
+}
+
+function renderWatchItems(items) {
+
+    if (!items.length) {
+        return `
+            <div class="border-top pt-3 mt-3">
+                <h5 class="mb-2">
+                    Watch items
+                </h5>
+
+                <p class="text-muted mb-0">
+                    No items configured for the watch.
+                </p>
+            </div>
+        `;
+    }
+
+    const rows = items
+        .map((item, index) => `
+            <div
+                class="border rounded-4 p-3 mb-3"
+                data-watch-item-index="${index}"
+            >
+
+                <div class="d-flex align-items-start">
+
+                    <div class="d-flex align-items-center gap-3">
+
+                        <div
+                            class="d-flex align-items-center justify-content-center flex-shrink-0"
+                            style="width: 72px; height: 48px;"
+                            data-watch-item-icon-preview
+                        >
+                            ${renderWatchItemIcon(item.icon)}
+                        </div>
+
+                        <div>
+                            <strong>
+                                ${item.name}
+                            </strong>
+
+                            <div class="small text-muted mt-1">
+                                Type: ${item.type}
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="row g-3 mt-3 pt-3 border-top">
+
+                    <div class="col-12 col-md-6">
+
+                        <label
+                            class="form-label small fw-semibold"
+                        >
+                            Icon
+                        </label>
+
+                        <select
+                            class="form-select form-select-sm"
+                            data-watch-item-icon
+                        >
+                            ${getWatchItemIconOptions(
+                                item.icon
+                            )}
+                       </select>
+
+                    </div>
+
+                    <div class="col-12 col-md-6">
+
+                        <div class="mb-3">
+
+                            <label
+                                class="form-label small fw-semibold d-block"
+                            >
+                                Visibility
+                            </label>
+
+                            <div class="form-check form-switch">
+
+                                <input
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    role="switch"
+                                    data-watch-item-enabled
+                                    ${
+                                        item.enabled
+                                            ? "checked"
+                                            : ""
+                                    }
+                                >
+
+                                <label class="form-check-label small">
+                                    Show on watch
+                                </label>
+
+                            </div>
+
+                        </div>
+
+                        <div>
+
+                            <label
+                                class="form-label small fw-semibold d-block"
+                            >
+                                Action
+                            </label>
+
+                            <div class="form-check form-switch">
+
+                                <input
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    role="switch"
+                                    data-watch-item-confirmation
+                                    ${
+                                        item.confirmation_required
+                                            ? "checked"
+                                            : ""
+                                    }
+                                >
+
+                                <label class="form-check-label small">
+                                    Require confirmation
+                                </label>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        `)
+        .join("");
+
+    return `
+        <div class="border-top pt-3 mt-3">
+            <h5 class="mb-3">
+                Watch items
+            </h5>
+
+            ${rows}
+
+            <div class="d-flex align-items-center gap-3 mt-3">
+
+                <button
+                    type="button"
+                    class="btn btn-primary"
+                    id="save-watch-items-btn"
+                >
+                    <i class="bi bi-check-lg me-1"></i>
+                    Save watch configuration
+                </button>
+
+                <span
+                    id="watch-items-save-status"
+                    class="small"
+                ></span>
+
+            </div>
+        </div>
+
+    `;
+}
+
+function bindWatchItemEditors() {
+
+    document
+        .querySelectorAll(
+            "[data-watch-item-index]"
+        )
+        .forEach((row) => {
+
+            const iconSelect =
+                row.querySelector(
+                    "[data-watch-item-icon]"
+                );
+
+            const iconPreview =
+                row.querySelector(
+                    "[data-watch-item-icon-preview]"
+                );
+
+            iconSelect.addEventListener(
+                "change",
+                () => {
+
+                    iconPreview.innerHTML =
+                        renderWatchItemIcon(
+                            iconSelect.value
+                        );
+
+                },
+            );
+
+        });
+}
+
+async function saveWatchItems(items) {
+
+    const button =
+        document.getElementById(
+            "save-watch-items-btn"
+        );
+
+    const status =
+        document.getElementById(
+            "watch-items-save-status"
+        );
+
+    if (!button || !status) {
+        return;
+    }
+
+    const rows = [
+        ...document.querySelectorAll(
+            "[data-watch-item-index]"
+        ),
+    ];
+
+    const updatedItems = rows.map((row) => {
+
+        const index = Number(
+            row.dataset.watchItemIndex
+        );
+
+        const original = items[index];
+
+        const icon =
+            row.querySelector(
+                "[data-watch-item-icon]"
+            ).value;
+
+        const enabled =
+            row.querySelector(
+                "[data-watch-item-enabled]"
+            ).checked;
+
+        const confirmationRequired =
+            row.querySelector(
+                "[data-watch-item-confirmation]"
+            ).checked;
+
+        return {
+            ...original,
+            icon: icon,
+            enabled: enabled,
+            confirmation_required:
+                confirmationRequired,
+        };
+    });
+
+    button.disabled = true;
+
+    status.textContent = "Saving...";
+    status.className =
+        "small text-muted";
+
+    try {
+
+        await updateWatchItems(
+            updatedItems
+        );
+
+        status.textContent = "Saved";
+        status.className =
+            "small text-success";
+
+    } catch (error) {
+
+        if (error instanceof ApiError) {
+            status.textContent =
+                error.message;
+        } else {
+            status.textContent =
+                "Unable to save configuration.";
+        }
+
+        status.className =
+            "small text-danger";
+
+    } finally {
+        button.disabled = false;
+    }
+}
+
+function renderWatch(
+    watch,
+    items = [],
+) {
 
     const content =
         document.getElementById("watch-content");
@@ -108,6 +524,8 @@ function renderWatch(watch) {
 
         </div>
 
+        ${renderWatchItems(items)}
+
         <div class="border-top pt-3 mt-2">
 
             <button
@@ -132,6 +550,15 @@ function renderWatch(watch) {
         .addEventListener(
             "click",
             renderPairingForm,
+        );
+
+    bindWatchItemEditors();
+
+    document
+        .getElementById("save-watch-items-btn")
+        .addEventListener(
+            "click",
+            () => saveWatchItems(items),
         );
 
 }
@@ -306,10 +733,18 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     try {
 
-        const watch =
-            await getWatchStatus();
+        const [
+            watch,
+            items,
+        ] = await Promise.all([
+            getWatchStatus(),
+            getWatchItems(),
+        ]);
 
-        renderWatch(watch);
+        renderWatch(
+            watch,
+            items,
+        );
 
     } catch (error) {
 

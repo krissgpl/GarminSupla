@@ -81,6 +81,28 @@ export async function getWatchStatus() {
 
 }
 
+export async function getWatchItems() {
+
+    return apiRequest(
+        "/api/v1/setup/watch/items",
+    );
+
+}
+
+export async function updateWatchItems(items) {
+
+    return apiRequest(
+        "/api/v1/setup/watch/items",
+        {
+            method: "PUT",
+            body: JSON.stringify({
+                items: items,
+            }),
+        },
+    );
+
+}
+
 export async function getAvailableGates() {
     return apiRequest("/api/v1/setup/gates");
 }

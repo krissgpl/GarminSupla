@@ -1,7 +1,12 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 
 from app.models.api import SetupStatus, GateSummary, SelectGateRequest, WatchStatus
-from app.models.settings import SelectedGate
+
+from app.models.settings import (
+    SelectedGate,
+    WatchItem,
+)
+
 from app.services.setup_service import SetupService
 
 from app.api.admin_auth import require_admin_csrf
@@ -9,6 +14,8 @@ from app.models.admin import AdminAccount
 
 from app.models.api.pairing import PairingApproveRequest
 from app.services.pairing_service import PairingService
+
+from app.models.api.setup import WatchItemsUpdateRequest
 
 router = APIRouter(
     prefix="/setup",
@@ -76,6 +83,38 @@ def get_watch_status() -> WatchStatus:
     """Return Garmin watch setup status."""
 
     return setup_service.get_watch_status()
+
+@router.get(
+    "/watch/items",
+    response_model=list[WatchItem],
+)
+def get_watch_items() -> list[WatchItem]:
+    """Return Garmin watch item configuration."""
+
+    return setup_service.get_watch_items()
+
+@router.put(
+    "/watch/items",
+    response_model=list[WatchItem],
+)
+def update_watch_items(
+    request: WatchItemsUpdateRequest,
+    admin: AdminAccount = Depends(
+        require_admin_csrf
+    ),
+) -> list[WatchItem]:
+    """Replace Garmin watch item configuration."""
+
+    items = [
+        WatchItem.model_validate(
+            item.model_dump()
+        )
+        for item in request.items
+    ]
+
+    return setup_service.save_watch_items(
+        items
+    )
 
 @router.post(
     "/watch/pair",

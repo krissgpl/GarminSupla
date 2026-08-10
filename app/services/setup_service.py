@@ -1,7 +1,13 @@
 from app.services.supla_service import SuplaService
 from app.models.api import SetupStatus, GateSummary, WatchStatus
 from app.models.setup import SetupForm
-from app.models.settings import Settings, SelectedGate
+
+from app.models.settings import (
+    Settings,
+    SelectedGate,
+    WatchItem,
+)
+
 from app.stores.settings_store import SettingsStore
 
 
@@ -104,3 +110,32 @@ class SetupService:
         """Return available gate channels."""
 
         return self._supla_service.get_available_gates()
+
+    def get_watch_items(self) -> list[WatchItem]:
+        """Return configured Garmin watch items."""
+
+        settings = self._store.load()
+
+        return sorted(
+            settings.watch_settings.items,
+            key=lambda item: item.order,
+        )
+
+    def save_watch_items(
+        self,
+        items: list[WatchItem],
+    ) -> list[WatchItem]:
+        """Replace Garmin watch item configuration."""
+
+        settings = self._store.load()
+
+        sorted_items = sorted(
+            items,
+            key=lambda item: item.order,
+        )
+
+        settings.watch_settings.items = sorted_items
+
+        self._store.save(settings)
+
+        return sorted_items
