@@ -80,36 +80,70 @@ class WatchConfigService:
         item: WatchItem,
         channels_by_id: dict,
     ) -> tuple[bool, str]:
-        if (
-            item.type != "gate"
-            or not item.status_enabled
-            or item.sensor_channel_id is None
-        ):
-            return False, "unknown"
+        if item.type == "gate":
+            if (
+                not item.status_enabled
+                or item.sensor_channel_id is None
+            ):
+                return False, "unknown"
 
-        sensor = channels_by_id.get(
-            item.sensor_channel_id
-        )
+            sensor = channels_by_id.get(
+                item.sensor_channel_id
+            )
 
-        if sensor is None:
-            return False, "unknown"
+            if sensor is None:
+                return False, "unknown"
 
-        connected = sensor.get("connected") is True
+            connected = (
+                sensor.get("connected") is True
+            )
 
-        if not connected:
-            return False, "unknown"
+            if not connected:
+                return False, "unknown"
 
-        state = sensor.get("state")
+            state = sensor.get("state")
 
-        if not isinstance(state, dict):
+            if not isinstance(state, dict):
+                return True, "unknown"
+
+            hi = state.get("hi")
+
+            if hi is True:
+                return True, "closed"
+
+            if hi is False:
+                return True, "opened"
+
             return True, "unknown"
 
-        hi = state.get("hi")
+        if item.type in ("light", "switch"):
+            channel = channels_by_id.get(
+                item.supla_id
+            )
 
-        if hi is True:
-            return True, "closed"
+            if channel is None:
+                return False, "unknown"
 
-        if hi is False:
-            return True, "opened"
+            connected = (
+                channel.get("connected") is True
+            )
 
-        return True, "unknown"
+            if not connected:
+                return False, "unknown"
+
+            state = channel.get("state")
+
+            if not isinstance(state, dict):
+                return True, "unknown"
+
+            is_on = state.get("on")
+
+            if is_on is True:
+                return True, "on"
+
+            if is_on is False:
+                return True, "off"
+
+            return True, "unknown"
+
+        return False, "unknown"

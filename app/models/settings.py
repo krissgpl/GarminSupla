@@ -14,7 +14,14 @@ class SelectedGate(BaseModel):
 
 class WatchItem(BaseModel):
     id: str
-    type: Literal["gate", "scene"]
+    type: Literal[
+        "gate",
+        "scene",
+        "light",
+        "switch",
+        "roller_shutter",
+        "awning",
+    ]
     name: str
     icon: str = "default"
     supla_id: int

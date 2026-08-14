@@ -7,7 +7,10 @@ from pydantic import BaseModel, Field
 class WatchItemType(str, Enum):
     GATE = "gate"
     SCENE = "scene"
-
+    LIGHT = "light"
+    SWITCH = "switch"
+    ROLLER_SHUTTER = "roller_shutter"
+    AWNING = "awning"
 
 class WatchItemConfig(BaseModel):
     id: str
@@ -17,7 +20,13 @@ class WatchItemConfig(BaseModel):
     status_enabled: bool = False
     confirmation_required: bool = True
     connected: bool = False
-    state: Literal["opened", "closed", "unknown"] = "unknown"
+    state: Literal[
+        "opened",
+        "closed",
+        "on",
+        "off",
+        "unknown",
+    ] = "unknown"
 
 
 class WatchConfig(BaseModel):

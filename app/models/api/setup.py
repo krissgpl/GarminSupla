@@ -33,7 +33,14 @@ class WatchStatus(BaseModel):
 
 class WatchItemUpdate(BaseModel):
     id: str
-    type: Literal["gate", "scene"]
+    type: Literal[
+        "gate",
+        "scene",
+        "light",
+        "switch",
+        "roller_shutter",
+        "awning",
+    ]
     name: str
     icon: Literal[
         "default",
@@ -65,3 +72,16 @@ class WatchItemsUpdateRequest(BaseModel):
             )
 
         return self
+
+class SuplaAvailableItem(BaseModel):
+    supla_id: int
+    type: Literal[
+        "gate",
+        "light",
+        "switch",
+        "roller_shutter",
+        "awning",
+    ]
+    name: str
+    function: str
+    sensor_channel_id: int | None = None

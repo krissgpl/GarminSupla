@@ -48,6 +48,12 @@ class WatchActionService:
                 action,
             )
 
+        if item.type in ("light", "switch"):
+            return self._execute_toggle_channel(
+                item,
+                action,
+            )
+
         return WatchActionResponse(
             success=False,
             message="Unsupported item type.",
@@ -79,5 +85,27 @@ class WatchActionService:
         return WatchActionResponse(
             success=True,
             message=f"Gate action executed: {executed_action}.",
+            refresh_required=True,
+        )
+
+    def _execute_toggle_channel(
+        self,
+        item: WatchItem,
+        action: WatchAction,
+    ) -> WatchActionResponse:
+
+        if action != WatchAction.TOGGLE:
+            return WatchActionResponse(
+                success=False,
+                message="Unsupported action.",
+            )
+
+        self._supla_service.toggle_channel(
+            item.supla_id,
+        )
+
+        return WatchActionResponse(
+            success=True,
+            message="Channel toggled.",
             refresh_required=True,
         )

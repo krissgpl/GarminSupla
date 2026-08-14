@@ -1,6 +1,7 @@
 import {
     ApiError,
     approveWatchPairing,
+    getAvailableSuplaItems,
     getWatchItems,
     getWatchStatus,
     updateWatchItems,
@@ -142,7 +143,10 @@ function renderWatchItems(items) {
 
     if (!items.length) {
         return `
-            <div class="border-top pt-3 mt-3">
+            <div
+                class="border-top pt-3 mt-3"
+                id="watch-items-section"
+            >
                 <h5 class="mb-2">
                     Watch items
                 </h5>
@@ -279,12 +283,33 @@ function renderWatchItems(items) {
         .join("");
 
     return `
-        <div class="border-top pt-3 mt-3">
+        <div
+            class="border-top pt-3 mt-3"
+            id="watch-items-section"
+        >
             <h5 class="mb-3">
                 Watch items
             </h5>
 
             ${rows}
+
+            <div class="mt-3">
+
+                <button
+                    type="button"
+                    class="btn btn-outline-primary"
+                    id="add-from-supla-btn"
+                >
+                    <i class="bi bi-plus-lg me-1"></i>
+                    Add from SUPLA
+                </button>
+
+                <div
+                    id="add-from-supla-content"
+                    class="mt-3"
+                ></div>
+
+            </div>
 
             <div class="d-flex align-items-center gap-3 mt-3">
 
@@ -339,6 +364,235 @@ function bindWatchItemEditors() {
             );
 
         });
+}
+
+function bindWatchItemActions(items) {
+
+    const addButton =
+        document.getElementById(
+            "add-from-supla-btn"
+        );
+
+    if (addButton) {
+        addButton.addEventListener(
+            "click",
+            () => showAddFromSupla(items),
+        );
+    }
+
+    const saveButton =
+        document.getElementById(
+            "save-watch-items-btn"
+        );
+
+    if (saveButton) {
+        saveButton.addEventListener(
+            "click",
+            () => saveWatchItems(items),
+        );
+    }
+}
+
+async function showAddFromSupla(items) {
+
+    const button =
+        document.getElementById(
+            "add-from-supla-btn"
+        );
+
+    const content =
+        document.getElementById(
+            "add-from-supla-content"
+        );
+
+    if (!button || !content) {
+        return;
+    }
+
+    button.disabled = true;
+
+    content.innerHTML = `
+        <div class="text-muted small">
+            Loading SUPLA items...
+        </div>
+    `;
+
+    try {
+
+        const suplaItems =
+            await getAvailableSuplaItems();
+
+        const usedSuplaIds =
+            new Set(
+                items.map(
+                    (item) =>
+                        item.supla_id
+                )
+            );
+
+        const availableItems =
+            suplaItems.filter(
+                (item) =>
+                    !usedSuplaIds.has(
+                        item.supla_id
+                    )
+            );
+
+        if (!availableItems.length) {
+
+            content.innerHTML = `
+                <div class="alert alert-info mb-0">
+                    No additional supported SUPLA
+                    items are available.
+                </div>
+            `;
+
+            return;
+        }
+
+        const options =
+            availableItems
+                .map((item) => `
+                    <option value="${item.supla_id}">
+                        ${item.name} (${item.type})
+                    </option>
+                `)
+                .join("");
+
+        content.innerHTML = `
+            <div class="border rounded-4 p-3">
+
+                <label
+                    class="form-label fw-semibold"
+                    for="supla-item-select"
+                >
+                    SUPLA item
+                </label>
+
+                <div class="d-flex gap-2">
+
+                    <select
+                        class="form-select"
+                        id="supla-item-select"
+                    >
+                        ${options}
+                    </select>
+
+                    <button
+                        type="button"
+                        class="btn btn-primary"
+                        id="confirm-add-supla-item-btn"
+                    >
+                        Add
+                    </button>
+
+                </div>
+
+                <div class="small text-muted mt-2">
+                    Currently supported: gates
+                </div>
+
+            </div>
+        `;
+
+        document
+            .getElementById(
+                "confirm-add-supla-item-btn"
+            )
+            .addEventListener(
+                "click",
+                () => addSuplaItemLocally(
+                    items,
+                    availableItems,
+                ),
+            );
+
+    } catch (error) {
+
+        content.innerHTML = `
+            <div class="alert alert-danger mb-0">
+                Unable to load SUPLA items.
+            </div>
+        `;
+
+    } finally {
+        button.disabled = false;
+    }
+}
+
+function addSuplaItemLocally(
+    items,
+    availableItems,
+) {
+
+    const select =
+        document.getElementById(
+            "supla-item-select"
+        );
+
+    if (!select) {
+        return;
+    }
+
+    const suplaId =
+        Number(select.value);
+
+    const suplaItem =
+        availableItems.find(
+            (item) =>
+                item.supla_id === suplaId
+        );
+
+    if (!suplaItem) {
+        return;
+    }
+
+    const newItem = {
+        id: crypto.randomUUID(),
+        type: suplaItem.type,
+        name: suplaItem.name,
+        icon: "default",
+        supla_id: suplaItem.supla_id,
+        order: items.length,
+        confirmation_required: true,
+        status_enabled:
+            suplaItem.sensor_channel_id !== null,
+        sensor_channel_id:
+            suplaItem.sensor_channel_id,
+        enabled: true,
+    };
+
+    items.push(newItem);
+
+    renderWatchItemsInPlace(items);
+}
+
+function renderWatchItemsInPlace(items) {
+
+    const current =
+        document.getElementById(
+            "watch-items-section"
+        );
+
+    if (!current) {
+        return;
+    }
+
+    const wrapper =
+        document.createElement("div");
+
+    wrapper.innerHTML =
+        renderWatchItems(items);
+
+    const replacement =
+        wrapper.firstElementChild;
+
+    current.replaceWith(
+        replacement
+    );
+
+    bindWatchItemEditors();
+    bindWatchItemActions(items);
 }
 
 async function saveWatchItems(items) {
@@ -553,13 +807,7 @@ function renderWatch(
         );
 
     bindWatchItemEditors();
-
-    document
-        .getElementById("save-watch-items-btn")
-        .addEventListener(
-            "click",
-            () => saveWatchItems(items),
-        );
+    bindWatchItemActions(items);
 
 }
 

@@ -1,6 +1,7 @@
 from app.services.supla_service import SuplaService
 from app.models.api import SetupStatus, GateSummary, WatchStatus
 from app.models.setup import SetupForm
+from app.models.api.setup import SuplaAvailableItem
 
 from app.models.settings import (
     Settings,
@@ -139,3 +140,10 @@ class SetupService:
         self._store.save(settings)
 
         return sorted_items
+
+    def get_available_supla_items(
+        self,
+    ) -> list[SuplaAvailableItem]:
+        """Return currently available SUPLA watch items."""
+
+        return self._supla_service.get_available_watch_items()

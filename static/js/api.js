@@ -134,3 +134,11 @@ export async function approveWatchPairing(code) {
     );
 
 }
+
+export async function getAvailableSuplaItems() {
+
+    return apiRequest(
+        "/api/v1/setup/supla/items",
+    );
+
+}

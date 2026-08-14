@@ -3,6 +3,7 @@ from app.exceptions import GateStateUnavailableError
 from app.models.supla import GateChannel
 from app.models.settings import SelectedGate
 from app.models.api import GateSummary
+from app.models.api.setup import SuplaAvailableItem
 from app.services.oauth_service import OAuthService
 from app.stores.settings_store import SettingsStore
 
@@ -84,6 +85,101 @@ class SuplaService:
             for gate in self.get_gate_channels()
         ]
 
+    def get_available_watch_items(
+        self,
+    ) -> list[SuplaAvailableItem]:
+        """
+        Return currently available executable SUPLA channels.
+
+        Data is fetched live from SUPLA on every call.
+        """
+
+        channels = self.get_channels()
+        iodevices = self.get_iodevices()
+
+        enabled_iodevice_ids = {
+            device.get("id")
+            for device in iodevices
+            if device.get("enabled") is True
+        }
+
+        type_by_function = {
+            "CONTROLLINGTHEGATE": "gate",
+            "LIGHTSWITCH": "light",
+            "POWERSWITCH": "switch",
+            "CONTROLLINGTHEROLLERSHUTTER": "roller_shutter",
+            "TERRACE_AWNING": "awning",
+        }
+
+        items: list[SuplaAvailableItem] = []
+
+        for channel in channels:
+            iodevice_id = channel.get("iodeviceId")
+
+            if iodevice_id not in enabled_iodevice_ids:
+                continue
+
+            function = channel.get("function")
+
+            if not isinstance(function, dict):
+                continue
+
+            function_name = function.get("name")
+
+            item_type = type_by_function.get(
+                function_name
+            )
+
+            if item_type is None:
+                continue
+
+            possible_actions = (
+                channel.get("possibleActions")
+                or []
+            )
+
+            if not possible_actions:
+                continue
+
+            channel_id = channel.get("id")
+
+            if not isinstance(channel_id, int):
+                continue
+
+            caption = channel.get("caption")
+
+            if not caption:
+                caption = (
+                    function.get("caption")
+                    or f"SUPLA {channel_id}"
+                )
+
+            sensor_channel_id = None
+
+            if item_type == "gate":
+                config = channel.get("config")
+
+                if isinstance(config, dict):
+                    sensor_channel_id = (
+                        config.get(
+                            "openingSensorChannelId"
+                        )
+                    )
+
+            items.append(
+                SuplaAvailableItem(
+                    supla_id=channel_id,
+                    type=item_type,
+                    name=str(caption),
+                    function=str(function_name),
+                    sensor_channel_id=(
+                        sensor_channel_id
+                    ),
+                )
+            )
+
+        return items
+
     def execute_gate_action(
         self,
         channel_id: int,
@@ -135,3 +231,13 @@ class SuplaService:
         )
 
         return action
+
+    def toggle_channel(
+        self,
+        channel_id: int,
+    ) -> None:
+        self._oauth_service.execute_with_token_refresh(
+            self._client().execute_channel_action,
+            channel_id,
+            "toggle",
+        )

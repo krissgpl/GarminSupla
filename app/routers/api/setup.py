@@ -15,7 +15,7 @@ from app.models.admin import AdminAccount
 from app.models.api.pairing import PairingApproveRequest
 from app.services.pairing_service import PairingService
 
-from app.models.api.setup import WatchItemsUpdateRequest
+from app.models.api.setup import WatchItemsUpdateRequest, SuplaAvailableItem
 
 router = APIRouter(
     prefix="/setup",
@@ -137,3 +137,12 @@ def approve_watch_pairing(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Pairing code not found or expired.",
         )
+
+@router.get(
+    "/supla/items",
+    response_model=list[SuplaAvailableItem],
+)
+def get_available_supla_items() -> list[SuplaAvailableItem]:
+    """Return currently available executable SUPLA items."""
+
+    return setup_service.get_available_supla_items()
