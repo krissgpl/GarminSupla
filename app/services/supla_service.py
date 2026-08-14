@@ -265,3 +265,27 @@ class SuplaService:
             channel_id,
             supla_action,
         )
+
+    def execute_awning_action(
+        self,
+        channel_id: int,
+        action: str,
+    ) -> None:
+        action_map = {
+            "collapse": "reveal",
+            "expand": "shut",
+            "stop": "stop",
+        }
+
+        supla_action = action_map.get(action)
+
+        if supla_action is None:
+            raise ValueError(
+                f"Unsupported awning action: {action}"
+            )
+
+        self._oauth_service.execute_with_token_refresh(
+            self._client().execute_channel_action,
+            channel_id,
+            supla_action,
+        )

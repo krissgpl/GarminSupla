@@ -35,6 +35,8 @@ class WatchAction(str, Enum):
     OPEN = "open"
     CLOSE = "close"
     STOP = "stop"
+    COLLAPSE = "collapse"
+    EXPAND = "expand"
 
 
 class WatchActionRequest(BaseModel):

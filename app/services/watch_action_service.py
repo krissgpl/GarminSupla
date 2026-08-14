@@ -60,6 +60,12 @@ class WatchActionService:
                 action,
             )
 
+        if item.type == "awning":
+            return self._execute_awning(
+                item,
+                action,
+            )
+
         return WatchActionResponse(
             success=False,
             message="Unsupported item type.",
@@ -141,6 +147,36 @@ class WatchActionService:
             success=True,
             message=(
                 "Roller shutter action executed: "
+                f"{action.value}."
+            ),
+            refresh_required=True,
+        )
+
+    def _execute_awning(
+        self,
+        item: WatchItem,
+        action: WatchAction,
+    ) -> WatchActionResponse:
+
+        if action not in (
+            WatchAction.COLLAPSE,
+            WatchAction.EXPAND,
+            WatchAction.STOP,
+        ):
+            return WatchActionResponse(
+                success=False,
+                message="Unsupported action.",
+            )
+
+        self._supla_service.execute_awning_action(
+            item.supla_id,
+            action.value,
+        )
+
+        return WatchActionResponse(
+            success=True,
+            message=(
+                "Awning action executed: "
                 f"{action.value}."
             ),
             refresh_required=True,

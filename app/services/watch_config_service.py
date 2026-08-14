@@ -146,7 +146,7 @@ class WatchConfigService:
 
             return True, "unknown"
 
-        if item.type == "roller_shutter":
+        if item.type in ("roller_shutter", "awning"):
             channel = channels_by_id.get(
                 item.supla_id
             )
@@ -172,9 +172,15 @@ class WatchConfigService:
                 return True, "unknown"
 
             if shut == 0:
+                if item.type == "awning":
+                    return True, "collapsed"
+
                 return True, "opened"
 
             if shut == 100:
+                if item.type == "awning":
+                    return True, "expanded"
+
                 return True, "closed"
 
             return True, f"{round(shut)}%"
