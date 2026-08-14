@@ -96,6 +96,55 @@ class GarminSuplaDelegate extends WatchUi.BehaviorDelegate {
 			return true;
 		}
 
+		if (
+			itemType != null
+			&& itemType.equals("awning")
+		) {
+
+			var menu =
+				new WatchUi.Menu2({
+					:title => "Awning"
+				});
+
+			menu.addItem(
+				new WatchUi.MenuItem(
+					"Collapse",
+					null,
+					:collapse,
+					{}
+				)
+			);
+
+			menu.addItem(
+				new WatchUi.MenuItem(
+					"Expand",
+					null,
+					:expand,
+					{}
+				)
+			);
+
+			menu.addItem(
+				new WatchUi.MenuItem(
+					"Stop",
+					null,
+					:stop,
+					{}
+				)
+			);
+
+			WatchUi.pushView(
+				menu,
+				new GarminSuplaAwningMenuDelegate(
+					_api,
+					itemId
+				),
+				WatchUi.SLIDE_IMMEDIATE
+			);
+
+			return true;
+		}
+
 		if (_view.isConfirmationRequired()) {
 
 			var confirmationText =
