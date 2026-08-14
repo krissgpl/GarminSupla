@@ -241,3 +241,27 @@ class SuplaService:
             channel_id,
             "toggle",
         )
+
+    def execute_roller_shutter_action(
+        self,
+        channel_id: int,
+        action: str,
+    ) -> None:
+        action_map = {
+            "open": "reveal",
+            "close": "shut",
+            "stop": "stop",
+        }
+
+        supla_action = action_map.get(action)
+
+        if supla_action is None:
+            raise ValueError(
+                f"Unsupported roller shutter action: {action}"
+            )
+
+        self._oauth_service.execute_with_token_refresh(
+            self._client().execute_channel_action,
+            channel_id,
+            supla_action,
+        )

@@ -657,8 +657,15 @@ async function saveWatchItems(items) {
 
     try {
 
-        await updateWatchItems(
-            updatedItems
+        const savedItems =
+            await updateWatchItems(
+                updatedItems
+            );
+
+        items.splice(
+            0,
+            items.length,
+            ...savedItems
         );
 
         status.textContent = "Saved";

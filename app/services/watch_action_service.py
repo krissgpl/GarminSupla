@@ -54,6 +54,12 @@ class WatchActionService:
                 action,
             )
 
+        if item.type == "roller_shutter":
+            return self._execute_roller_shutter(
+                item,
+                action,
+            )
+
         return WatchActionResponse(
             success=False,
             message="Unsupported item type.",
@@ -107,5 +113,35 @@ class WatchActionService:
         return WatchActionResponse(
             success=True,
             message="Channel toggled.",
+            refresh_required=True,
+        )
+
+    def _execute_roller_shutter(
+        self,
+        item: WatchItem,
+        action: WatchAction,
+    ) -> WatchActionResponse:
+
+        if action not in (
+            WatchAction.OPEN,
+            WatchAction.CLOSE,
+            WatchAction.STOP,
+        ):
+            return WatchActionResponse(
+                success=False,
+                message="Unsupported action.",
+            )
+
+        self._supla_service.execute_roller_shutter_action(
+            item.supla_id,
+            action.value,
+        )
+
+        return WatchActionResponse(
+            success=True,
+            message=(
+                "Roller shutter action executed: "
+                f"{action.value}."
+            ),
             refresh_required=True,
         )

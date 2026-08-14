@@ -146,4 +146,37 @@ class WatchConfigService:
 
             return True, "unknown"
 
+        if item.type == "roller_shutter":
+            channel = channels_by_id.get(
+                item.supla_id
+            )
+
+            if channel is None:
+                return False, "unknown"
+
+            connected = (
+                channel.get("connected") is True
+            )
+
+            if not connected:
+                return False, "unknown"
+
+            state = channel.get("state")
+
+            if not isinstance(state, dict):
+                return True, "unknown"
+
+            shut = state.get("shut")
+
+            if not isinstance(shut, (int, float)):
+                return True, "unknown"
+
+            if shut == 0:
+                return True, "opened"
+
+            if shut == 100:
+                return True, "closed"
+
+            return True, f"{round(shut)}%"
+
         return False, "unknown"

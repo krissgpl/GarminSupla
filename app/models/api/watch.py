@@ -20,13 +20,7 @@ class WatchItemConfig(BaseModel):
     status_enabled: bool = False
     confirmation_required: bool = True
     connected: bool = False
-    state: Literal[
-        "opened",
-        "closed",
-        "on",
-        "off",
-        "unknown",
-    ] = "unknown"
+    state: str = "unknown"
 
 
 class WatchConfig(BaseModel):
@@ -38,6 +32,9 @@ class WatchConfig(BaseModel):
 
 class WatchAction(str, Enum):
     TOGGLE = "toggle"
+    OPEN = "open"
+    CLOSE = "close"
+    STOP = "stop"
 
 
 class WatchActionRequest(BaseModel):
