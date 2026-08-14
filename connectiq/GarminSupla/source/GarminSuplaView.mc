@@ -334,7 +334,7 @@ class GarminSuplaView extends WatchUi.View {
 			dc.drawText(
 				width / 2,
 				height * 0.32,
-				Graphics.FONT_MEDIUM,
+				Graphics.FONT_SMALL,
 				_itemName,
 				Graphics.TEXT_JUSTIFY_CENTER
 			);
