@@ -27,7 +27,7 @@ class GarminSuplaDelegate extends WatchUi.BehaviorDelegate {
         return true;
     }
 
-	    function onSelect() as Boolean {
+	function onSelect() as Boolean {
 
         var itemId = _view.getItemId();
         var itemType = _view.getItemType();
@@ -47,28 +47,50 @@ class GarminSuplaDelegate extends WatchUi.BehaviorDelegate {
             + itemType
         );
 
-        if (_view.isConfirmationRequired()) {
+		if (_view.isConfirmationRequired()) {
 
-            var confirmation =
-                new WatchUi.Confirmation(
-                    "Open / close?"
-                );
+			var confirmationText =
+				"Execute action?";
 
-            WatchUi.pushView(
-                confirmation,
-                new GarminSuplaConfirmationDelegate(
+			if (itemType != null) {
+
+				if (itemType.equals("gate")) {
+					confirmationText =
+						"Open / close?";
+				} else if (
+					itemType.equals("light")
+					|| itemType.equals("switch")
+				) {
+					confirmationText =
+						"Turn on / off?";
+				}
+			}
+
+			var confirmation =
+				new WatchUi.Confirmation(
+					confirmationText
+				);
+
+			WatchUi.pushView(
+				confirmation,
+				new GarminSuplaConfirmationDelegate(
 					_api,
 					itemId
 				),
-                WatchUi.SLIDE_IMMEDIATE
-            );
+				WatchUi.SLIDE_IMMEDIATE
+			);
 
-            return true;
-        }
+			return true;
+		}
 
         System.println(
             "Confirmation not required"
         );
+
+		_api.executeAction(
+			itemId,
+			"toggle"
+		);
 
         return true;
     }
