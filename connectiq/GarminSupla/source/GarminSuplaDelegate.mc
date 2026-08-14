@@ -47,6 +47,55 @@ class GarminSuplaDelegate extends WatchUi.BehaviorDelegate {
             + itemType
         );
 
+		if (
+			itemType != null
+			&& itemType.equals("roller_shutter")
+		) {
+
+			var menu =
+				new WatchUi.Menu2({
+					:title => "Roller shutter"
+				});
+
+			menu.addItem(
+				new WatchUi.MenuItem(
+					"Open",
+					null,
+					:open,
+					{}
+				)
+			);
+
+			menu.addItem(
+				new WatchUi.MenuItem(
+					"Close",
+					null,
+					:close,
+					{}
+				)
+			);
+
+			menu.addItem(
+				new WatchUi.MenuItem(
+					"Stop",
+					null,
+					:stop,
+					{}
+				)
+			);
+
+			WatchUi.pushView(
+				menu,
+				new GarminSuplaRollerShutterMenuDelegate(
+					_api,
+					itemId
+				),
+				WatchUi.SLIDE_IMMEDIATE
+			);
+
+			return true;
+		}
+
 		if (_view.isConfirmationRequired()) {
 
 			var confirmationText =
