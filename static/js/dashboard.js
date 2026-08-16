@@ -174,152 +174,156 @@ function renderWatchItems(items) {
 
     const rows = items
         .map((item, index) => `
-            <div
-                class="border rounded-4 p-3 mb-3"
-                data-watch-item-index="${index}"
-            >
+            <div class="col-12 col-xl-6 col-xxl-4">
 
-                <div class="d-flex align-items-start justify-content-between gap-3">
+                <div
+                    class="border rounded-4 p-3 h-100"
+                    data-watch-item-index="${index}"
+                >
 
-                    <div class="d-flex align-items-center gap-3">
+                    <div class="d-flex flex-column flex-md-row align-items-stretch align-items-md-start justify-content-between gap-3">
 
-                        <div
-                            class="d-flex align-items-center justify-content-center flex-shrink-0"
-                            style="width: 72px; height: 48px;"
-                            data-watch-item-icon-preview
-                        >
-                            ${renderWatchItemIcon(item.icon)}
-                        </div>
+                        <div class="d-flex align-items-center gap-3">
 
-                        <div>
-                            <strong>
-                                ${item.name}
-                            </strong>
-
-                            <div class="small text-muted mt-1">
-                                Type: ${item.type}
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <div class="d-flex gap-2">
-
-                        <button
-                            type="button"
-                            class="btn btn-outline-secondary btn-sm"
-                            data-watch-item-up="${index}"
-                            ${index === 0 ? "disabled" : ""}
-                            title="Move up"
-                        >
-                            <i class="bi bi-arrow-up"></i>
-                        </button>
-
-                        <button
-                            type="button"
-                            class="btn btn-outline-secondary btn-sm"
-                            data-watch-item-down="${index}"
-                            ${
-                                index === items.length - 1
-                                    ? "disabled"
-                                    : ""
-                            }
-                            title="Move down"
-                        >
-                            <i class="bi bi-arrow-down"></i>
-                        </button>
-
-                        <button
-                            type="button"
-                            class="btn btn-outline-danger btn-sm"
-                            data-watch-item-remove="${index}"
-                        >
-                            <i class="bi bi-trash"></i>
-                            Remove
-                        </button>
-
-                    </div>
-
-                </div>
-
-                <div class="row g-3 mt-3 pt-3 border-top">
-
-                    <div class="col-12 col-md-6">
-
-                        <label
-                            class="form-label small fw-semibold"
-                        >
-                            Icon
-                        </label>
-
-                        <select
-                            class="form-select form-select-sm"
-                            data-watch-item-icon
-                        >
-                            ${getWatchItemIconOptions(
-                                item.icon
-                            )}
-                       </select>
-
-                    </div>
-
-                    <div class="col-12 col-md-6">
-
-                        <div class="mb-3">
-
-                            <label
-                                class="form-label small fw-semibold d-block"
+                            <div
+                                class="d-flex align-items-center justify-content-center flex-shrink-0"
+                                style="width: 72px; height: 48px;"
+                                data-watch-item-icon-preview
                             >
-                                Visibility
-                            </label>
+                                ${renderWatchItemIcon(item.icon)}
+                            </div>
 
-                            <div class="form-check form-switch">
+                            <div>
+                                <strong>
+                                    ${item.name}
+                                </strong>
 
-                                <input
-                                    class="form-check-input"
-                                    type="checkbox"
-                                    role="switch"
-                                    data-watch-item-enabled
-                                    ${
-                                        item.enabled
-                                            ? "checked"
-                                            : ""
-                                    }
-                                >
-
-                                <label class="form-check-label small">
-                                    Show on watch
-                                </label>
-
+                                <div class="small text-muted mt-1">
+                                    Type: ${item.type}
+                                </div>
                             </div>
 
                         </div>
 
-                        <div>
+                        <div class="d-flex gap-2 justify-content-end flex-wrap">
+
+                            <button
+                                type="button"
+                                class="btn btn-outline-secondary btn-sm"
+                                data-watch-item-up="${index}"
+                                ${index === 0 ? "disabled" : ""}
+                                title="Move up"
+                            >
+                                <i class="bi bi-arrow-up"></i>
+                            </button>
+
+                            <button
+                                type="button"
+                                class="btn btn-outline-secondary btn-sm"
+                                data-watch-item-down="${index}"
+                                ${
+                                    index === items.length - 1
+                                        ? "disabled"
+                                        : ""
+                                }
+                                title="Move down"
+                            >
+                                <i class="bi bi-arrow-down"></i>
+                            </button>
+
+                            <button
+                                type="button"
+                                class="btn btn-outline-danger btn-sm"
+                                data-watch-item-remove="${index}"
+                            >
+                                <i class="bi bi-trash"></i>
+                                Remove
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                    <div class="row g-3 mt-3 pt-3 border-top">
+
+                        <div class="col-12 col-md-6">
 
                             <label
-                                class="form-label small fw-semibold d-block"
+                                class="form-label small fw-semibold"
                             >
-                                Action
+                                Icon
                             </label>
 
-                            <div class="form-check form-switch">
+                            <select
+                                class="form-select form-select-sm"
+                                data-watch-item-icon
+                            >
+                                ${getWatchItemIconOptions(
+                                    item.icon
+                                )}
+                           </select>
 
-                                <input
-                                    class="form-check-input"
-                                    type="checkbox"
-                                    role="switch"
-                                    data-watch-item-confirmation
-                                    ${
-                                        item.confirmation_required
-                                            ? "checked"
-                                            : ""
-                                    }
+                        </div>
+
+                        <div class="col-12 col-md-6">
+
+                            <div class="mb-3">
+
+                                <label
+                                    class="form-label small fw-semibold d-block"
                                 >
-
-                                <label class="form-check-label small">
-                                    Require confirmation
+                                    Visibility
                                 </label>
+
+                                <div class="form-check form-switch">
+
+                                    <input
+                                        class="form-check-input"
+                                        type="checkbox"
+                                        role="switch"
+                                        data-watch-item-enabled
+                                        ${
+                                            item.enabled
+                                                ? "checked"
+                                                : ""
+                                        }
+                                    >
+
+                                    <label class="form-check-label small">
+                                        Show on watch
+                                    </label>
+
+                                </div>
+
+                            </div>
+
+                            <div>
+
+                                <label
+                                    class="form-label small fw-semibold d-block"
+                                >
+                                    Action
+                                </label>
+
+                                <div class="form-check form-switch">
+
+                                    <input
+                                        class="form-check-input"
+                                        type="checkbox"
+                                        role="switch"
+                                        data-watch-item-confirmation
+                                        ${
+                                            item.confirmation_required
+                                                ? "checked"
+                                                : ""
+                                        }
+                                    >
+
+                                    <label class="form-check-label small">
+                                        Require confirmation
+                                    </label>
+
+                                </div>
 
                             </div>
 
@@ -342,7 +346,9 @@ function renderWatchItems(items) {
                 Watch items
             </h5>
 
-            ${rows}
+            <div class="row g-3">
+                ${rows}
+            </div>
 
             <div class="mt-3">
 

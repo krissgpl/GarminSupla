@@ -19,6 +19,15 @@
   - Sceny
   - Pozostałe urządzenia
 
+- [ ] Przebudować layout `Watch items` w dashboardzie pod różne szerokości ekranu.
+  - Desktop / laptop:
+    - wyświetlać itemy jako kafelki w responsywnej siatce,
+    - wykorzystywać całą dostępną szerokość strony,
+    - unikać jednej długiej pionowej kolumny.
+  - Telefon:
+    - pozostawić itemy w jednej pionowej kolumnie,
+    - akcje `Move up`, `Move down`, `Remove` układać tak, aby nie wychodziły poza kartę.
+
 # Watch UI
 
 - [ ] Przebudować główny UI Connect IQ w kierunku natywnego stylu Garmin/Menu2.
