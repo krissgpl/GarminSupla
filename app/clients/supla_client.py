@@ -164,6 +164,29 @@ class SuplaClient:
 
         return response.json()
 
+    def get_scenes(
+        self,
+        access_token: str,
+        include: str | None = None,
+    ) -> list[dict]:
+        params = {}
+
+        if include:
+            params["include"] = include
+
+        response = self._client.get(
+            self._url("/api/v2.4.0/scenes"),
+            headers={
+                "Authorization": f"Bearer {access_token}",
+                "Accept": "application/json",
+            },
+            params=params,
+        )
+
+        self._raise_for_status(response)
+
+        return response.json()
+
     def execute_channel_action(
         self,
         access_token: str,
@@ -186,6 +209,28 @@ class SuplaClient:
                 "Content-Type": "application/json",
             },
             json=payload,
+        )
+
+        self._raise_for_status(response)
+
+    def execute_scene_action(
+        self,
+        access_token: str,
+        scene_id: int,
+        action: str,
+    ) -> None:
+        response = self._client.patch(
+            self._url(
+                f"/api/v2.4.0/scenes/{scene_id}"
+            ),
+            headers={
+                "Authorization": f"Bearer {access_token}",
+                "Accept": "application/json",
+                "Content-Type": "application/json",
+            },
+            json={
+                "action": action,
+            },
         )
 
         self._raise_for_status(response)

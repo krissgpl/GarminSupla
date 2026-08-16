@@ -422,19 +422,19 @@ async function showAddFromSupla(items) {
         const suplaItems =
             await getAvailableSuplaItems();
 
-        const usedSuplaIds =
+        const usedSuplaItems =
             new Set(
                 items.map(
                     (item) =>
-                        item.supla_id
+                        `${item.type}:${item.supla_id}`
                 )
             );
 
         const availableItems =
             suplaItems.filter(
                 (item) =>
-                    !usedSuplaIds.has(
-                        item.supla_id
+                    !usedSuplaItems.has(
+                        `${item.type}:${item.supla_id}`
                     )
             );
 

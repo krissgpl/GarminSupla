@@ -66,6 +66,12 @@ class WatchActionService:
                 action,
             )
 
+        if item.type == "scene":
+            return self._execute_scene(
+                item,
+                action,
+            )
+
         return WatchActionResponse(
             success=False,
             message="Unsupported item type.",
@@ -179,5 +185,27 @@ class WatchActionService:
                 "Awning action executed: "
                 f"{action.value}."
             ),
+            refresh_required=True,
+        )
+
+    def _execute_scene(
+        self,
+        item: WatchItem,
+        action: WatchAction,
+    ) -> WatchActionResponse:
+
+        if action != WatchAction.TOGGLE:
+            return WatchActionResponse(
+                success=False,
+                message="Unsupported action.",
+            )
+
+        self._supla_service.execute_scene(
+            item.supla_id,
+        )
+
+        return WatchActionResponse(
+            success=True,
+            message="Scene executed.",
             refresh_required=True,
         )

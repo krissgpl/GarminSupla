@@ -36,6 +36,11 @@ class SuplaService:
             "state,connected",
         )
 
+    def get_scenes(self):
+        return self._oauth_service.execute_with_token_refresh(
+            self._client().get_scenes,
+        )
+
     def get_gate_channels(self) -> list[GateChannel]:
         channels = self.get_channels()
 
@@ -96,6 +101,7 @@ class SuplaService:
 
         channels = self.get_channels()
         iodevices = self.get_iodevices()
+        scenes = self.get_scenes()
 
         enabled_iodevice_ids = {
             device.get("id")
@@ -175,6 +181,47 @@ class SuplaService:
                     sensor_channel_id=(
                         sensor_channel_id
                     ),
+                )
+            )
+
+        for scene in scenes:
+            if scene.get("enabled") is not True:
+                continue
+
+            if scene.get("hidden") is True:
+                continue
+
+            scene_id = scene.get("id")
+
+            if not isinstance(scene_id, int):
+                continue
+
+            possible_actions = (
+                scene.get("possibleActions")
+                or []
+            )
+
+            action_names = {
+                action.get("name")
+                for action in possible_actions
+                if isinstance(action, dict)
+            }
+
+            if "EXECUTE" not in action_names:
+                continue
+
+            caption = scene.get("caption")
+
+            if not caption:
+                caption = f"Scene {scene_id}"
+
+            items.append(
+                SuplaAvailableItem(
+                    supla_id=scene_id,
+                    type="scene",
+                    name=str(caption),
+                    function="SCENE",
+                    sensor_channel_id=None,
                 )
             )
 
@@ -288,4 +335,14 @@ class SuplaService:
             self._client().execute_channel_action,
             channel_id,
             supla_action,
+        )
+
+    def execute_scene(
+        self,
+        scene_id: int,
+    ) -> None:
+        self._oauth_service.execute_with_token_refresh(
+            self._client().execute_scene_action,
+            scene_id,
+            "execute",
         )

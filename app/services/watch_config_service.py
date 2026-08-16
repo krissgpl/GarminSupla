@@ -59,10 +59,16 @@ class WatchConfigService:
         items: list[WatchItem],
     ) -> dict[str, tuple[bool, str]]:
         channels = self._supla_service.get_channels_with_state()
+        scenes = self._supla_service.get_scenes()
 
         channels_by_id = {
             channel.get("id"): channel
             for channel in channels
+        }
+
+        scenes_by_id = {
+            scene.get("id"): scene
+            for scene in scenes
         }
 
         statuses: dict[str, tuple[bool, str]] = {}
@@ -71,6 +77,7 @@ class WatchConfigService:
             statuses[item.id] = self._get_item_status(
                 item,
                 channels_by_id,
+                scenes_by_id,
             )
 
         return statuses
@@ -79,6 +86,7 @@ class WatchConfigService:
         self,
         item: WatchItem,
         channels_by_id: dict,
+        scenes_by_id: dict,
     ) -> tuple[bool, str]:
         if item.type == "gate":
             if (
@@ -184,5 +192,18 @@ class WatchConfigService:
                 return True, "closed"
 
             return True, f"{round(shut)}%"
+
+        if item.type == "scene":
+            scene = scenes_by_id.get(
+                item.supla_id
+            )
+
+            if scene is None:
+                return False, ""
+
+            if scene.get("enabled") is not True:
+                return False, ""
+
+            return True, ""
 
         return False, "unknown"

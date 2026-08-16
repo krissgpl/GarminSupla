@@ -77,6 +77,7 @@ class SuplaAvailableItem(BaseModel):
     supla_id: int
     type: Literal[
         "gate",
+        "scene",
         "light",
         "switch",
         "roller_shutter",
