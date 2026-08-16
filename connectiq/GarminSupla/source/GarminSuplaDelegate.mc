@@ -161,6 +161,9 @@ class GarminSuplaDelegate extends WatchUi.BehaviorDelegate {
 				) {
 					confirmationText =
 						"Turn on / off?";
+				} else if (itemType.equals("scene")) {
+					confirmationText =
+						"Execute scene?";
 				}
 			}
 
