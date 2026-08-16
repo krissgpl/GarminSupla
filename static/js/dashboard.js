@@ -7,6 +7,20 @@ import {
     updateWatchItems,
 } from "./api.js";
 
+let watchItemsDirty = false;
+
+function setWatchItemsDirty(dirty) {
+    watchItemsDirty = dirty;
+
+    const button =
+        document.getElementById(
+            "save-watch-items-btn"
+        );
+
+    if (button) {
+        button.disabled = !dirty;
+    }
+}
 
 function formatDate(value) {
 
@@ -165,7 +179,7 @@ function renderWatchItems(items) {
                 data-watch-item-index="${index}"
             >
 
-                <div class="d-flex align-items-start">
+                <div class="d-flex align-items-start justify-content-between gap-3">
 
                     <div class="d-flex align-items-center gap-3">
 
@@ -186,6 +200,43 @@ function renderWatchItems(items) {
                                 Type: ${item.type}
                             </div>
                         </div>
+
+                    </div>
+
+                    <div class="d-flex gap-2">
+
+                        <button
+                            type="button"
+                            class="btn btn-outline-secondary btn-sm"
+                            data-watch-item-up="${index}"
+                            ${index === 0 ? "disabled" : ""}
+                            title="Move up"
+                        >
+                            <i class="bi bi-arrow-up"></i>
+                        </button>
+
+                        <button
+                            type="button"
+                            class="btn btn-outline-secondary btn-sm"
+                            data-watch-item-down="${index}"
+                            ${
+                                index === items.length - 1
+                                    ? "disabled"
+                                    : ""
+                            }
+                            title="Move down"
+                        >
+                            <i class="bi bi-arrow-down"></i>
+                        </button>
+
+                        <button
+                            type="button"
+                            class="btn btn-outline-danger btn-sm"
+                            data-watch-item-remove="${index}"
+                        >
+                            <i class="bi bi-trash"></i>
+                            Remove
+                        </button>
 
                     </div>
 
@@ -317,6 +368,7 @@ function renderWatchItems(items) {
                     type="button"
                     class="btn btn-primary"
                     id="save-watch-items-btn"
+                    ${watchItemsDirty ? "" : "disabled"}
                 >
                     <i class="bi bi-check-lg me-1"></i>
                     Save watch configuration
@@ -346,6 +398,26 @@ function bindWatchItemEditors() {
                     "[data-watch-item-icon]"
                 );
 
+            const enabledToggle =
+                row.querySelector(
+                    "[data-watch-item-enabled]"
+                );
+
+            const confirmationToggle =
+                row.querySelector(
+                    "[data-watch-item-confirmation]"
+                );
+
+            enabledToggle.addEventListener(
+                "change",
+                () => setWatchItemsDirty(true),
+            );
+
+            confirmationToggle.addEventListener(
+                "change",
+                () => setWatchItemsDirty(true),
+            );
+
             const iconPreview =
                 row.querySelector(
                     "[data-watch-item-icon-preview]"
@@ -359,6 +431,7 @@ function bindWatchItemEditors() {
                         renderWatchItemIcon(
                             iconSelect.value
                         );
+                    setWatchItemsDirty(true);
 
                 },
             );
@@ -367,6 +440,141 @@ function bindWatchItemEditors() {
 }
 
 function bindWatchItemActions(items) {
+
+    document
+        .querySelectorAll(
+            "[data-watch-item-up]"
+        )
+        .forEach((button) => {
+
+            button.addEventListener(
+                "click",
+                () => {
+
+                    const index = Number(
+                        button.dataset.watchItemUp
+                    );
+
+                    if (
+                        !Number.isInteger(index)
+                        || index <= 0
+                        || index >= items.length
+                    ) {
+                        return;
+                    }
+
+                    [
+                        items[index - 1],
+                        items[index],
+                    ] = [
+                        items[index],
+                        items[index - 1],
+                    ];
+
+                    items.forEach(
+                        (item, itemIndex) => {
+                            item.order = itemIndex;
+                        }
+                    );
+
+                    setWatchItemsDirty(true);
+
+                    renderWatchItemsInPlace(
+                        items
+                    );
+                },
+            );
+
+        });
+
+    document
+        .querySelectorAll(
+            "[data-watch-item-down]"
+        )
+        .forEach((button) => {
+
+            button.addEventListener(
+                "click",
+                () => {
+
+                    const index = Number(
+                        button.dataset.watchItemDown
+                    );
+
+                    if (
+                        !Number.isInteger(index)
+                        || index < 0
+                        || index >= items.length - 1
+                    ) {
+                        return;
+                    }
+
+                    [
+                        items[index],
+                        items[index + 1],
+                    ] = [
+                        items[index + 1],
+                        items[index],
+                    ];
+
+                    items.forEach(
+                        (item, itemIndex) => {
+                            item.order = itemIndex;
+                        }
+                    );
+
+                    setWatchItemsDirty(true);
+
+                    renderWatchItemsInPlace(
+                        items
+                    );
+                },
+            );
+
+        });
+
+    document
+        .querySelectorAll(
+            "[data-watch-item-remove]"
+        )
+        .forEach((button) => {
+
+            button.addEventListener(
+                "click",
+                () => {
+
+                    const index = Number(
+                        button.dataset.watchItemRemove
+                    );
+
+                    if (
+                        !Number.isInteger(index)
+                        || index < 0
+                        || index >= items.length
+                    ) {
+                        return;
+                    }
+
+                    items.splice(
+                        index,
+                        1
+                    );
+
+                    items.forEach(
+                        (item, itemIndex) => {
+                            item.order = itemIndex;
+                        }
+                    );
+
+                    setWatchItemsDirty(true);
+
+                    renderWatchItemsInPlace(
+                        items
+                    );
+                },
+            );
+
+        });
 
     const addButton =
         document.getElementById(
@@ -450,12 +658,48 @@ async function showAddFromSupla(items) {
             return;
         }
 
+        const groups = [
+            {
+                label: "Gates",
+                items: availableItems.filter(
+                    (item) => item.type === "gate"
+                ),
+            },
+            {
+                label: "Scenes",
+                items: availableItems.filter(
+                    (item) => item.type === "scene"
+                ),
+            },
+            {
+                label: "Other devices",
+                items: availableItems.filter(
+                    (item) =>
+                        item.type !== "gate"
+                        && item.type !== "scene"
+                ),
+            },
+        ];
+
         const options =
-            availableItems
-                .map((item) => `
-                    <option value="${item.supla_id}">
-                        ${item.name} (${item.type})
-                    </option>
+            groups
+                .filter(
+                    (group) => group.items.length
+                )
+                .map((group) => `
+                    <optgroup label="${group.label}">
+                        ${
+                            group.items
+                                .map((item) => `
+                                    <option
+                                        value="${item.type}:${item.supla_id}"
+                                    >
+                                        ${item.name} (${item.type})
+                                    </option>
+                                `)
+                                .join("")
+                        }
+                    </optgroup>
                 `)
                 .join("");
 
@@ -534,13 +778,19 @@ function addSuplaItemLocally(
         return;
     }
 
+    const [
+        itemType,
+        suplaIdValue,
+    ] = select.value.split(":");
+
     const suplaId =
-        Number(select.value);
+        Number(suplaIdValue);
 
     const suplaItem =
         availableItems.find(
             (item) =>
-                item.supla_id === suplaId
+                item.type === itemType
+                && item.supla_id === suplaId
         );
 
     if (!suplaItem) {
@@ -563,6 +813,8 @@ function addSuplaItemLocally(
     };
 
     items.push(newItem);
+
+    setWatchItemsDirty(true);
 
     renderWatchItemsInPlace(items);
 }
@@ -668,6 +920,8 @@ async function saveWatchItems(items) {
             ...savedItems
         );
 
+        setWatchItemsDirty(false);
+
         status.textContent = "Saved";
         status.className =
             "small text-success";
@@ -686,7 +940,7 @@ async function saveWatchItems(items) {
             "small text-danger";
 
     } finally {
-        button.disabled = false;
+        button.disabled = !watchItemsDirty;
     }
 }
 
