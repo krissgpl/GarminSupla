@@ -74,7 +74,7 @@ def callback(
     )
 
     response = RedirectResponse(
-        url="/select-gate",
+        url="/dashboard",
         status_code=303,
     )
 

@@ -21,8 +21,6 @@ from app.routers.web import (
     dashboard,
     oauth,
     setup as web_setup,
-    select_gate,
-    summary,
 )
 
 app = FastAPI(
@@ -69,16 +67,6 @@ app.include_router(
 
 app.include_router(
     oauth.router,
-)
-
-app.include_router(
-    select_gate.router,
-    dependencies=[Depends(require_admin_web)],
-)
-
-app.include_router(
-    summary.router,
-    dependencies=[Depends(require_admin_web)],
 )
 
 app.include_router(

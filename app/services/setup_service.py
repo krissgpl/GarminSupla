@@ -66,7 +66,6 @@ class SetupService:
         setup_completed = bool(
             settings.supla.server
             and authorized
-            and settings.supla.selected_gate
         )
 
         return SetupStatus(

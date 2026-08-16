@@ -29,7 +29,7 @@ async def setup_page(request: Request):
             "title": "Setup",
             "version": settings.app_version,
             "step": 1,
-            "steps": 4,
+            "steps": 2,
             "form": {
                 "server": current.supla.server,
             },
@@ -73,7 +73,7 @@ async def setup_submit(
                 "title": "Setup",
                 "version": settings.app_version,
                 "step": 1,
-                "steps": 4,
+                "steps": 2,
                 "form": form_data,
                 "errors": errors,
                 "csrf_token": csrf_token,
@@ -84,7 +84,7 @@ async def setup_submit(
 
     if saved_settings.supla.access_token:
         return RedirectResponse(
-            url="/select-gate",
+            url="/dashboard",
             status_code=303,
         )
 
