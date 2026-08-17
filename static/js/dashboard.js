@@ -205,21 +205,22 @@ function renderWatchItems(items) {
 
                         </div>
 
-                        <div class="d-flex gap-2 justify-content-end flex-wrap">
+                        <div class="d-flex gap-2 justify-content-end flex-shrink-0">
 
                             <button
                                 type="button"
-                                class="btn btn-outline-secondary btn-sm"
+                                class="btn btn-outline-secondary btn-sm px-2"
                                 data-watch-item-up="${index}"
                                 ${index === 0 ? "disabled" : ""}
                                 title="Move up"
+                                aria-label="Move up"
                             >
                                 <i class="bi bi-arrow-up"></i>
                             </button>
 
                             <button
                                 type="button"
-                                class="btn btn-outline-secondary btn-sm"
+                                class="btn btn-outline-secondary btn-sm px-2"
                                 data-watch-item-down="${index}"
                                 ${
                                     index === items.length - 1
@@ -227,17 +228,19 @@ function renderWatchItems(items) {
                                         : ""
                                 }
                                 title="Move down"
+                                aria-label="Move down"
                             >
                                 <i class="bi bi-arrow-down"></i>
                             </button>
 
                             <button
                                 type="button"
-                                class="btn btn-outline-danger btn-sm"
+                                class="btn btn-outline-danger btn-sm px-2"
                                 data-watch-item-remove="${index}"
+                                title="Remove"
+                                aria-label="Remove"
                             >
                                 <i class="bi bi-trash"></i>
-                                Remove
                             </button>
 
                         </div>
@@ -372,7 +375,11 @@ function renderWatchItems(items) {
 
                 <button
                     type="button"
-                    class="btn btn-primary"
+                    class="btn ${
+                        watchItemsDirty
+                            ? "btn-primary"
+                            : "btn-secondary"
+                    }"
                     id="save-watch-items-btn"
                     ${watchItemsDirty ? "" : "disabled"}
                 >
