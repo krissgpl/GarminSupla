@@ -1,6 +1,6 @@
 # UX / Setup improvements
 
-- [ ] Przebudować kreator konfiguracji.
+- [X] Przebudować kreator konfiguracji.
   - Po autoryzacji SUPLA przechodzić bezpośrednio do dashboardu.
   - Na dashboardzie najpierw sparować / dodać Garmin Watch.
   - Następnie wybierać z aktualnej listy SUPLA itemy, które mają być dostępne na zegarku.
@@ -10,16 +10,16 @@
   - Użytkownik podaje adres serwera w ustawieniach aplikacji Connect IQ.
   - Dopiero po skonfigurowaniu serwera uruchamiane jest parowanie zegarka z GarminSupla.
 
-- [ ] Uporządkować flow ponownej autoryzacji SUPLA.
+- [X] Uporządkować flow ponownej autoryzacji SUPLA.
   - Ponowna autoryzacja nie powinna uruchamiać kreatora od początku.
   - Po poprawnym OAuth wracać do dashboardu przy istniejącej konfiguracji.
 
-- [ ] Pogrupować listę `Add from SUPLA` według typu urządzenia.
+- [X] Pogrupować listę `Add from SUPLA` według typu urządzenia.
   - Bramy
   - Sceny
   - Pozostałe urządzenia
 
-- [ ] Przebudować layout `Watch items` w dashboardzie pod różne szerokości ekranu.
+- [X] Przebudować layout `Watch items` w dashboardzie pod różne szerokości ekranu.
   - Desktop / laptop:
     - wyświetlać itemy jako kafelki w responsywnej siatce,
     - wykorzystywać całą dostępną szerokość strony,
@@ -31,7 +31,18 @@
 # Watch UI
 
 - [ ] Przebudować główny UI Connect IQ w kierunku natywnego stylu Garmin/Menu2.
-- [ ] Dodać ikony dla typów itemów i ich stanów.
+- [ ] Przygotować spójny zestaw ikon dla typów itemów.
+  - Dodać dedykowane ikony dla obsługiwanych typów, m.in.:
+    - brama,
+    - światło,
+    - przełącznik,
+    - roleta,
+    - markiza,
+    - scena.
+  - Używać analogicznych ikon w aplikacji Connect IQ i dashboardzie.
+  - W dashboardzie po wyborze ikony pokazywać dokładny odpowiednik używany na zegarku.
+  - Uwzględnić czytelność ikon na małym ekranie oraz ograniczenia urządzeń Connect IQ.
+  - Zachować ikonę `default` jako fallback dla nieobsługiwanych lub przyszłych typów.
 
 # SUPLA
 
