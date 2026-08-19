@@ -6,6 +6,7 @@ import Toybox.WatchUi;
 class GarminSuplaView extends WatchUi.View {
 
     private var _pairingCode = null;
+	private var _serverNotConfigured = false;
     private var _status = "Connecting...";
 	private var _itemId = null;
 	private var _itemType = null;
@@ -50,6 +51,14 @@ class GarminSuplaView extends WatchUi.View {
 
         WatchUi.requestUpdate();
     }
+
+	function setServerNotConfigured() as Void {
+		_pairingCode = null;
+		_serverNotConfigured = true;
+		_status = "Garmin Connect";
+
+		WatchUi.requestUpdate();
+	}
 
     function onLayout(dc as Dc) as Void {
     }
@@ -414,7 +423,9 @@ class GarminSuplaView extends WatchUi.View {
 			width / 2,
 			height * 0.30,
 			Graphics.FONT_SMALL,
-			"Pair your watch",
+			_serverNotConfigured
+				? "Configure server"
+				: "Pair your watch",
 			Graphics.TEXT_JUSTIFY_CENTER
 		);
 

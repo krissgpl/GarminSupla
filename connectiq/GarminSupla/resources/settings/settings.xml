@@ -1,0 +1,12 @@
+<settings>
+    <setting
+        propertyKey="@Properties.serverUrl"
+        title="@Strings.ServerUrlTitle"
+        prompt="@Strings.ServerUrlPrompt"
+    >
+        <settingConfig
+            type="url"
+            required="true"
+        />
+    </setting>
+</settings>

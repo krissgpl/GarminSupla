@@ -13,12 +13,10 @@ typedef WebResponseData as
 
 class GarminSuplaApi {
 
-    private const BASE_URL =
-        "https://garmin.krissg.ovh/api/v1";
-
     private const POLL_INTERVAL_MS = 3000;
 	private const CONFIG_REFRESH_INTERVAL_MS = 5000;
 
+	private var _baseUrl;
     private var _view;
     private var _pairingId = null;
     private var _pollTimer;
@@ -27,13 +25,63 @@ class GarminSuplaApi {
 	private var _configTimer;
 	private var _configInProgress = false;
 
+	function reloadServerUrl() as Void {
+
+		var serverUrl =
+			Application.Properties.getValue(
+				"serverUrl"
+			);
+
+		if (serverUrl == null) {
+			_baseUrl = null;
+			return;
+		}
+
+		var value =
+			serverUrl.toString();
+
+		while (
+			value.length() > 0
+			&& value.substring(
+				value.length() - 1,
+				value.length()
+			).equals("/")
+		) {
+			value =
+				value.substring(
+					0,
+					value.length() - 1
+				);
+		}
+
+		if (value.length() == 0) {
+			_baseUrl = null;
+		} else {
+			_baseUrl =
+				value + "/api/v1";
+		}
+	}
+
     function initialize(view) {
         _view = view;
+
+		reloadServerUrl();
+
         _pollTimer = new Timer.Timer();
 		_configTimer = new Timer.Timer();
     }
 
 	function start() as Void {
+
+		if (_baseUrl == null) {
+			System.println(
+				"GarminSupla server URL not configured"
+			);
+
+			_view.setServerNotConfigured();
+
+			return;
+		}
 
 		var token =
 			Application.Storage.getValue(
@@ -62,7 +110,7 @@ class GarminSuplaApi {
 	function verifyWatch(token as Lang.String) as Void {
 
 		var url =
-			BASE_URL + "/watch/me";
+			_baseUrl + "/watch/me";
 
 		var options = {
 			:method =>
@@ -107,7 +155,7 @@ class GarminSuplaApi {
 		}
 
 		var url =
-			BASE_URL + "/watch/config";
+			_baseUrl + "/watch/config";
 
 		var options = {
 			:method =>
@@ -306,7 +354,7 @@ class GarminSuplaApi {
 
 		stopConfigPolling();
 
-        var url = BASE_URL + "/watch/pair";
+        var url = _baseUrl + "/watch/pair";
 
         var options = {
             :method =>
@@ -423,7 +471,7 @@ class GarminSuplaApi {
         _pollInProgress = true;
 
         var url =
-            BASE_URL
+            _baseUrl
             + "/watch/pair/"
             + _pairingId;
 
@@ -455,7 +503,7 @@ class GarminSuplaApi {
 		}
 
 		var url =
-			BASE_URL
+			_baseUrl
 			+ "/watch/pair/"
 			+ _pairingId
 			+ "/consume";
@@ -633,7 +681,7 @@ class GarminSuplaApi {
         }
 
         var url =
-            BASE_URL + "/watch/action";
+            _baseUrl + "/watch/action";
 
         var params = {
             "item_id" => itemId,
