@@ -580,6 +580,10 @@ class GarminSuplaApi {
 
 				_pairingId = null;
 
+				_view.setAuthenticated();
+
+				loadConfig();
+
 				return;
 			}
 		}
