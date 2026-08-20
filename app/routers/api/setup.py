@@ -146,3 +146,16 @@ def get_available_supla_items() -> list[SuplaAvailableItem]:
     """Return currently available executable SUPLA items."""
 
     return setup_service.get_available_supla_items()
+
+@router.post(
+    "/watch/reset",
+    status_code=status.HTTP_204_NO_CONTENT,
+)
+def reset_watch_pairing(
+    admin: AdminAccount = Depends(
+        require_admin_csrf
+    ),
+) -> None:
+    """Invalidate the currently paired Garmin watch."""
+
+    setup_service.reset_watch_pairing()

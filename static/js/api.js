@@ -142,3 +142,14 @@ export async function getAvailableSuplaItems() {
     );
 
 }
+
+export async function resetWatchPairing() {
+
+    return apiRequest(
+        "/api/v1/setup/watch/reset",
+        {
+            method: "POST",
+        },
+    );
+
+}

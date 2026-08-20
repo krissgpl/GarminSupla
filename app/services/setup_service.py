@@ -96,6 +96,15 @@ class SetupService:
             last_seen_at=watch.last_seen_at,
         )
 
+    def reset_watch_pairing(self) -> None:
+        """Invalidate the currently paired Garmin watch."""
+
+        settings = self._store.load()
+
+        settings.watch = None
+
+        self._store.save(settings)
+
     def save_selected_gate(
         self,
         channel_id: int,

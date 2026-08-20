@@ -4,6 +4,7 @@ import {
     getAvailableSuplaItems,
     getWatchItems,
     getWatchStatus,
+    resetWatchPairing,
     updateWatchItems,
 } from "./api.js";
 
@@ -1056,18 +1057,32 @@ function renderWatch(
 
         <div class="border-top pt-3 mt-2">
 
-            <button
-                type="button"
-                class="btn btn-outline-primary"
-                id="replace-watch-btn"
-            >
-                <i class="bi bi-arrow-repeat me-2"></i>
-                Replace Watch
-            </button>
+            <div class="d-flex flex-wrap gap-2">
+
+                <button
+                    type="button"
+                    class="btn btn-outline-primary"
+                    id="replace-watch-btn"
+                >
+                    <i class="bi bi-arrow-repeat me-2"></i>
+                    Replace Watch
+                </button>
+
+                <button
+                    type="button"
+                    class="btn btn-outline-danger"
+                    id="reset-watch-pairing-btn"
+                >
+                    <i class="bi bi-link-45deg me-2"></i>
+                    Re-pair current watch
+                </button>
+
+            </div>
 
             <p class="small text-muted mt-2 mb-0">
-                Your current watch will remain active
+                Replace Watch keeps the current watch active
                 until the new watch completes pairing.
+                Re-pair invalidates the current watch token immediately.
             </p>
 
         </div>
@@ -1080,9 +1095,56 @@ function renderWatch(
             renderPairingForm,
         );
 
+    document
+        .getElementById("reset-watch-pairing-btn")
+        .addEventListener(
+            "click",
+            handleWatchRePair,
+        );
+
     bindWatchItemEditors();
     bindWatchItemActions(items);
 
+}
+
+async function handleWatchRePair() {
+
+    const confirmed = window.confirm(
+        "Re-pair the current watch?\n\n"
+        + "The current watch token will be invalidated. "
+        + "The watch will need to pair again."
+    );
+
+    if (!confirmed) {
+        return;
+    }
+
+    const button =
+        document.getElementById(
+            "reset-watch-pairing-btn"
+        );
+
+    if (button) {
+        button.disabled = true;
+    }
+
+    try {
+
+        await resetWatchPairing();
+
+        renderPairingForm();
+
+    } catch (error) {
+
+        if (error instanceof ApiError) {
+            showError(error.message);
+        } else {
+            showError(
+                "Unable to reset watch pairing."
+            );
+        }
+
+    }
 }
 
 function renderPairingForm() {
@@ -1238,6 +1300,57 @@ function renderPairingApproved() {
 
         </div>
     `;
+
+    waitForWatchPairingCompletion();
+}
+
+async function waitForWatchPairingCompletion() {
+
+    const maxAttempts = 30;
+    const delayMs = 2000;
+
+    for (
+        let attempt = 0;
+        attempt < maxAttempts;
+        attempt += 1
+    ) {
+
+        await new Promise(
+            (resolve) =>
+                setTimeout(
+                    resolve,
+                    delayMs,
+                ),
+        );
+
+        try {
+
+            const watch =
+                await getWatchStatus();
+
+            if (!watch.configured) {
+                continue;
+            }
+
+            const items =
+                await getWatchItems();
+
+            renderWatch(
+                watch,
+                items,
+            );
+
+            return;
+
+        } catch (error) {
+
+            console.error(
+                "Unable to check pairing status:",
+                error,
+            );
+
+        }
+    }
 }
 
 function showError(message) {

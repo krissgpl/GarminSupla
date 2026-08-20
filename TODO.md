@@ -28,6 +28,26 @@
     - pozostawić itemy w jednej pionowej kolumnie,
     - akcje `Move up`, `Move down`, `Remove` układać tak, aby nie wychodziły poza kartę.
 
+- [ ] Dodać obsługę wielu zegarków Garmin.
+  - Zmienić model pojedynczego `watch` na kolekcję sparowanych zegarków.
+  - Każdy zegarek powinien mieć własne:
+    - `id`,
+    - token,
+    - nazwę,
+    - status `enabled`,
+    - `created_at`,
+    - `last_seen_at`,
+    - niezależną listę `Watch items`.
+  - Każdy zegarek powinien mieć osobne:
+    - parowanie,
+    - ponowne parowanie,
+    - usunięcie / unieważnienie,
+    - konfigurację kolejności, ikon i confirmation dla itemów.
+  - Dodać możliwość skopiowania konfiguracji `Watch items`:
+    - z istniejącego zegarka do nowego,
+    - opcjonalnie między już sparowanymi zegarkami.
+  - Dashboard powinien wyświetlać osobne kafelki / sekcje dla każdego zegarka.
+
 # Watch UI
 
 - [ ] Przebudować główny UI Connect IQ w kierunku natywnego stylu Garmin/Menu2.
