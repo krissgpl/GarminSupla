@@ -26,6 +26,7 @@ class GarminSuplaView extends WatchUi.View {
     }
 
     function setPairingCode(code) as Void {
+		_serverNotConfigured = false;
         _pairingCode = code;
         _status = "Waiting for pairing";
 
@@ -419,10 +420,13 @@ class GarminSuplaView extends WatchUi.View {
 			return;
 		}
 
+		var pairingTitleY =
+			(height * 0.26).toNumber();
+
 		dc.drawText(
 			width / 2,
-			height * 0.30,
-			Graphics.FONT_SMALL,
+			pairingTitleY,
+			Graphics.FONT_TINY,
 			_serverNotConfigured
 				? "Configure server"
 				: "Pair your watch",
@@ -431,39 +435,61 @@ class GarminSuplaView extends WatchUi.View {
 
 		if (_pairingCode != null) {
 
+			var codeY =
+				pairingTitleY
+				+ dc.getFontHeight(
+					Graphics.FONT_TINY
+				)
+				+ 10;
+
 			dc.drawText(
 				width / 2,
-				height * 0.40,
-				Graphics.FONT_LARGE,
+				codeY,
+				Graphics.FONT_MEDIUM,
 				_pairingCode,
 				Graphics.TEXT_JUSTIFY_CENTER
 			);
 
+			var instructionY =
+				codeY
+				+ dc.getFontHeight(
+					Graphics.FONT_MEDIUM
+				)
+				+ 10;
+
 			dc.drawText(
 				width / 2,
-				height * 0.55,
+				instructionY,
 				Graphics.FONT_TINY,
 				"Enter this code",
 				Graphics.TEXT_JUSTIFY_CENTER
 			);
 
+			instructionY +=
+				dc.getFontHeight(
+					Graphics.FONT_TINY
+				);
+
 			dc.drawText(
 				width / 2,
-				height * 0.62,
+				instructionY,
 				Graphics.FONT_TINY,
 				"in GarminSupla",
 				Graphics.TEXT_JUSTIFY_CENTER
 			);
 		}
 
+		var statusY =
+				(height * 0.76).toNumber();
+
 		dc.drawText(
 			width / 2,
-			height * 0.72,
+			statusY,
 			Graphics.FONT_TINY,
 			_status,
 			Graphics.TEXT_JUSTIFY_CENTER
 		);
-    }
+	}
 
     function onHide() as Void {
     }
