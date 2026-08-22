@@ -47,6 +47,7 @@ class WatchItemUpdate(BaseModel):
         "garage_gate",
         "sliding_gate",
         "double_swing_gate",
+        "light",
     ] = "default"
     supla_id: int
     order: int = 0
@@ -55,6 +56,40 @@ class WatchItemUpdate(BaseModel):
     sensor_channel_id: int | None = None
     enabled: bool = True
 
+    @model_validator(mode="after")
+    def validate_icon_for_type(self):
+        allowed_icons = {
+            "gate": {
+                "default",
+                "garage_gate",
+                "sliding_gate",
+                "double_swing_gate",
+            },
+            "light": {
+                "default",
+                "light",
+            },
+            "switch": {
+                "default",
+            },
+            "scene": {
+                "default",
+            },
+            "roller_shutter": {
+                "default",
+            },
+            "awning": {
+                "default",
+            },
+        }
+
+        if self.icon not in allowed_icons[self.type]:
+            raise ValueError(
+                f'Icon "{self.icon}" is not allowed '
+                f'for item type "{self.type}".'
+            )
+
+        return self
 
 class WatchItemsUpdateRequest(BaseModel):
     items: list[WatchItemUpdate]

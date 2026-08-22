@@ -122,6 +122,50 @@ function renderWatchItemIcon(icon) {
         `;
     }
 
+    if (icon === "light") {
+        return `
+            <svg
+                width="64"
+                height="40"
+                viewBox="0 0 64 40"
+                role="img"
+                aria-label="Light"
+                class="text-body"
+            >
+                <g
+                    transform="translate(0 3)"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                >
+                    <!-- bulb -->
+                    <path
+                        d="
+                            M24 19
+                            C20 16 19 13 19 10
+                            C19 3 24 -1 32 -1
+                            C40 -1 45 3 45 10
+                            C45 13 44 16 40 19
+                            C38 21 37 23 37 26
+                            L27 26
+                            C27 23 26 21 24 19
+                        "
+                    />
+
+                    <!-- filament -->
+                    <path d="M28 13 L32 19 L36 13" />
+
+                    <!-- base -->
+                    <line x1="27" y1="29" x2="37" y2="29" />
+                    <line x1="28" y1="32" x2="36" y2="32" />
+                    <line x1="30" y1="35" x2="34" y2="35" />
+                </g>
+            </svg>
+        `;
+    }
+
     return `
         <i
             class="bi bi-square fs-2 text-muted"
@@ -130,13 +174,45 @@ function renderWatchItemIcon(icon) {
     `;
 }
 
-function getWatchItemIconOptions(selectedIcon) {
+function getWatchItemIconOptions(
+    itemType,
+    selectedIcon,
+) {
 
-    const icons = [
-        ["default", "Default"],
-        ["sliding_gate", "Sliding gate"],
-        ["double_swing_gate", "Double swing gate"],
-    ];
+    const iconsByType = {
+        gate: [
+            ["default", "Default"],
+            ["sliding_gate", "Sliding gate"],
+            ["double_swing_gate", "Double swing gate"],
+        ],
+
+        light: [
+            ["default", "Default"],
+            ["light", "Light"],
+        ],
+
+        switch: [
+            ["default", "Default"],
+        ],
+
+        scene: [
+            ["default", "Default"],
+        ],
+
+        roller_shutter: [
+            ["default", "Default"],
+        ],
+
+        awning: [
+            ["default", "Default"],
+        ],
+    };
+
+    const icons =
+        iconsByType[itemType]
+        ?? [
+            ["default", "Default"],
+        ];
 
     return icons
         .map(([value, label]) => `
@@ -263,6 +339,7 @@ function renderWatchItems(items) {
                                 data-watch-item-icon
                             >
                                 ${getWatchItemIconOptions(
+                                    item.type,
                                     item.icon
                                 )}
                            </select>

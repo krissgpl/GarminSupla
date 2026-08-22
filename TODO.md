@@ -6,7 +6,7 @@
   - Następnie wybierać z aktualnej listy SUPLA itemy, które mają być dostępne na zegarku.
   - Usunąć obowiązkowy etap osobnego wyboru bramy z kreatora.
 
-- [ ] Dodać konfigurację serwera GarminSupla z poziomu Garmin Connect / telefonu.
+- [X] Dodać konfigurację serwera GarminSupla z poziomu Garmin Connect / telefonu.
   - Użytkownik podaje adres serwera w ustawieniach aplikacji Connect IQ.
   - Dopiero po skonfigurowaniu serwera uruchamiane jest parowanie zegarka z GarminSupla.
 
@@ -48,6 +48,17 @@
     - opcjonalnie między już sparowanymi zegarkami.
   - Dashboard powinien wyświetlać osobne kafelki / sekcje dla każdego zegarka.
 
+- [ ] Przygotować wspólną ikonę / logo GarminSupla.
+  - Używać tego samego motywu graficznego w:
+    - aplikacji Garmin Connect IQ,
+    - launcherze aplikacji na zegarku,
+    - dashboardzie WWW,
+    - faviconie strony.
+  - Przygotować warianty odpowiednie dla różnych rozmiarów i rozdzielczości.
+  - Przygotować wersję czytelną na jasnym i ciemnym tle.
+  - Dla Connect IQ przygotować launcher icon zgodną z wymaganiami obsługiwanych urządzeń, bez skalowania obecnej ikony 24×24.
+  - Zachować jeden spójny motyw GarminSupla jako źródło dla wszystkich wariantów ikon.
+
 # Watch UI
 
 - [ ] Przebudować główny UI Connect IQ w kierunku natywnego stylu Garmin/Menu2.
@@ -63,6 +74,13 @@
   - W dashboardzie po wyborze ikony pokazywać dokładny odpowiednik używany na zegarku.
   - Uwzględnić czytelność ikon na małym ekranie oraz ograniczenia urządzeń Connect IQ.
   - Zachować ikonę `default` jako fallback dla nieobsługiwanych lub przyszłych typów.
+
+ - Wykorzystać możliwości ekranów AMOLED/OLED:
+    - przygotować kolorowe grafiki ikon,
+    - preferować czarne tło i wysoki kontrast,
+    - wykorzystywać kolor do prezentacji typu i stanu urządzenia,
+    - przygotować różne warianty grafiki zależnie od stanu, np. ON/OFF, OPENED/CLOSED, ONLINE/OFFLINE,
+    - zachować czytelność oraz rozsądne zużycie energii na ekranach AMOLED.
 
 # SUPLA
 
