@@ -55,4 +55,28 @@
         dithering="none"
     />
 
+    <bitmap
+        id="LightOn"
+        filename="light_on.png"
+        dithering="none"
+    />
+
+    <bitmap
+        id="LightOff"
+        filename="light_off.png"
+        dithering="none"
+    />
+
+    <bitmap
+        id="LightUnknown"
+        filename="light_unknown.png"
+        dithering="none"
+    />
+
+    <bitmap
+        id="LightOffline"
+        filename="light_offline.png"
+        dithering="none"
+    />
+
 </drawables>

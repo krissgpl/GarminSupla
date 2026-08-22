@@ -779,6 +779,8 @@ class GarminSuplaApi {
                     "Watch action succeeded"
                 );
 
+				_view.applyToggleState();
+
 				_view.setActionSuccess();
 
 				loadConfig();

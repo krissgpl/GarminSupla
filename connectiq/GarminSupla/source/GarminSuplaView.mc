@@ -28,6 +28,10 @@ class GarminSuplaView extends WatchUi.View {
 	private var _slidingGateOpenedBitmap = null;
 	private var _slidingGateUnknownBitmap = null;
 	private var _slidingGateOfflineBitmap = null;
+	private var _lightOnBitmap = null;
+	private var _lightOffBitmap = null;
+	private var _lightUnknownBitmap = null;
+	private var _lightOfflineBitmap = null;
 
 	function initialize() {
 		View.initialize();
@@ -72,6 +76,26 @@ class GarminSuplaView extends WatchUi.View {
 		_slidingGateOfflineBitmap =
 			Application.loadResource(
 				Rez.Drawables.SlidingGateOffline
+			);
+
+		_lightOnBitmap =
+			Application.loadResource(
+				Rez.Drawables.LightOn
+			);
+
+		_lightOffBitmap =
+			Application.loadResource(
+				Rez.Drawables.LightOff
+			);
+
+		_lightUnknownBitmap =
+			Application.loadResource(
+				Rez.Drawables.LightUnknown
+			);
+
+		_lightOfflineBitmap =
+			Application.loadResource(
+				Rez.Drawables.LightOffline
 			);
 
 	}
@@ -188,7 +212,7 @@ class GarminSuplaView extends WatchUi.View {
 			// Online / Offline
 			dc.drawText(
 				width / 2,
-				height * 0.47,
+				height * 0.44,
 				Graphics.FONT_SMALL,
 				_itemConnected
 					? "Online"
@@ -199,7 +223,7 @@ class GarminSuplaView extends WatchUi.View {
 			// CLOSED / OPENED / UNKNOWN
 			dc.drawText(
 				width / 2,
-				height * 0.57,
+				height * 0.54,
 				Graphics.FONT_MEDIUM,
 				_itemState.toUpper(),
 				Graphics.TEXT_JUSTIFY_CENTER
@@ -309,11 +333,63 @@ class GarminSuplaView extends WatchUi.View {
 				}
 			}
 
+			if (
+				_itemType != null
+				&& _itemType.equals("light")
+			) {
+
+				var lightBitmap = null;
+
+				if (
+					!_itemConnected
+					&& _lightOfflineBitmap != null
+				) {
+					lightBitmap =
+						_lightOfflineBitmap;
+
+				} else if (
+					_itemState.equals("on")
+					&& _lightOnBitmap != null
+				) {
+					lightBitmap =
+						_lightOnBitmap;
+
+				} else if (
+					_itemState.equals("off")
+					&& _lightOffBitmap != null
+				) {
+					lightBitmap =
+						_lightOffBitmap;
+
+				} else if (
+					_lightUnknownBitmap != null
+				) {
+					lightBitmap =
+						_lightUnknownBitmap;
+				}
+
+				if (lightBitmap != null) {
+
+					var bitmapWidth =
+						lightBitmap.getWidth();
+
+					var bitmapHeight =
+						lightBitmap.getHeight();
+
+					dc.drawBitmap(
+						(width - bitmapWidth) / 2,
+						(height * 0.76).toNumber()
+							- (bitmapHeight / 2),
+						lightBitmap
+					);
+				}
+			}
+
 			// 1/2, 2/2...
 			dc.drawText(
 				width / 2,
-				height * 0.82,
-				Graphics.FONT_SMALL,
+				height * 0.85,
+				Graphics.FONT_XTINY,
 				getItemPositionText(),
 				Graphics.TEXT_JUSTIFY_CENTER
 			);
@@ -551,6 +627,26 @@ class GarminSuplaView extends WatchUi.View {
 		_status = "Configure GarminSupla";
 
 		WatchUi.requestUpdate();
+	}
+
+	function applyToggleState() as Void {
+
+		if (
+			_itemType != null
+			&& (
+				_itemType.equals("light")
+				|| _itemType.equals("switch")
+			)
+		) {
+
+			if (_itemState.equals("on")) {
+				_itemState = "off";
+			} else if (_itemState.equals("off")) {
+				_itemState = "on";
+			}
+
+			WatchUi.requestUpdate();
+		}
 	}
 
 	function resetActionStatus() as Void {
