@@ -32,6 +32,10 @@ class GarminSuplaView extends WatchUi.View {
 	private var _lightOffBitmap = null;
 	private var _lightUnknownBitmap = null;
 	private var _lightOfflineBitmap = null;
+	private var _switchOnBitmap = null;
+	private var _switchOffBitmap = null;
+	private var _switchUnknownBitmap = null;
+	private var _switchOfflineBitmap = null;
 
 	function initialize() {
 		View.initialize();
@@ -96,6 +100,26 @@ class GarminSuplaView extends WatchUi.View {
 		_lightOfflineBitmap =
 			Application.loadResource(
 				Rez.Drawables.LightOffline
+			);
+
+		_switchOnBitmap =
+			Application.loadResource(
+				Rez.Drawables.SwitchOn
+			);
+
+		_switchOffBitmap =
+			Application.loadResource(
+				Rez.Drawables.SwitchOff
+			);
+
+		_switchUnknownBitmap =
+			Application.loadResource(
+				Rez.Drawables.SwitchUnknown
+			);
+
+		_switchOfflineBitmap =
+			Application.loadResource(
+				Rez.Drawables.SwitchOffline
 			);
 
 	}
@@ -381,6 +405,58 @@ class GarminSuplaView extends WatchUi.View {
 						(height * 0.76).toNumber()
 							- (bitmapHeight / 2),
 						lightBitmap
+					);
+				}
+			}
+
+			if (
+				_itemType != null
+				&& _itemIcon.equals("switch")
+			) {
+
+				var switchBitmap = null;
+
+				if (
+					!_itemConnected
+					&& _switchOfflineBitmap != null
+				) {
+					switchBitmap =
+						_switchOfflineBitmap;
+
+				} else if (
+					_itemState.equals("on")
+					&& _switchOnBitmap != null
+				) {
+					switchBitmap =
+						_switchOnBitmap;
+
+				} else if (
+					_itemState.equals("off")
+					&& _switchOffBitmap != null
+				) {
+					switchBitmap =
+						_switchOffBitmap;
+
+				} else if (
+					_switchUnknownBitmap != null
+				) {
+					switchBitmap =
+						_switchUnknownBitmap;
+				}
+
+				if (switchBitmap != null) {
+
+					var bitmapWidth =
+						switchBitmap.getWidth();
+
+					var bitmapHeight =
+						switchBitmap.getHeight();
+
+					dc.drawBitmap(
+						(width - bitmapWidth) / 2,
+						(height * 0.76).toNumber()
+							- (bitmapHeight / 2),
+						switchBitmap
 					);
 				}
 			}

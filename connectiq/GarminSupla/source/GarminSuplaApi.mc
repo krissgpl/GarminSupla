@@ -24,6 +24,7 @@ class GarminSuplaApi {
 
 	private var _configTimer;
 	private var _configInProgress = false;
+	private var _ignoreNextConfigResponse = false;
 
 	function reloadServerUrl() as Void {
 
@@ -222,6 +223,19 @@ class GarminSuplaApi {
 		);
 
 		_configInProgress = false;
+
+		if (_ignoreNextConfigResponse) {
+
+			_ignoreNextConfigResponse = false;
+
+			System.println(
+				"Ignoring stale watch config response after action"
+			);
+
+			scheduleNextConfigRefresh();
+
+			return;
+		}
 
 		if (
 			responseCode == 200
@@ -745,6 +759,15 @@ class GarminSuplaApi {
 
 		_view.setActionSending();
 
+		if (_configInProgress) {
+			System.println(
+				"Config request in progress during action; "
+				+ "next config response will be ignored"
+			);
+
+			_ignoreNextConfigResponse = true;
+		}
+
         Communications.makeWebRequest(
             url,
             params,
@@ -779,13 +802,27 @@ class GarminSuplaApi {
                     "Watch action succeeded"
                 );
 
+				var itemType =
+					_view.getItemType();
+
 				_view.applyToggleState();
 
 				_view.setActionSuccess();
 
-				loadConfig();
+				if (
+					itemType != null
+					&& (
+						itemType.equals("light")
+						|| itemType.equals("switch")
+					)
+				) {
+					scheduleNextConfigRefresh();
+				} else {
+					loadConfig();
+				}
 
-                return;
+				return;
+
             }
         }
 

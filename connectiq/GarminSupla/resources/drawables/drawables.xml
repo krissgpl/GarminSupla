@@ -79,4 +79,28 @@
         dithering="none"
     />
 
+    <bitmap
+        id="SwitchOn"
+        filename="switch_on.png"
+        dithering="none"
+    />
+
+    <bitmap
+        id="SwitchOff"
+        filename="switch_off.png"
+        dithering="none"
+    />
+
+    <bitmap
+        id="SwitchUnknown"
+        filename="switch_unknown.png"
+        dithering="none"
+    />
+
+    <bitmap
+        id="SwitchOffline"
+        filename="switch_offline.png"
+        dithering="none"
+    />
+
 </drawables>
