@@ -309,6 +309,34 @@ class GarminSuplaApi {
 		);
 	}
 
+	function scheduleVerifyRetry() as Void {
+
+		_configTimer.stop();
+
+		_configTimer.start(
+			method(:retryVerifyWatch),
+			CONFIG_REFRESH_INTERVAL_MS,
+			false
+		);
+	}
+
+	function retryVerifyWatch() as Void {
+
+		var token =
+			Application.Storage.getValue(
+				"watch_token"
+			);
+
+		if (token == null) {
+			startPairing();
+			return;
+		}
+
+		verifyWatch(
+			token.toString()
+		);
+	}
+
 	function onVerifyWatchResponse(
 		responseCode as Lang.Number,
 		data as WebResponseData
@@ -348,6 +376,9 @@ class GarminSuplaApi {
 		);
 
 		_view.setError();
+
+		scheduleVerifyRetry();
+
 	}
 
     function startPairing() as Void {

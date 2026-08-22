@@ -1,3 +1,4 @@
+import Toybox.Application;
 import Toybox.Graphics;
 import Toybox.Lang;
 import Toybox.Timer;
@@ -19,11 +20,36 @@ class GarminSuplaView extends WatchUi.View {
 	private var _itemConnected = false;
 	private var _itemState = "unknown";
 	private var _itemIcon = "default";
+	private var _doubleSwingGateClosedBitmap = null;
+	private var _doubleSwingGateOpenedBitmap = null;
+	private var _doubleSwingGateUnknownBitmap = null;
+	private var _doubleSwingGateOfflineBitmap = null;
 
-    function initialize() {
-        View.initialize();
+	function initialize() {
+		View.initialize();
+
 		_statusTimer = new Timer.Timer();
-    }
+
+		_doubleSwingGateClosedBitmap =
+			Application.loadResource(
+				Rez.Drawables.DoubleSwingGateClosed
+			);
+
+		_doubleSwingGateOpenedBitmap =
+			Application.loadResource(
+				Rez.Drawables.DoubleSwingGateOpened
+			);
+
+		_doubleSwingGateUnknownBitmap =
+			Application.loadResource(
+				Rez.Drawables.DoubleSwingGateUnknown
+			);
+
+		_doubleSwingGateOfflineBitmap =
+			Application.loadResource(
+				Rez.Drawables.DoubleSwingGateOffline
+			);
+	}
 
     function setPairingCode(code) as Void {
 		_serverNotConfigured = false;
@@ -47,11 +73,16 @@ class GarminSuplaView extends WatchUi.View {
 		WatchUi.requestUpdate();
 	}
 
-    function setError() as Void {
-        _status = "Connection error";
+	function setError() as Void {
+		_status = "Connection error";
 
-        WatchUi.requestUpdate();
-    }
+		if (_itemName != null) {
+			_itemConnected = false;
+			_itemState = "unknown";
+		}
+
+		WatchUi.requestUpdate();
+	}
 
 	function setServerNotConfigured() as Void {
 		_pairingCode = null;
@@ -198,104 +229,271 @@ class GarminSuplaView extends WatchUi.View {
 		centerY
 	) as Void {
 
+		var gateWidth = 88;
+		var gateHeight = 38;
+
+		var left =
+			centerX - (gateWidth / 2);
+
+		var right =
+			centerX + (gateWidth / 2);
+
+		var top =
+			centerY - (gateHeight / 2);
+
+		var bottom =
+			centerY + (gateHeight / 2);
+
+		var middle = centerX;
+
+		var structureColor =
+			_itemConnected
+				? Graphics.COLOR_WHITE
+				: Graphics.COLOR_DK_GRAY;
+
+		var accentColor =
+			_itemConnected
+				? Graphics.COLOR_GREEN
+				: Graphics.COLOR_DK_GRAY;
+
+		//
+		// Subtelne zielone podświetlenie pod bramą
+		//
 		dc.setColor(
-			Graphics.COLOR_WHITE,
+			accentColor,
 			Graphics.COLOR_TRANSPARENT
 		);
 
-		var gateWidth = 58;
-		var gateHeight = 26;
+		dc.drawLine(
+			left + 4,
+			bottom + 6,
+			right - 4,
+			bottom + 6
+		);
 
-		var left = centerX - (gateWidth / 2);
-		var right = centerX + (gateWidth / 2);
-		var top = centerY - (gateHeight / 2);
-		var bottom = centerY + (gateHeight / 2);
-		var middle = centerX;
+		if (_itemConnected) {
+			dc.drawLine(
+				left + 14,
+				bottom + 8,
+				right - 14,
+				bottom + 8
+			);
+		}
 
+		//
 		// Słupki
-		dc.drawLine(
-			left,
-			top - 4,
-			left,
-			bottom + 4
+		//
+		dc.setColor(
+			structureColor,
+			Graphics.COLOR_TRANSPARENT
 		);
 
-		dc.drawLine(
-			right,
-			top - 4,
-			right,
-			bottom + 4
+		dc.drawRectangle(
+			left,
+			top - 3,
+			7,
+			gateHeight + 8
 		);
 
+		dc.drawRectangle(
+			right - 7,
+			top - 3,
+			7,
+			gateHeight + 8
+		);
+
+		//
+		// Lampy na słupkach
+		//
+		dc.setColor(
+			accentColor,
+			Graphics.COLOR_TRANSPARENT
+		);
+
+		dc.fillRectangle(
+			left + 1,
+			top - 8,
+			5,
+			4
+		);
+
+		dc.fillRectangle(
+			right - 6,
+			top - 8,
+			5,
+			4
+		);
+
+		dc.setColor(
+			structureColor,
+			Graphics.COLOR_TRANSPARENT
+		);
+
+		//
+		// Brama zamknięta
+		//
 		if (_itemState.equals("closed")) {
 
-			// Lewe skrzydło
+			var leafWidth =
+				(gateWidth / 2) - 10;
+
 			dc.drawRectangle(
-				left + 4,
+				left + 8,
 				top,
-				(gateWidth / 2) - 4,
+				leafWidth,
 				gateHeight
 			);
 
-			// Prawe skrzydło
 			dc.drawRectangle(
-				middle,
+				middle + 2,
 				top,
-				(gateWidth / 2) - 4,
+				leafWidth,
 				gateHeight
 			);
+
+			//
+			// Pionowe szczeble
+			//
+			var barX = left + 16;
+
+			while (
+				barX < middle - 4
+			) {
+				dc.drawLine(
+					barX,
+					top + 3,
+					barX,
+					bottom - 3
+				);
+
+				barX += 9;
+			}
+
+			barX = middle + 10;
+
+			while (
+				barX < right - 9
+			) {
+				dc.drawLine(
+					barX,
+					top + 3,
+					barX,
+					bottom - 3
+				);
+
+				barX += 9;
+			}
 
 			return;
 		}
 
+		//
+		// Brama otwarta
+		//
 		if (_itemState.equals("opened")) {
 
-			// Lewe skrzydło otwarte
+			//
+			// Lewe skrzydło
+			//
 			dc.drawLine(
-				left + 4,
+				left + 8,
 				top,
-				middle - 10,
-				centerY
+				middle - 14,
+				centerY - 7
 			);
 
 			dc.drawLine(
-				left + 4,
+				left + 8,
 				bottom,
-				middle - 10,
-				centerY
+				middle - 14,
+				centerY + 7
 			);
 
-			// Prawe skrzydło otwarte
 			dc.drawLine(
-				right - 4,
+				middle - 14,
+				centerY - 7,
+				middle - 14,
+				centerY + 7
+			);
+
+			//
+			// Prawe skrzydło
+			//
+			dc.drawLine(
+				right - 8,
 				top,
-				middle + 10,
-				centerY
+				middle + 14,
+				centerY - 7
 			);
 
 			dc.drawLine(
-				right - 4,
+				right - 8,
 				bottom,
-				middle + 10,
-				centerY
+				middle + 14,
+				centerY + 7
+			);
+
+			dc.drawLine(
+				middle + 14,
+				centerY - 7,
+				middle + 14,
+				centerY + 7
+			);
+
+			//
+			// Szczeble otwartych skrzydeł
+			//
+			dc.drawLine(
+				left + 16,
+				top + 5,
+				middle - 14,
+				centerY - 3
+			);
+
+			dc.drawLine(
+				left + 16,
+				bottom - 5,
+				middle - 14,
+				centerY + 3
+			);
+
+			dc.drawLine(
+				right - 16,
+				top + 5,
+				middle + 14,
+				centerY - 3
+			);
+
+			dc.drawLine(
+				right - 16,
+				bottom - 5,
+				middle + 14,
+				centerY + 3
 			);
 
 			return;
 		}
 
+		//
 		// UNKNOWN
-		dc.drawLine(
-			left + 8,
-			top + 4,
-			right - 8,
-			bottom - 4
+		//
+		dc.setColor(
+			Graphics.COLOR_DK_GRAY,
+			Graphics.COLOR_TRANSPARENT
 		);
 
 		dc.drawLine(
-			right - 8,
-			top + 4,
-			left + 8,
-			bottom - 4
+			middle - 10,
+			centerY - 10,
+			middle + 10,
+			centerY + 10
+		);
+
+		dc.drawLine(
+			middle + 10,
+			centerY - 10,
+			middle - 10,
+			centerY + 10
 		);
 	}
 
@@ -384,11 +582,52 @@ class GarminSuplaView extends WatchUi.View {
 				_itemIcon != null
 				&& _itemIcon.equals("double_swing_gate")
 			) {
-				drawDoubleSwingGateIcon(
-					dc,
-					width / 2,
-					(height * 0.76).toNumber()
-				);
+
+				var gateBitmap = null;
+
+				if (
+					!_itemConnected
+					&& _doubleSwingGateOfflineBitmap != null
+				) {
+					gateBitmap =
+						_doubleSwingGateOfflineBitmap;
+
+				} else if (
+					_itemState.equals("closed")
+					&& _doubleSwingGateClosedBitmap != null
+				) {
+					gateBitmap =
+						_doubleSwingGateClosedBitmap;
+
+				} else if (
+					_itemState.equals("opened")
+					&& _doubleSwingGateOpenedBitmap != null
+				) {
+					gateBitmap =
+						_doubleSwingGateOpenedBitmap;
+
+				} else if (
+					_doubleSwingGateUnknownBitmap != null
+				) {
+					gateBitmap =
+						_doubleSwingGateUnknownBitmap;
+				}
+
+				if (gateBitmap != null) {
+
+					var bitmapWidth =
+						gateBitmap.getWidth();
+
+					var bitmapHeight =
+						gateBitmap.getHeight();
+
+					dc.drawBitmap(
+						(width - bitmapWidth) / 2,
+						(height * 0.76).toNumber()
+							- (bitmapHeight / 2),
+						gateBitmap
+					);
+				}
 			}
 
 			// 1/2, 2/2...

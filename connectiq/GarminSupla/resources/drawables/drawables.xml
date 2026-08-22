@@ -1,3 +1,34 @@
-<drawables xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://developer.garmin.com/downloads/connect-iq/resources.xsd">
-    <bitmap id="LauncherIcon" filename="launcher_icon.svg" dithering="none" />
+<drawables xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="https://developer.garmin.com/downloads/connect-iq/resources.xsd">
+
+    <bitmap
+        id="LauncherIcon"
+        filename="launcher_icon.svg"
+        dithering="none"
+    />
+
+    <bitmap
+        id="DoubleSwingGateClosed"
+        filename="double_swing_gate_closed.png"
+        dithering="none"
+    />
+
+    <bitmap
+        id="DoubleSwingGateOpened"
+        filename="double_swing_gate_opened.png"
+        dithering="none"
+    />
+
+    <bitmap
+        id="DoubleSwingGateUnknown"
+        filename="double_swing_gate_unknown.png"
+        dithering="none"
+    />
+
+    <bitmap
+        id="DoubleSwingGateOffline"
+        filename="double_swing_gate_offline.png"
+        dithering="none"
+    />
+
 </drawables>
