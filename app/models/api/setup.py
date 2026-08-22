@@ -48,6 +48,7 @@ class WatchItemUpdate(BaseModel):
         "sliding_gate",
         "double_swing_gate",
         "light",
+        "switch",
     ] = "default"
     supla_id: int
     order: int = 0
@@ -71,6 +72,7 @@ class WatchItemUpdate(BaseModel):
             },
             "switch": {
                 "default",
+                "switch",
             },
             "scene": {
                 "default",

@@ -166,6 +166,74 @@ function renderWatchItemIcon(icon) {
         `;
     }
 
+    if (icon === "switch") {
+        return `
+            <svg
+                width="64"
+                height="40"
+                viewBox="0 0 64 40"
+                role="img"
+                aria-label="Switch"
+                class="text-body"
+            >
+                <g
+                    transform="translate(0 1)"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                >
+                    <!-- square outer plate -->
+                    <rect
+                        x="21"
+                        y="3"
+                        width="22"
+                        height="32"
+                        rx="3"
+                    />
+
+                    <!-- rocker -->
+                    <rect
+                        x="26"
+                        y="8"
+                        width="12"
+                        height="21"
+                        rx="1.5"
+                    />
+
+                    <!-- ON mark -->
+                    <line
+                        x1="32"
+                        y1="11"
+                        x2="32"
+                        y2="16"
+                    />
+
+                    <!-- OFF mark -->
+                    <circle
+                        cx="32"
+                        cy="24"
+                        r="2"
+                    />
+
+                    <!-- screws -->
+                    <circle
+                        cx="24"
+                        cy="6"
+                        r="1"
+                    />
+
+                    <circle
+                        cx="40"
+                        cy="32"
+                        r="1"
+                    />
+                </g>
+            </svg>
+        `;
+    }
+
     return `
         <i
             class="bi bi-square fs-2 text-muted"
@@ -193,6 +261,7 @@ function getWatchItemIconOptions(
 
         switch: [
             ["default", "Default"],
+            ["switch", "Switch"],
         ],
 
         scene: [
