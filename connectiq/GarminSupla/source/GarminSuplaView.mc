@@ -24,6 +24,10 @@ class GarminSuplaView extends WatchUi.View {
 	private var _doubleSwingGateOpenedBitmap = null;
 	private var _doubleSwingGateUnknownBitmap = null;
 	private var _doubleSwingGateOfflineBitmap = null;
+	private var _slidingGateClosedBitmap = null;
+	private var _slidingGateOpenedBitmap = null;
+	private var _slidingGateUnknownBitmap = null;
+	private var _slidingGateOfflineBitmap = null;
 
 	function initialize() {
 		View.initialize();
@@ -49,6 +53,27 @@ class GarminSuplaView extends WatchUi.View {
 			Application.loadResource(
 				Rez.Drawables.DoubleSwingGateOffline
 			);
+
+		_slidingGateClosedBitmap =
+			Application.loadResource(
+				Rez.Drawables.SlidingGateClosed
+			);
+
+		_slidingGateOpenedBitmap =
+			Application.loadResource(
+				Rez.Drawables.SlidingGateOpened
+			);
+
+		_slidingGateUnknownBitmap =
+			Application.loadResource(
+				Rez.Drawables.SlidingGateUnknown
+			);
+
+		_slidingGateOfflineBitmap =
+			Application.loadResource(
+				Rez.Drawables.SlidingGateOffline
+			);
+
 	}
 
     function setPairingCode(code) as Void {
@@ -108,393 +133,6 @@ class GarminSuplaView extends WatchUi.View {
 			(_selectedIndex + 1).toString()
 			+ "/"
 			+ _items.size().toString();
-	}
-
-	function drawSlidingGateIcon(
-		dc as Dc,
-		centerX,
-		centerY
-	) as Void {
-
-		dc.setColor(
-			Graphics.COLOR_WHITE,
-			Graphics.COLOR_TRANSPARENT
-		);
-
-		var gateWidth = 58;
-		var gateHeight = 26;
-
-		var left = centerX - (gateWidth / 2);
-		var top = centerY - (gateHeight / 2);
-		var bottom = centerY + (gateHeight / 2);
-
-		// Słupki
-		dc.drawLine(
-			left,
-			top - 4,
-			left,
-			bottom + 4
-		);
-
-		dc.drawLine(
-			left + gateWidth,
-			top - 4,
-			left + gateWidth,
-			bottom + 4
-		);
-
-		// Prowadnica
-		dc.drawLine(
-			left - 5,
-			bottom + 4,
-			left + gateWidth + 5,
-			bottom + 4
-		);
-
-		if (_itemState.equals("closed")) {
-
-			// Skrzydło zamknięte
-			dc.drawRectangle(
-				left + 4,
-				top,
-				gateWidth - 8,
-				gateHeight
-			);
-
-			// Pionowe elementy skrzydła
-			dc.drawLine(
-				left + 17,
-				top,
-				left + 17,
-				bottom
-			);
-
-			dc.drawLine(
-				left + 29,
-				top,
-				left + 29,
-				bottom
-			);
-
-			dc.drawLine(
-				left + 41,
-				top,
-				left + 41,
-				bottom
-			);
-
-			return;
-		}
-
-		if (_itemState.equals("opened")) {
-
-			// Otwarte światło przejazdu
-			// Skrzydło odsunięte w lewo
-			dc.drawRectangle(
-				left - 16,
-				top,
-				20,
-				gateHeight
-			);
-
-			dc.drawLine(
-				left - 9,
-				top,
-				left - 9,
-				bottom
-			);
-
-			return;
-		}
-
-		// UNKNOWN
-		dc.drawLine(
-			left + 8,
-			top + 4,
-			left + gateWidth - 8,
-			bottom - 4
-		);
-
-		dc.drawLine(
-			left + gateWidth - 8,
-			top + 4,
-			left + 8,
-			bottom - 4
-		);
-	}
-
-	function drawDoubleSwingGateIcon(
-		dc as Dc,
-		centerX,
-		centerY
-	) as Void {
-
-		var gateWidth = 88;
-		var gateHeight = 38;
-
-		var left =
-			centerX - (gateWidth / 2);
-
-		var right =
-			centerX + (gateWidth / 2);
-
-		var top =
-			centerY - (gateHeight / 2);
-
-		var bottom =
-			centerY + (gateHeight / 2);
-
-		var middle = centerX;
-
-		var structureColor =
-			_itemConnected
-				? Graphics.COLOR_WHITE
-				: Graphics.COLOR_DK_GRAY;
-
-		var accentColor =
-			_itemConnected
-				? Graphics.COLOR_GREEN
-				: Graphics.COLOR_DK_GRAY;
-
-		//
-		// Subtelne zielone podświetlenie pod bramą
-		//
-		dc.setColor(
-			accentColor,
-			Graphics.COLOR_TRANSPARENT
-		);
-
-		dc.drawLine(
-			left + 4,
-			bottom + 6,
-			right - 4,
-			bottom + 6
-		);
-
-		if (_itemConnected) {
-			dc.drawLine(
-				left + 14,
-				bottom + 8,
-				right - 14,
-				bottom + 8
-			);
-		}
-
-		//
-		// Słupki
-		//
-		dc.setColor(
-			structureColor,
-			Graphics.COLOR_TRANSPARENT
-		);
-
-		dc.drawRectangle(
-			left,
-			top - 3,
-			7,
-			gateHeight + 8
-		);
-
-		dc.drawRectangle(
-			right - 7,
-			top - 3,
-			7,
-			gateHeight + 8
-		);
-
-		//
-		// Lampy na słupkach
-		//
-		dc.setColor(
-			accentColor,
-			Graphics.COLOR_TRANSPARENT
-		);
-
-		dc.fillRectangle(
-			left + 1,
-			top - 8,
-			5,
-			4
-		);
-
-		dc.fillRectangle(
-			right - 6,
-			top - 8,
-			5,
-			4
-		);
-
-		dc.setColor(
-			structureColor,
-			Graphics.COLOR_TRANSPARENT
-		);
-
-		//
-		// Brama zamknięta
-		//
-		if (_itemState.equals("closed")) {
-
-			var leafWidth =
-				(gateWidth / 2) - 10;
-
-			dc.drawRectangle(
-				left + 8,
-				top,
-				leafWidth,
-				gateHeight
-			);
-
-			dc.drawRectangle(
-				middle + 2,
-				top,
-				leafWidth,
-				gateHeight
-			);
-
-			//
-			// Pionowe szczeble
-			//
-			var barX = left + 16;
-
-			while (
-				barX < middle - 4
-			) {
-				dc.drawLine(
-					barX,
-					top + 3,
-					barX,
-					bottom - 3
-				);
-
-				barX += 9;
-			}
-
-			barX = middle + 10;
-
-			while (
-				barX < right - 9
-			) {
-				dc.drawLine(
-					barX,
-					top + 3,
-					barX,
-					bottom - 3
-				);
-
-				barX += 9;
-			}
-
-			return;
-		}
-
-		//
-		// Brama otwarta
-		//
-		if (_itemState.equals("opened")) {
-
-			//
-			// Lewe skrzydło
-			//
-			dc.drawLine(
-				left + 8,
-				top,
-				middle - 14,
-				centerY - 7
-			);
-
-			dc.drawLine(
-				left + 8,
-				bottom,
-				middle - 14,
-				centerY + 7
-			);
-
-			dc.drawLine(
-				middle - 14,
-				centerY - 7,
-				middle - 14,
-				centerY + 7
-			);
-
-			//
-			// Prawe skrzydło
-			//
-			dc.drawLine(
-				right - 8,
-				top,
-				middle + 14,
-				centerY - 7
-			);
-
-			dc.drawLine(
-				right - 8,
-				bottom,
-				middle + 14,
-				centerY + 7
-			);
-
-			dc.drawLine(
-				middle + 14,
-				centerY - 7,
-				middle + 14,
-				centerY + 7
-			);
-
-			//
-			// Szczeble otwartych skrzydeł
-			//
-			dc.drawLine(
-				left + 16,
-				top + 5,
-				middle - 14,
-				centerY - 3
-			);
-
-			dc.drawLine(
-				left + 16,
-				bottom - 5,
-				middle - 14,
-				centerY + 3
-			);
-
-			dc.drawLine(
-				right - 16,
-				top + 5,
-				middle + 14,
-				centerY - 3
-			);
-
-			dc.drawLine(
-				right - 16,
-				bottom - 5,
-				middle + 14,
-				centerY + 3
-			);
-
-			return;
-		}
-
-		//
-		// UNKNOWN
-		//
-		dc.setColor(
-			Graphics.COLOR_DK_GRAY,
-			Graphics.COLOR_TRANSPARENT
-		);
-
-		dc.drawLine(
-			middle - 10,
-			centerY - 10,
-			middle + 10,
-			centerY + 10
-		);
-
-		dc.drawLine(
-			middle + 10,
-			centerY - 10,
-			middle - 10,
-			centerY + 10
-		);
 	}
 
     function onUpdate(dc as Dc) as Void {
@@ -571,11 +209,52 @@ class GarminSuplaView extends WatchUi.View {
 				_itemIcon != null
 				&& _itemIcon.equals("sliding_gate")
 			) {
-				drawSlidingGateIcon(
-					dc,
-					width / 2,
-					(height * 0.76).toNumber()
-				);
+
+				var slidingGateBitmap = null;
+
+				if (
+					!_itemConnected
+					&& _slidingGateOfflineBitmap != null
+				) {
+					slidingGateBitmap =
+						_slidingGateOfflineBitmap;
+
+				} else if (
+					_itemState.equals("closed")
+					&& _slidingGateClosedBitmap != null
+				) {
+					slidingGateBitmap =
+						_slidingGateClosedBitmap;
+
+				} else if (
+					_itemState.equals("opened")
+					&& _slidingGateOpenedBitmap != null
+				) {
+					slidingGateBitmap =
+						_slidingGateOpenedBitmap;
+
+				} else if (
+					_slidingGateUnknownBitmap != null
+				) {
+					slidingGateBitmap =
+						_slidingGateUnknownBitmap;
+				}
+
+				if (slidingGateBitmap != null) {
+
+					var bitmapWidth =
+						slidingGateBitmap.getWidth();
+
+					var bitmapHeight =
+						slidingGateBitmap.getHeight();
+
+					dc.drawBitmap(
+						(width - bitmapWidth) / 2,
+						(height * 0.76).toNumber()
+							- (bitmapHeight / 2),
+						slidingGateBitmap
+					);
+				}
 			}
 
 			if (

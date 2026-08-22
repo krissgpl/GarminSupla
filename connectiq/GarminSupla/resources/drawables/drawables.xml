@@ -31,4 +31,28 @@
         dithering="none"
     />
 
+    <bitmap
+        id="SlidingGateClosed"
+        filename="sliding_gate_closed.png"
+        dithering="none"
+    />
+
+    <bitmap
+        id="SlidingGateOpened"
+        filename="sliding_gate_opened.png"
+        dithering="none"
+    />
+
+    <bitmap
+        id="SlidingGateUnknown"
+        filename="sliding_gate_unknown.png"
+        dithering="none"
+    />
+
+    <bitmap
+        id="SlidingGateOffline"
+        filename="sliding_gate_offline.png"
+        dithering="none"
+    />
+
 </drawables>
