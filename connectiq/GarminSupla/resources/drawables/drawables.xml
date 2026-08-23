@@ -103,4 +103,34 @@
         dithering="none"
     />
 
+    <bitmap
+        id="RollerShutterOpened"
+        filename="roller_shutter_opened.png"
+        dithering="none"
+    />
+
+    <bitmap
+        id="RollerShutterPartial"
+        filename="roller_shutter_partial.png"
+        dithering="none"
+    />
+
+    <bitmap
+        id="RollerShutterClosed"
+        filename="roller_shutter_closed.png"
+        dithering="none"
+    />
+
+    <bitmap
+        id="RollerShutterOffline"
+        filename="roller_shutter_offline.png"
+        dithering="none"
+    />
+
+    <bitmap
+        id="RollerShutterUnknown"
+        filename="roller_shutter_unknown.png"
+        dithering="none"
+    />
+
 </drawables>

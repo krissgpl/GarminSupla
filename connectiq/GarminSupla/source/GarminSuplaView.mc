@@ -36,6 +36,11 @@ class GarminSuplaView extends WatchUi.View {
 	private var _switchOffBitmap = null;
 	private var _switchUnknownBitmap = null;
 	private var _switchOfflineBitmap = null;
+	private var _rollerShutterOpenedBitmap = null;
+	private var _rollerShutterPartialBitmap = null;
+	private var _rollerShutterClosedBitmap = null;
+	private var _rollerShutterOfflineBitmap = null;
+	private var _rollerShutterUnknownBitmap = null;
 
 	function initialize() {
 		View.initialize();
@@ -120,6 +125,31 @@ class GarminSuplaView extends WatchUi.View {
 		_switchOfflineBitmap =
 			Application.loadResource(
 				Rez.Drawables.SwitchOffline
+			);
+
+		_rollerShutterOpenedBitmap =
+			Application.loadResource(
+				Rez.Drawables.RollerShutterOpened
+			);
+
+		_rollerShutterPartialBitmap =
+			Application.loadResource(
+				Rez.Drawables.RollerShutterPartial
+			);
+
+		_rollerShutterClosedBitmap =
+			Application.loadResource(
+				Rez.Drawables.RollerShutterClosed
+			);
+
+		_rollerShutterOfflineBitmap =
+			Application.loadResource(
+				Rez.Drawables.RollerShutterOffline
+			);
+
+		_rollerShutterUnknownBitmap =
+			Application.loadResource(
+				Rez.Drawables.RollerShutterUnknown
 			);
 
 	}
@@ -457,6 +487,65 @@ class GarminSuplaView extends WatchUi.View {
 						(height * 0.76).toNumber()
 							- (bitmapHeight / 2),
 						switchBitmap
+					);
+				}
+			}
+
+			if (
+				_itemType != null
+				&& _itemIcon.equals("roller_shutter")
+			) {
+
+				var rollerShutterBitmap = null;
+
+				if (
+					!_itemConnected
+					&& _rollerShutterOfflineBitmap != null
+				) {
+					rollerShutterBitmap =
+						_rollerShutterOfflineBitmap;
+
+				} else if (
+					_itemState.equals("opened")
+					&& _rollerShutterOpenedBitmap != null
+				) {
+					rollerShutterBitmap =
+						_rollerShutterOpenedBitmap;
+
+				} else if (
+					_itemState.equals("closed")
+					&& _rollerShutterClosedBitmap != null
+				) {
+					rollerShutterBitmap =
+						_rollerShutterClosedBitmap;
+
+				} else if (
+					_itemState.equals("unknown")
+					&& _rollerShutterUnknownBitmap != null
+				) {
+					rollerShutterBitmap =
+						_rollerShutterUnknownBitmap;
+
+				} else if (
+					_rollerShutterPartialBitmap != null
+				) {
+					rollerShutterBitmap =
+						_rollerShutterPartialBitmap;
+				}
+
+				if (rollerShutterBitmap != null) {
+
+					var bitmapWidth =
+						rollerShutterBitmap.getWidth();
+
+					var bitmapHeight =
+						rollerShutterBitmap.getHeight();
+
+					dc.drawBitmap(
+						(width - bitmapWidth) / 2,
+						(height * 0.76).toNumber()
+							- (bitmapHeight / 2),
+						rollerShutterBitmap
 					);
 				}
 			}
