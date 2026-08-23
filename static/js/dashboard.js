@@ -234,6 +234,55 @@ function renderWatchItemIcon(icon) {
         `;
     }
 
+    if (icon === "roller_shutter") {
+        return `
+            <svg
+                width="64"
+                height="40"
+                viewBox="0 0 64 40"
+                role="img"
+                aria-label="Roller shutter"
+                class="text-body"
+            >
+                <g
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                >
+                    <!-- frame -->
+                    <rect
+                        x="18"
+                        y="4"
+                        width="28"
+                        height="31"
+                        rx="2"
+                    />
+
+                    <!-- top housing -->
+                    <rect
+                        x="20"
+                        y="6"
+                        width="24"
+                        height="5"
+                        rx="1"
+                    />
+
+                    <!-- shutter slats -->
+                    <line x1="21" y1="14" x2="43" y2="14" />
+                    <line x1="21" y1="18" x2="43" y2="18" />
+                    <line x1="21" y1="22" x2="43" y2="22" />
+                    <line x1="21" y1="26" x2="43" y2="26" />
+                    <line x1="21" y1="30" x2="43" y2="30" />
+
+                    <!-- bottom handle -->
+                    <line x1="29" y1="32" x2="35" y2="32" />
+                </g>
+            </svg>
+        `;
+    }
+
     return `
         <i
             class="bi bi-square fs-2 text-muted"
@@ -270,6 +319,7 @@ function getWatchItemIconOptions(
 
         roller_shutter: [
             ["default", "Default"],
+            ["roller_shutter", "Roller shutter"],
         ],
 
         awning: [

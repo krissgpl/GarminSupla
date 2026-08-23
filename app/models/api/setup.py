@@ -49,6 +49,7 @@ class WatchItemUpdate(BaseModel):
         "double_swing_gate",
         "light",
         "switch",
+        "roller_shutter",
     ] = "default"
     supla_id: int
     order: int = 0
@@ -79,6 +80,7 @@ class WatchItemUpdate(BaseModel):
             },
             "roller_shutter": {
                 "default",
+                "roller_shutter",
             },
             "awning": {
                 "default",
