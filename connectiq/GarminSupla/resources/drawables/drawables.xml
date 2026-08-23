@@ -163,4 +163,28 @@
         dithering="none"
     />
 
+	<bitmap
+		id="GarageGateClosed"
+		filename="garage_gate_closed.png"
+		dithering="none"
+	/>
+
+	<bitmap
+		id="GarageGateOpened"
+		filename="garage_gate_opened.png"
+		dithering="none"
+	/>
+
+	<bitmap
+		id="GarageGateOffline"
+		filename="garage_gate_offline.png"
+		dithering="none"
+	/>
+
+	<bitmap
+		id="GarageGateUnknown"
+		filename="garage_gate_unknown.png"
+		dithering="none"
+	/>
+
 </drawables>

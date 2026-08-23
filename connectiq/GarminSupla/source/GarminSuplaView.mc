@@ -46,6 +46,10 @@ class GarminSuplaView extends WatchUi.View {
 	private var _awningOpenedBitmap = null;
 	private var _awningOfflineBitmap = null;
 	private var _awningUnknownBitmap = null;
+	private var _garageGateClosedBitmap = null;
+	private var _garageGateOpenedBitmap = null;
+	private var _garageGateOfflineBitmap = null;
+	private var _garageGateUnknownBitmap = null;
 
 	function initialize() {
 		View.initialize();
@@ -182,6 +186,26 @@ class GarminSuplaView extends WatchUi.View {
 				Rez.Drawables.AwningUnknown
 			);
 
+		_garageGateClosedBitmap =
+			Application.loadResource(
+				Rez.Drawables.GarageGateClosed
+			);
+
+		_garageGateOpenedBitmap =
+			Application.loadResource(
+				Rez.Drawables.GarageGateOpened
+			);
+
+		_garageGateOfflineBitmap =
+			Application.loadResource(
+				Rez.Drawables.GarageGateOffline
+			);
+
+		_garageGateUnknownBitmap =
+			Application.loadResource(
+				Rez.Drawables.GarageGateUnknown
+			);
+
 	}
 
     function setPairingCode(code) as Void {
@@ -312,6 +336,58 @@ class GarminSuplaView extends WatchUi.View {
 				_itemState.toUpper(),
 				Graphics.TEXT_JUSTIFY_CENTER
 			);
+
+			if (
+				_itemIcon != null
+				&& _itemIcon.equals("garage_gate")
+			) {
+
+				var garageGateBitmap = null;
+
+				if (
+					!_itemConnected
+					&& _garageGateOfflineBitmap != null
+				) {
+					garageGateBitmap =
+						_garageGateOfflineBitmap;
+
+				} else if (
+					_itemState.equals("closed")
+					&& _garageGateClosedBitmap != null
+				) {
+					garageGateBitmap =
+						_garageGateClosedBitmap;
+
+				} else if (
+					_itemState.equals("opened")
+					&& _garageGateOpenedBitmap != null
+				) {
+					garageGateBitmap =
+						_garageGateOpenedBitmap;
+
+				} else if (
+					_garageGateUnknownBitmap != null
+				) {
+					garageGateBitmap =
+						_garageGateUnknownBitmap;
+				}
+
+				if (garageGateBitmap != null) {
+
+					var bitmapWidth =
+						garageGateBitmap.getWidth();
+
+					var bitmapHeight =
+						garageGateBitmap.getHeight();
+
+					dc.drawBitmap(
+						(width - bitmapWidth) / 2,
+						(height * 0.76).toNumber()
+							- (bitmapHeight / 2),
+						garageGateBitmap
+					);
+				}
+			}
 
 			if (
 				_itemIcon != null
