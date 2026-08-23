@@ -122,6 +122,56 @@ function renderWatchItemIcon(icon) {
         `;
     }
 
+    if (icon === "garage_gate") {
+        return `
+            <svg
+                width="64"
+                height="40"
+                viewBox="0 0 64 40"
+                role="img"
+                aria-label="Garage gate"
+                class="text-body"
+            >
+                <g
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                >
+                    <!-- garage outline -->
+                    <path
+                        d="
+                            M14 34
+                            L14 15
+                            L32 5
+                            L50 15
+                            L50 34
+                            Z
+                        "
+                    />
+
+                    <!-- garage door -->
+                    <rect
+                        x="19"
+                        y="16"
+                        width="26"
+                        height="18"
+                        rx="1"
+                    />
+
+                    <!-- sectional panels -->
+                    <line x1="19" y1="21" x2="45" y2="21" />
+                    <line x1="19" y1="26" x2="45" y2="26" />
+                    <line x1="19" y1="31" x2="45" y2="31" />
+
+                    <!-- handle -->
+                    <line x1="29" y1="33" x2="35" y2="33" />
+                </g>
+            </svg>
+        `;
+    }
+
     if (icon === "light") {
         return `
             <svg
@@ -366,6 +416,7 @@ function getWatchItemIconOptions(
     const iconsByType = {
         gate: [
             ["default", "Default"],
+            ["garage_gate", "Garage gate"],
             ["sliding_gate", "Sliding gate"],
             ["double_swing_gate", "Double swing gate"],
         ],
