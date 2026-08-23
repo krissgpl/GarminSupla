@@ -51,6 +51,7 @@ class WatchItemUpdate(BaseModel):
         "switch",
         "roller_shutter",
         "awning",
+        "scene",
     ] = "default"
     supla_id: int
     order: int = 0
@@ -78,6 +79,7 @@ class WatchItemUpdate(BaseModel):
             },
             "scene": {
                 "default",
+                "scene",
             },
             "roller_shutter": {
                 "default",

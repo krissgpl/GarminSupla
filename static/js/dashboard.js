@@ -172,6 +172,62 @@ function renderWatchItemIcon(icon) {
         `;
     }
 
+    if (icon === "scene") {
+        return `
+            <svg
+                width="64"
+                height="40"
+                viewBox="0 0 64 40"
+                role="img"
+                aria-label="Scene"
+                class="text-body"
+            >
+                <g
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                >
+                    <!-- clapper top -->
+                    <path
+                        d="
+                            M19 8
+                            L45 5
+                            L47 11
+                            L21 14
+                            Z
+                        "
+                    />
+
+                    <!-- clapper stripes -->
+                    <line x1="25" y1="7" x2="29" y2="13" />
+                    <line x1="34" y1="6" x2="38" y2="12" />
+                    <line x1="43" y1="5" x2="46" y2="10" />
+
+                    <!-- board -->
+                    <rect
+                        x="19"
+                        y="15"
+                        width="28"
+                        height="19"
+                        rx="2"
+                    />
+
+                    <!-- play symbol -->
+                    <path
+                        d="
+                            M29 21
+                            L38 25
+                            L29 29
+                            Z
+                        "
+                    />
+                </g>
+            </svg>
+        `;
+    }
+
     if (icon === "light") {
         return `
             <svg
@@ -433,6 +489,7 @@ function getWatchItemIconOptions(
 
         scene: [
             ["default", "Default"],
+            ["scene", "Scene"],
         ],
 
         roller_shutter: [
