@@ -133,4 +133,34 @@
         dithering="none"
     />
 
+    <bitmap
+        id="AwningClosed"
+        filename="awning_closed.png"
+        dithering="none"
+    />
+
+    <bitmap
+        id="AwningPartiallyOpened"
+        filename="awning_partially_opened.png"
+        dithering="none"
+    />
+
+    <bitmap
+        id="AwningOpened"
+        filename="awning_opened.png"
+        dithering="none"
+    />
+
+    <bitmap
+        id="AwningOffline"
+        filename="awning_offline.png"
+        dithering="none"
+    />
+
+    <bitmap
+        id="AwningUnknown"
+        filename="awning_unknown.png"
+        dithering="none"
+    />
+
 </drawables>

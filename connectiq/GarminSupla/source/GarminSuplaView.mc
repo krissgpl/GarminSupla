@@ -41,6 +41,11 @@ class GarminSuplaView extends WatchUi.View {
 	private var _rollerShutterClosedBitmap = null;
 	private var _rollerShutterOfflineBitmap = null;
 	private var _rollerShutterUnknownBitmap = null;
+	private var _awningClosedBitmap = null;
+	private var _awningPartiallyOpenedBitmap = null;
+	private var _awningOpenedBitmap = null;
+	private var _awningOfflineBitmap = null;
+	private var _awningUnknownBitmap = null;
 
 	function initialize() {
 		View.initialize();
@@ -150,6 +155,31 @@ class GarminSuplaView extends WatchUi.View {
 		_rollerShutterUnknownBitmap =
 			Application.loadResource(
 				Rez.Drawables.RollerShutterUnknown
+			);
+
+		_awningClosedBitmap =
+			Application.loadResource(
+				Rez.Drawables.AwningClosed
+			);
+
+		_awningPartiallyOpenedBitmap =
+			Application.loadResource(
+				Rez.Drawables.AwningPartiallyOpened
+			);
+
+		_awningOpenedBitmap =
+			Application.loadResource(
+				Rez.Drawables.AwningOpened
+			);
+
+		_awningOfflineBitmap =
+			Application.loadResource(
+				Rez.Drawables.AwningOffline
+			);
+
+		_awningUnknownBitmap =
+			Application.loadResource(
+				Rez.Drawables.AwningUnknown
 			);
 
 	}
@@ -546,6 +576,65 @@ class GarminSuplaView extends WatchUi.View {
 						(height * 0.76).toNumber()
 							- (bitmapHeight / 2),
 						rollerShutterBitmap
+					);
+				}
+			}
+
+			if (
+				_itemType != null
+				&& _itemIcon.equals("awning")
+			) {
+
+				var awningBitmap = null;
+
+				if (
+					!_itemConnected
+					&& _awningOfflineBitmap != null
+				) {
+					awningBitmap =
+						_awningOfflineBitmap;
+
+				} else if (
+					_itemState.equals("collapsed")
+					&& _awningClosedBitmap != null
+				) {
+					awningBitmap =
+						_awningClosedBitmap;
+
+				} else if (
+					_itemState.equals("expanded")
+					&& _awningOpenedBitmap != null
+				) {
+					awningBitmap =
+						_awningOpenedBitmap;
+
+				} else if (
+					_itemState.equals("unknown")
+					&& _awningUnknownBitmap != null
+				) {
+					awningBitmap =
+						_awningUnknownBitmap;
+
+				} else if (
+					_awningPartiallyOpenedBitmap != null
+				) {
+					awningBitmap =
+						_awningPartiallyOpenedBitmap;
+				}
+
+				if (awningBitmap != null) {
+
+					var bitmapWidth =
+						awningBitmap.getWidth();
+
+					var bitmapHeight =
+						awningBitmap.getHeight();
+
+					dc.drawBitmap(
+						(width - bitmapWidth) / 2,
+						(height * 0.76).toNumber()
+							- (bitmapHeight / 2),
+						awningBitmap
 					);
 				}
 			}
