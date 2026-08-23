@@ -187,4 +187,22 @@
 		dithering="none"
 	/>
 
+    <bitmap
+        id="Scene"
+        filename="scene.png"
+        dithering="none"
+    />
+
+    <bitmap
+        id="SceneOffline"
+        filename="scene_offline.png"
+        dithering="none"
+    />
+
+    <bitmap
+        id="SceneUnknown"
+        filename="scene_unknown.png"
+        dithering="none"
+    />
+
 </drawables>

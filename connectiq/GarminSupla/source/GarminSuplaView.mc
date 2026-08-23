@@ -50,6 +50,9 @@ class GarminSuplaView extends WatchUi.View {
 	private var _garageGateOpenedBitmap = null;
 	private var _garageGateOfflineBitmap = null;
 	private var _garageGateUnknownBitmap = null;
+	private var _sceneBitmap = null;
+	private var _sceneOfflineBitmap = null;
+	private var _sceneUnknownBitmap = null;
 
 	function initialize() {
 		View.initialize();
@@ -204,6 +207,21 @@ class GarminSuplaView extends WatchUi.View {
 		_garageGateUnknownBitmap =
 			Application.loadResource(
 				Rez.Drawables.GarageGateUnknown
+			);
+
+		_sceneBitmap =
+			Application.loadResource(
+				Rez.Drawables.Scene
+			);
+
+		_sceneOfflineBitmap =
+			Application.loadResource(
+				Rez.Drawables.SceneOffline
+			);
+
+		_sceneUnknownBitmap =
+			Application.loadResource(
+				Rez.Drawables.SceneUnknown
 			);
 
 	}
@@ -711,6 +729,51 @@ class GarminSuplaView extends WatchUi.View {
 						(height * 0.76).toNumber()
 							- (bitmapHeight / 2),
 						awningBitmap
+					);
+				}
+			}
+
+			if (
+				_itemType != null
+				&& _itemIcon.equals("scene")
+			) {
+
+				var sceneBitmap = null;
+
+				if (
+					!_itemConnected
+					&& _sceneOfflineBitmap != null
+				) {
+					sceneBitmap =
+						_sceneOfflineBitmap;
+
+				} else if (
+					_itemState.equals("unknown")
+					&& _sceneUnknownBitmap != null
+				) {
+					sceneBitmap =
+						_sceneUnknownBitmap;
+
+				} else if (
+					_sceneBitmap != null
+				) {
+					sceneBitmap =
+						_sceneBitmap;
+				}
+
+				if (sceneBitmap != null) {
+
+					var bitmapWidth =
+						sceneBitmap.getWidth();
+
+					var bitmapHeight =
+						sceneBitmap.getHeight();
+
+					dc.drawBitmap(
+						(width - bitmapWidth) / 2,
+						(height * 0.76).toNumber()
+							- (bitmapHeight / 2),
+						sceneBitmap
 					);
 				}
 			}
