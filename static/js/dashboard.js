@@ -471,34 +471,28 @@ function getWatchItemIconOptions(
 
     const iconsByType = {
         gate: [
-            ["default", "Default"],
             ["garage_gate", "Garage gate"],
             ["sliding_gate", "Sliding gate"],
             ["double_swing_gate", "Double swing gate"],
         ],
 
         light: [
-            ["default", "Default"],
             ["light", "Light"],
         ],
 
         switch: [
-            ["default", "Default"],
             ["switch", "Switch"],
         ],
 
         scene: [
-            ["default", "Default"],
             ["scene", "Scene"],
         ],
 
         roller_shutter: [
-            ["default", "Default"],
             ["roller_shutter", "Roller shutter"],
         ],
 
         awning: [
-            ["default", "Default"],
             ["awning", "Awning"],
         ],
     };

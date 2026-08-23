@@ -43,7 +43,6 @@ class WatchItemUpdate(BaseModel):
     ]
     name: str
     icon: Literal[
-        "default",
         "garage_gate",
         "sliding_gate",
         "double_swing_gate",
@@ -52,7 +51,7 @@ class WatchItemUpdate(BaseModel):
         "roller_shutter",
         "awning",
         "scene",
-    ] = "default"
+    ]
     supla_id: int
     order: int = 0
     confirmation_required: bool = True
@@ -64,29 +63,23 @@ class WatchItemUpdate(BaseModel):
     def validate_icon_for_type(self):
         allowed_icons = {
             "gate": {
-                "default",
                 "garage_gate",
                 "sliding_gate",
                 "double_swing_gate",
             },
             "light": {
-                "default",
                 "light",
             },
             "switch": {
-                "default",
                 "switch",
             },
             "scene": {
-                "default",
                 "scene",
             },
             "roller_shutter": {
-                "default",
                 "roller_shutter",
             },
             "awning": {
-                "default",
                 "awning",
             },
         }
