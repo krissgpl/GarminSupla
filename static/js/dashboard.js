@@ -283,6 +283,73 @@ function renderWatchItemIcon(icon) {
         `;
     }
 
+    if (icon === "awning") {
+        return `
+            <svg
+                width="64"
+                height="40"
+                viewBox="0 0 64 40"
+                role="img"
+                aria-label="Awning"
+                class="text-body"
+            >
+                <g
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                >
+                    <!-- cassette -->
+                    <rect
+                        x="18"
+                        y="5"
+                        width="28"
+                        height="6"
+                        rx="3"
+                    />
+
+                    <!-- canopy -->
+                    <path
+                        d="
+                            M21 11
+                            L43 11
+                            L48 24
+                            L26 24
+                            Z
+                        "
+                    />
+
+                    <!-- front valance -->
+                    <path
+                        d="
+                            M26 24
+                            C27 28 30 28 32 25
+                            C34 28 37 28 39 25
+                            C41 28 44 28 46 25
+                            L48 24
+                        "
+                    />
+
+                    <!-- support arms -->
+                    <line
+                        x1="22"
+                        y1="12"
+                        x2="27"
+                        y2="24"
+                    />
+
+                    <line
+                        x1="42"
+                        y1="12"
+                        x2="47"
+                        y2="24"
+                    />
+                </g>
+            </svg>
+        `;
+    }
+
     return `
         <i
             class="bi bi-square fs-2 text-muted"
@@ -324,6 +391,7 @@ function getWatchItemIconOptions(
 
         awning: [
             ["default", "Default"],
+            ["awning", "Awning"],
         ],
     };
 
