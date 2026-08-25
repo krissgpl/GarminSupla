@@ -53,6 +53,7 @@ class GarminSuplaView extends WatchUi.View {
 	private var _sceneBitmap = null;
 	private var _sceneOfflineBitmap = null;
 	private var _sceneUnknownBitmap = null;
+	private var _watchBackgroundBitmap = null;
 
 	function initialize() {
 		View.initialize();
@@ -224,6 +225,11 @@ class GarminSuplaView extends WatchUi.View {
 				Rez.Drawables.SceneUnknown
 			);
 
+		_watchBackgroundBitmap =
+			Application.loadResource(
+				Rez.Drawables.WatchBackground
+			);
+
 	}
 
     function setPairingCode(code) as Void {
@@ -294,8 +300,28 @@ class GarminSuplaView extends WatchUi.View {
 
         dc.clear();
 
+		dc.setColor(
+			Graphics.COLOR_WHITE,
+			Graphics.COLOR_TRANSPARENT
+		);
+
         var width = dc.getWidth();
         var height = dc.getHeight();
+
+		if (_watchBackgroundBitmap != null) {
+
+			var backgroundWidth =
+				_watchBackgroundBitmap.getWidth();
+
+			var backgroundHeight =
+				_watchBackgroundBitmap.getHeight();
+
+			dc.drawBitmap(
+				(width - backgroundWidth) / 2,
+				(height - backgroundHeight) / 2,
+				_watchBackgroundBitmap
+			);
+		}
 
         dc.drawText(
 			width / 2,
@@ -335,24 +361,107 @@ class GarminSuplaView extends WatchUi.View {
 				Graphics.TEXT_JUSTIFY_CENTER
 			);
 
-			// Online / Offline
-			dc.drawText(
-				width / 2,
-				height * 0.44,
-				Graphics.FONT_SMALL,
+			// Online / Offline + status dot
+			var connectionText =
 				_itemConnected
 					? "Online"
-					: "Offline",
-				Graphics.TEXT_JUSTIFY_CENTER
+					: "Offline";
+
+			var connectionColor =
+				_itemConnected
+					? Graphics.COLOR_GREEN
+					: Graphics.COLOR_RED;
+
+			var connectionY =
+				(height * 0.44).toNumber();
+
+			var connectionFont =
+				Graphics.FONT_SMALL;
+
+			var connectionWidth =
+				dc.getTextWidthInPixels(
+					connectionText,
+					connectionFont
+				);
+
+			var dotRadius = 9;
+			var dotGap = 8;
+
+			var groupWidth =
+				(dotRadius * 2)
+				+ dotGap
+				+ connectionWidth;
+
+			var groupX =
+				(width - groupWidth) / 2;
+
+			var dotX =
+				groupX + dotRadius;
+
+			var connectionFontHeight =
+					dc.getFontHeight(
+							connectionFont
+					);
+
+			var dotY =
+					connectionY
+					+ (connectionFontHeight / 2);
+
+			dc.setColor(
+				connectionColor,
+				Graphics.COLOR_TRANSPARENT
+			);
+
+			dc.fillCircle(
+				dotX,
+				dotY,
+				dotRadius
+			);
+
+			dc.setColor(
+				Graphics.COLOR_WHITE,
+				Graphics.COLOR_TRANSPARENT
+			);
+
+			dc.drawText(
+				groupX
+					+ (dotRadius * 2)
+					+ dotGap,
+				connectionY,
+				connectionFont,
+				connectionText,
+				Graphics.TEXT_JUSTIFY_LEFT
 			);
 
 			// CLOSED / OPENED / UNKNOWN
+			var stateColor = Graphics.COLOR_WHITE;
+
+			if (
+				_itemState.equals("closed")
+				|| _itemState.equals("opened")
+			) {
+				stateColor = Graphics.COLOR_GREEN;
+			}
+			else if (_itemState.equals("unknown")) {
+				stateColor = Graphics.COLOR_RED;
+			}
+
+			dc.setColor(
+				stateColor,
+				Graphics.COLOR_TRANSPARENT
+			);
+
 			dc.drawText(
 				width / 2,
 				height * 0.54,
 				Graphics.FONT_MEDIUM,
 				_itemState.toUpper(),
 				Graphics.TEXT_JUSTIFY_CENTER
+			);
+
+			dc.setColor(
+				Graphics.COLOR_WHITE,
+				Graphics.COLOR_TRANSPARENT
 			);
 
 			if (

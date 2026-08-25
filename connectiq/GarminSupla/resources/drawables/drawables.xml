@@ -205,4 +205,10 @@
         dithering="none"
     />
 
+	<bitmap
+		id="WatchBackground"
+		filename="background_fenix8_454.png"
+		dithering="none"
+	/>
+
 </drawables>
