@@ -7,6 +7,19 @@ class GarminSuplaDelegate extends WatchUi.BehaviorDelegate {
     private var _view;
     private var _api;
 
+	private const DRAG_THRESHOLD_PX = 35;
+	private const DRAG_DUPLICATE_WINDOW_MS = 300;
+
+	// Wartości DragType z Connect IQ API 3.3.0.
+	// Używamy wartości liczbowych, żeby zachować
+	// kompatybilność projektu z minApiLevel 3.1.0.
+	private const DRAG_TYPE_START_VALUE = 0;
+	private const DRAG_TYPE_STOP_VALUE = 2;
+
+	private var _dragStartX = null;
+	private var _dragStartY = null;
+	private var _lastDragNavigationTime = null;
+
     function initialize(
         view,
         api
@@ -168,9 +181,27 @@ class GarminSuplaDelegate extends WatchUi.BehaviorDelegate {
 			}
 
 			var confirmation =
-				new WatchUi.Confirmation(
-					confirmationText
-				);
+				new WatchUi.Menu2({
+					:title => confirmationText
+				});
+
+			confirmation.addItem(
+				new WatchUi.MenuItem(
+					"Confirm",
+					null,
+					:confirm,
+					{}
+				)
+			);
+
+			confirmation.addItem(
+				new WatchUi.MenuItem(
+					"Cancel",
+					null,
+					:cancel,
+					{}
+				)
+			);
 
 			WatchUi.pushView(
 				confirmation,
@@ -196,7 +227,123 @@ class GarminSuplaDelegate extends WatchUi.BehaviorDelegate {
         return true;
     }
 
+	function shouldIgnorePageBehavior() as Lang.Boolean {
+
+		if (_lastDragNavigationTime == null) {
+			return false;
+		}
+
+		var elapsed =
+			System.getTimer()
+			- _lastDragNavigationTime;
+
+		_lastDragNavigationTime = null;
+
+		return
+			elapsed >= 0
+			&& elapsed < DRAG_DUPLICATE_WINDOW_MS;
+	}
+
+	function onDrag(dragEvent) as Lang.Boolean {
+
+		// DragEvent istnieje od API 3.3.0.
+		// Starsze urządzenia nadal korzystają
+		// z onNextPage / onPreviousPage.
+		if (
+			!(dragEvent has :getType)
+			|| !(dragEvent has :getCoordinates)
+		) {
+			return false;
+		}
+
+		var dragType =
+			dragEvent.getType();
+
+		var coordinates =
+			dragEvent.getCoordinates();
+
+		if (dragType == DRAG_TYPE_START_VALUE) {
+
+			_dragStartX = coordinates[0];
+			_dragStartY = coordinates[1];
+
+			return true;
+		}
+
+		if (dragType != DRAG_TYPE_STOP_VALUE) {
+			return true;
+		}
+
+		if (
+			_dragStartX == null
+			|| _dragStartY == null
+		) {
+			return true;
+		}
+
+		var deltaX =
+			coordinates[0] - _dragStartX;
+
+		var deltaY =
+			coordinates[1] - _dragStartY;
+
+		_dragStartX = null;
+		_dragStartY = null;
+
+		var absX = deltaX;
+		var absY = deltaY;
+
+		if (absX < 0) {
+			absX = -absX;
+		}
+
+		if (absY < 0) {
+			absY = -absY;
+		}
+
+		// Ignorujemy krótkie ruchy oraz gesty
+		// bardziej poziome niż pionowe.
+		if (
+			absY < DRAG_THRESHOLD_PX
+			|| absY <= absX
+		) {
+			return true;
+		}
+
+		_lastDragNavigationTime =
+			System.getTimer();
+
+		if (deltaY < 0) {
+
+			System.println(
+				"DRAG NEXT PAGE"
+			);
+
+			_view.selectNextItem();
+
+		} else {
+
+			System.println(
+				"DRAG PREVIOUS PAGE"
+			);
+
+			_view.selectPreviousItem();
+		}
+
+		return true;
+	}
+
 	function onNextPage() as Lang.Boolean {
+
+		if (shouldIgnorePageBehavior()) {
+
+			System.println(
+				"NEXT PAGE ignored after drag"
+			);
+
+			return true;
+		}
+
 		System.println("NEXT PAGE");
 
 		_view.selectNextItem();
@@ -205,6 +352,16 @@ class GarminSuplaDelegate extends WatchUi.BehaviorDelegate {
 	}
 
 	function onPreviousPage() as Lang.Boolean {
+
+		if (shouldIgnorePageBehavior()) {
+
+			System.println(
+				"PREVIOUS PAGE ignored after drag"
+			);
+
+			return true;
+		}
+
 		System.println("PREVIOUS PAGE");
 
 		_view.selectPreviousItem();

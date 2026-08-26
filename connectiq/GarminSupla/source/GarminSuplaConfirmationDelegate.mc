@@ -1,9 +1,8 @@
-import Toybox.Lang;
 import Toybox.System;
 import Toybox.WatchUi;
 
 class GarminSuplaConfirmationDelegate
-    extends WatchUi.ConfirmationDelegate {
+    extends WatchUi.Menu2InputDelegate {
 
     private var _api;
     private var _itemId;
@@ -12,15 +11,19 @@ class GarminSuplaConfirmationDelegate
         api,
         itemId
     ) {
-        ConfirmationDelegate.initialize();
+        Menu2InputDelegate.initialize();
 
         _api = api;
         _itemId = itemId;
     }
 
-    function onResponse(response) as Lang.Boolean {
+    function onSelect(
+        item as WatchUi.MenuItem
+    ) as Void {
 
-        if (response == WatchUi.CONFIRM_YES) {
+        var id = item.getId();
+
+        if (id == :confirm) {
 
             System.println(
                 "CONFIRM YES"
@@ -31,13 +34,15 @@ class GarminSuplaConfirmationDelegate
                 "toggle"
             );
 
-        } else {
+        } else if (id == :cancel) {
 
             System.println(
                 "CONFIRM NO"
             );
         }
 
-        return true;
+        WatchUi.popView(
+            WatchUi.SLIDE_IMMEDIATE
+        );
     }
 }
