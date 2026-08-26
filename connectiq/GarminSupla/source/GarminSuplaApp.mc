@@ -1,4 +1,5 @@
 import Toybox.Application;
+import Toybox.Communications;
 import Toybox.Lang;
 import Toybox.System;
 import Toybox.WatchUi;
@@ -36,6 +37,16 @@ class GarminSuplaApp extends Application.AppBase {
         _api.reloadServerUrl();
         _api.start();
     }
+
+	function getSyncDelegate()
+		as Communications.SyncDelegate or Null {
+
+		System.println(
+			"Creating WIFI sync delegate"
+		);
+
+		return new GarminSuplaWifiSyncDelegate();
+	}
 
     function getInitialView() as [Views] or [Views, InputDelegates] {
 

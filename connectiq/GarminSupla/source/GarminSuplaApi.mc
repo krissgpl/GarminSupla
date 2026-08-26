@@ -303,6 +303,17 @@ class GarminSuplaApi {
 			"Unable to load watch config"
 		);
 
+		if (loadStoredWifiConfig()) {
+
+			System.println(
+				"Watch config restored from WIFI snapshot"
+			);
+
+			scheduleNextConfigRefresh();
+
+			return;
+		}
+
 		_view.setError();
 
 		scheduleNextConfigRefresh();
@@ -321,6 +332,54 @@ class GarminSuplaApi {
 		System.println(
 			"Stored watch credentials cleared"
 		);
+	}
+
+	function loadStoredWifiConfig() as Lang.Boolean {
+
+		var storedConfig =
+			Application.Storage.getValue(
+				"wifi_sync_config"
+			);
+
+		if (!(storedConfig instanceof Lang.Dictionary)) {
+
+			System.println(
+				"No stored WIFI sync config"
+			);
+
+			return false;
+		}
+
+		var configured =
+			storedConfig["configured"];
+
+		var items =
+			storedConfig["items"];
+
+		if (
+			configured != true
+			|| !(items instanceof Lang.Array)
+			|| items.size() == 0
+		) {
+
+			System.println(
+				"Stored WIFI sync config invalid"
+			);
+
+			return false;
+		}
+
+		System.println(
+			"Using stored WIFI sync config: "
+			+ items.size()
+			+ " item(s)"
+		);
+
+		_view.setStoredWifiItems(
+			items
+		);
+
+		return true;
 	}
 
 	function scheduleVerifyRetry() as Void {
@@ -388,6 +447,17 @@ class GarminSuplaApi {
 		System.println(
 			"Watch verification failed"
 		);
+
+		if (loadStoredWifiConfig()) {
+
+			System.println(
+				"Watch view restored from WIFI snapshot"
+			);
+
+			scheduleVerifyRetry();
+
+			return;
+		}
 
 		_view.setError();
 

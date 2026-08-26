@@ -19,6 +19,7 @@ class GarminSuplaView extends WatchUi.View {
 	private var _selectedIndex = 0;
 	private var _itemConnected = false;
 	private var _itemState = "unknown";
+	private var _usingStoredWifiConfig = false;
 	private var _itemIcon = "default";
 	private var _doubleSwingGateClosedBitmap = null;
 	private var _doubleSwingGateOpenedBitmap = null;
@@ -362,15 +363,23 @@ class GarminSuplaView extends WatchUi.View {
 			);
 
 			// Online / Offline + status dot
-			var connectionText =
-				_itemConnected
-					? "Online"
-					: "Offline";
+			var connectionText = null;
+			var connectionColor = Graphics.COLOR_WHITE;
 
-			var connectionColor =
-				_itemConnected
-					? Graphics.COLOR_GREEN
-					: Graphics.COLOR_RED;
+			if (_usingStoredWifiConfig) {
+
+				connectionText = "Cached";
+
+			} else if (_itemConnected) {
+
+				connectionText = "Online";
+				connectionColor = Graphics.COLOR_GREEN;
+
+			} else {
+
+				connectionText = "Offline";
+				connectionColor = Graphics.COLOR_RED;
+			}
 
 			var connectionY =
 				(height * 0.44).toNumber();
@@ -990,9 +999,38 @@ class GarminSuplaView extends WatchUi.View {
     function onHide() as Void {
     }
 
+	function setStoredWifiItems(
+		items
+	) as Void {
+
+		_usingStoredWifiConfig = true;
+
+		_pairingCode = null;
+		_items = items;
+
+		if (_items.size() == 0) {
+			setNotConfigured();
+			return;
+		}
+
+		if (_selectedIndex >= _items.size()) {
+			_selectedIndex = 0;
+		}
+
+		System.println(
+			"View loaded stored WIFI config: "
+			+ _items.size()
+			+ " item(s)"
+		);
+
+		selectCurrentItem();
+	}
+
 	function setConfiguredItems(
 		items
 	) as Void {
+
+		_usingStoredWifiConfig = false;
 
 		_pairingCode = null;
 		_items = items;
