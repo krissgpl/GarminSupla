@@ -13,6 +13,9 @@ typedef WifiSyncResponseData as
 class GarminSuplaWifiSyncDelegate
     extends Communications.SyncDelegate {
 
+    private var _baseUrl = null;
+    private var _token = null;
+
     function initialize() {
         SyncDelegate.initialize();
     }
@@ -80,9 +83,197 @@ class GarminSuplaWifiSyncDelegate
                 );
         }
 
+        _baseUrl =
+            baseUrl + "/api/v1";
+
+        _token =
+            token.toString();
+
+        Communications.notifySyncProgress(
+            0
+        );
+
+        var pendingAction =
+            Application.Storage.getValue(
+                "wifi_sync_pending_action"
+            );
+
+        if (
+            pendingAction instanceof Lang.Dictionary
+        ) {
+
+            var itemId =
+                pendingAction["item_id"];
+
+            var action =
+                pendingAction["action"];
+
+            if (
+                itemId != null
+                && action != null
+                && action.toString().equals(
+                    "toggle"
+                )
+            ) {
+
+                System.println(
+                    "WIFI SYNC pending toggle found"
+                );
+
+                requestAction(
+                    itemId.toString(),
+                    action.toString()
+                );
+
+                return;
+            }
+
+            System.println(
+                "WIFI SYNC invalid pending action"
+            );
+
+            Application.Storage.deleteValue(
+                "wifi_sync_pending_action"
+            );
+        }
+
+        requestConfig();
+    }
+
+    function requestAction(
+        itemId as Lang.String,
+        action as Lang.String
+    ) as Void {
+
+        if (
+            _baseUrl == null
+            || _token == null
+        ) {
+
+            System.println(
+                "WIFI SYNC action: missing sync state"
+            );
+
+            Application.Storage.deleteValue(
+                "wifi_sync_pending_action"
+            );
+
+            Communications.notifySyncComplete(
+                "Sync state missing"
+            );
+
+            return;
+        }
+
         var url =
-            baseUrl
-            + "/api/v1/watch/config";
+            _baseUrl.toString()
+            + "/watch/action";
+
+        var params = {
+            "item_id" => itemId,
+            "action" => action
+        };
+
+        var options = {
+            :method =>
+                Communications.HTTP_REQUEST_METHOD_POST,
+
+            :headers => {
+                "Authorization" =>
+                    "Bearer "
+                    + _token.toString(),
+
+                "Content-Type" =>
+                    Communications.REQUEST_CONTENT_TYPE_JSON
+            },
+
+            :responseType =>
+                Communications.HTTP_RESPONSE_CONTENT_TYPE_JSON
+        };
+
+        System.println(
+            "WIFI SYNC POST "
+            + url
+        );
+
+        Communications.makeWebRequest(
+            url,
+            params,
+            options,
+            method(:onActionResponse)
+        );
+    }
+
+    function onActionResponse(
+        responseCode as Lang.Number,
+        data as WifiSyncResponseData
+    ) as Void {
+
+        System.println(
+            "WIFI SYNC action HTTP: "
+            + responseCode
+        );
+
+        if (
+            responseCode == 200
+            && data instanceof Lang.Dictionary
+            && data["success"] == true
+        ) {
+
+            System.println(
+                "WIFI SYNC action OK"
+            );
+
+            // Usuwamy akcję przed odświeżeniem configu,
+            // żeby nigdy nie wykonać toggle drugi raz,
+            // jeśli późniejszy GET config się nie powiedzie.
+            Application.Storage.deleteValue(
+                "wifi_sync_pending_action"
+            );
+
+            Communications.notifySyncProgress(
+                50
+            );
+
+            requestConfig();
+
+            return;
+        }
+
+        System.println(
+            "WIFI SYNC action failed"
+        );
+
+        Application.Storage.deleteValue(
+            "wifi_sync_pending_action"
+        );
+
+        Communications.notifySyncComplete(
+            "Action failed"
+        );
+    }
+
+    function requestConfig() as Void {
+
+        if (
+            _baseUrl == null
+            || _token == null
+        ) {
+
+            System.println(
+                "WIFI SYNC config: missing sync state"
+            );
+
+            Communications.notifySyncComplete(
+                "Sync state missing"
+            );
+
+            return;
+        }
+
+        var url =
+            _baseUrl.toString()
+            + "/watch/config";
 
         var options = {
             :method =>
@@ -91,7 +282,7 @@ class GarminSuplaWifiSyncDelegate
             :headers => {
                 "Authorization" =>
                     "Bearer "
-                    + token.toString()
+                    + _token.toString()
             },
 
             :responseType =>
@@ -101,10 +292,6 @@ class GarminSuplaWifiSyncDelegate
         System.println(
             "WIFI SYNC GET "
             + url
-        );
-
-        Communications.notifySyncProgress(
-            0
         );
 
         Communications.makeWebRequest(
@@ -125,47 +312,47 @@ class GarminSuplaWifiSyncDelegate
             + responseCode
         );
 
-		if (
-			responseCode == 200
-			&& data instanceof Lang.Dictionary
-		) {
+        if (
+            responseCode == 200
+            && data instanceof Lang.Dictionary
+        ) {
 
-			System.println(
-				"WIFI SYNC config OK"
-			);
+            System.println(
+                "WIFI SYNC config OK"
+            );
 
-			Application.Storage.setValue(
-				"wifi_sync_config",
-				data
-			);
+            Application.Storage.setValue(
+                "wifi_sync_config",
+                data
+            );
 
-			System.println(
-				"WIFI SYNC config stored"
-			);
+            System.println(
+                "WIFI SYNC config stored"
+            );
 
-			Communications.notifySyncProgress(
-				100
-			);
+            Communications.notifySyncProgress(
+                100
+            );
 
-			Communications.notifySyncComplete(
-				null
-			);
+            Communications.notifySyncComplete(
+                null
+            );
 
-			return;
-		}
+            return;
+        }
 
-		if (responseCode == 200) {
+        if (responseCode == 200) {
 
-			System.println(
-				"WIFI SYNC invalid config payload"
-			);
+            System.println(
+                "WIFI SYNC invalid config payload"
+            );
 
-			Communications.notifySyncComplete(
-				"Invalid config"
-			);
+            Communications.notifySyncComplete(
+                "Invalid config"
+            );
 
-			return;
-		}
+            return;
+        }
 
         System.println(
             "WIFI SYNC config failed"
@@ -184,6 +371,10 @@ class GarminSuplaWifiSyncDelegate
         );
 
         Communications.cancelAllRequests();
+
+        Application.Storage.deleteValue(
+            "wifi_sync_pending_action"
+        );
 
         Communications.notifySyncComplete(
             null

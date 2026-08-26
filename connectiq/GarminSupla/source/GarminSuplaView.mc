@@ -1222,6 +1222,10 @@ class GarminSuplaView extends WatchUi.View {
         return _itemType;
     }
 
+	function isUsingStoredWifiConfig() as Lang.Boolean {
+		return _usingStoredWifiConfig;
+	}
+
     function isConfirmationRequired() as Lang.Boolean {
         return _confirmationRequired;
     }

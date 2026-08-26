@@ -799,6 +799,43 @@ class GarminSuplaApi {
             return;
         }
 
+		if (
+			action.equals("toggle")
+			&& _view.isUsingStoredWifiConfig()
+		) {
+
+			System.println(
+				"Executing toggle through WIFI sync"
+			);
+
+			if (!(Communications has :startSync)) {
+
+				System.println(
+					"WIFI sync not supported"
+				);
+
+				_view.setError();
+
+				return;
+			}
+
+			Application.Storage.setValue(
+				"wifi_sync_pending_action",
+				{
+					"item_id" => itemId,
+					"action" => action
+				}
+			);
+
+			System.println(
+				"WIFI sync pending action stored"
+			);
+
+			Communications.startSync();
+
+			return;
+		}
+
         var url =
             _baseUrl + "/watch/action";
 
