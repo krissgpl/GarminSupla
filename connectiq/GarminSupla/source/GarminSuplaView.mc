@@ -1140,7 +1140,10 @@ class GarminSuplaView extends WatchUi.View {
 			return;
 		}
 
-		var item = _items[_selectedIndex];
+		var item =
+			(_items as Lang.Array<Lang.Object or Null>)[
+				_selectedIndex
+			];
 
 		if (!(item instanceof Lang.Dictionary)) {
 			setError();
