@@ -48,19 +48,6 @@ class GarminSuplaWifiSyncDelegate
                 "serverUrl"
             );
 
-        if (serverUrl == null) {
-
-            System.println(
-                "WIFI SYNC: server URL missing"
-            );
-
-            Communications.notifySyncComplete(
-                "Server URL missing"
-            );
-
-            return;
-        }
-
         var token =
             Application.Storage.getValue(
                 "watch_token"
