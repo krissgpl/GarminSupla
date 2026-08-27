@@ -8,7 +8,7 @@ class GarminSuplaView extends WatchUi.View {
 
     private var _pairingCode = null;
 	private var _serverNotConfigured = false;
-    private var _status = "Connecting...";
+    private var _status = null;
 	private var _itemId = null;
 	private var _itemType = null;
 	private var _itemName = null;
@@ -62,6 +62,11 @@ class GarminSuplaView extends WatchUi.View {
 	private var _pairingTitle = null;
 	private var _pairingEnterCode = null;
 	private var _pairingInGarminSupla = null;
+	private var _statusConnecting = null;
+	private var _statusWaitingForPairing = null;
+	private var _statusPairingApproved = null;
+	private var _statusWatchConnected = null;
+	private var _statusConnectionError = null;
 
 	function initialize() {
 		View.initialize();
@@ -273,18 +278,45 @@ class GarminSuplaView extends WatchUi.View {
                 Rez.Strings.PairingInGarminSupla
             );
 
+        _statusConnecting =
+            Application.loadResource(
+                Rez.Strings.StatusConnecting
+            );
+
+        _statusWaitingForPairing =
+            Application.loadResource(
+                Rez.Strings.StatusWaitingForPairing
+            );
+
+        _statusPairingApproved =
+            Application.loadResource(
+                Rez.Strings.StatusPairingApproved
+            );
+
+        _statusWatchConnected =
+            Application.loadResource(
+                Rez.Strings.StatusWatchConnected
+            );
+
+        _statusConnectionError =
+            Application.loadResource(
+                Rez.Strings.StatusConnectionError
+            );
+
+        _status = _statusConnecting;
+
 	}
 
     function setPairingCode(code) as Void {
 		_serverNotConfigured = false;
         _pairingCode = code;
-        _status = "Waiting for pairing";
+        _status = _statusWaitingForPairing;
 
         WatchUi.requestUpdate();
     }
 
 	function setPairingApproved() as Void {
-		_status = "Pairing approved";
+		_status = _statusPairingApproved;
 
 		WatchUi.requestUpdate();
 	}
@@ -292,13 +324,13 @@ class GarminSuplaView extends WatchUi.View {
 	function setAuthenticated() as Void {
 
 		_pairingCode = null;
-		_status = "Watch connected";
+		_status = _statusWatchConnected;
 
 		WatchUi.requestUpdate();
 	}
 
 	function setError() as Void {
-		_status = "Connection error";
+		_status = _statusConnectionError;
 
 		if (_itemName != null) {
 			_itemConnected = false;

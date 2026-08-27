@@ -29,4 +29,10 @@
     <string id="PairingEnterCode">Enter this code</string>
     <string id="PairingInGarminSupla">in GarminSupla</string>
 
+    <string id="StatusConnecting">Connecting...</string>
+    <string id="StatusWaitingForPairing">Waiting for pairing</string>
+    <string id="StatusPairingApproved">Pairing approved</string>
+    <string id="StatusWatchConnected">Watch connected</string>
+    <string id="StatusConnectionError">Connection error</string>
+
 </strings>

@@ -20,4 +20,10 @@
     <string id="PairingEnterCode">Wprowadź ten kod</string>
     <string id="PairingInGarminSupla">w GarminSupla</string>
 
+    <string id="StatusConnecting">Łączenie...</string>
+    <string id="StatusWaitingForPairing">Parowanie...</string>
+    <string id="StatusPairingApproved">Zatwierdzono</string>
+    <string id="StatusWatchConnected">Zegarek połączony</string>
+    <string id="StatusConnectionError">Błąd połączenia</string>
+
 </strings>
