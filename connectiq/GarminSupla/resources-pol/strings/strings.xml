@@ -1,12 +1,20 @@
 <strings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:noNamespaceSchemaLocation="https://developer.garmin.com/downloads/connect-iq/resources.xsd">
+    <string id="AppName">GarminSupla</string>
+
+    <string id="prompt">Naciśnij przycisk menu</string>
 
     <string id="menu_label_wifi_refresh">Odśwież Wi-Fi</string>
     <string id="menu_label_about">O aplikacji</string>
 
     <string id="AboutVersionLabel">Wersja</string>
+	<string id="AboutVersion">0.5.0</string>
+
     <string id="AboutAuthorLabel">Autor</string>
+	<string id="AboutAuthor">Krzysztof Zawadzki</string>
+
     <string id="AboutEmailLabel">E-mail</string>
+	<string id="AboutEmail">garminsupla@home-dev.eu</string>
 
     <string id="ServerUrlTitle">Serwer GarminSupla</string>
     <string id="ServerUrlPrompt">Wprowadź adres URL serwera GarminSupla</string>
