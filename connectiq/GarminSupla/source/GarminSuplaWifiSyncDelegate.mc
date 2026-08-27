@@ -24,6 +24,19 @@ class GarminSuplaWifiSyncDelegate
         return true;
     }
 
+	function isSupportedAction(
+		action as Lang.String
+	) as Lang.Boolean {
+
+		return
+			action.equals("toggle")
+			|| action.equals("open")
+			|| action.equals("close")
+			|| action.equals("stop")
+			|| action.equals("collapse")
+			|| action.equals("expand");
+	}
+
     function onStartSync() as Void {
 
         System.println(
@@ -108,17 +121,18 @@ class GarminSuplaWifiSyncDelegate
             var action =
                 pendingAction["action"];
 
-            if (
-                itemId != null
-                && action != null
-                && action.toString().equals(
-                    "toggle"
-                )
-            ) {
+			if (
+				itemId != null
+				&& action != null
+				&& isSupportedAction(
+					action.toString()
+				)
+			) {
 
-                System.println(
-                    "WIFI SYNC pending toggle found"
-                );
+				System.println(
+					"WIFI SYNC pending action found: "
+					+ action.toString()
+				);
 
                 requestAction(
                     itemId.toString(),
@@ -224,9 +238,9 @@ class GarminSuplaWifiSyncDelegate
                 "WIFI SYNC action OK"
             );
 
-            // Usuwamy akcję przed odświeżeniem configu,
-            // żeby nigdy nie wykonać toggle drugi raz,
-            // jeśli późniejszy GET config się nie powiedzie.
+			// Usuwamy akcję przed odświeżeniem configu,
+			// żeby nigdy nie wykonać jej drugi raz,
+			// jeśli późniejszy GET config się nie powiedzie.
             Application.Storage.deleteValue(
                 "wifi_sync_pending_action"
             );

@@ -799,13 +799,11 @@ class GarminSuplaApi {
             return;
         }
 
-		if (
-			action.equals("toggle")
-			&& _view.isUsingStoredWifiConfig()
-		) {
+		if (_view.isUsingStoredWifiConfig()) {
 
 			System.println(
-				"Executing toggle through WIFI sync"
+				"Executing action through WIFI sync: "
+				+ action
 			);
 
 			if (!(Communications has :startSync)) {
