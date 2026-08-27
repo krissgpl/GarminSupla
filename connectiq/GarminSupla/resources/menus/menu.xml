@@ -1,4 +1,15 @@
-<menu id="MainMenu" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://developer.garmin.com/downloads/connect-iq/resources.xsd">
-    <menu-item id="item_1" label="@Strings.menu_label_1" />
-    <menu-item id="item_2" label="@Strings.menu_label_2" />
+<menu id="MainMenu"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="https://developer.garmin.com/downloads/connect-iq/resources.xsd">
+
+    <menu-item
+        id="wifi_refresh"
+        label="@Strings.menu_label_wifi_refresh"
+    />
+
+    <menu-item
+        id="about"
+        label="@Strings.menu_label_about"
+    />
+
 </menu>

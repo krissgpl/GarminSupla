@@ -14,10 +14,10 @@ class GarminSuplaMenuDelegate
         item as Symbol
     ) as Void {
 
-        if (item == :item_1) {
+        if (item == :wifi_refresh) {
 
             System.println(
-                "Starting WIFI sync test"
+                "Starting WIFI refresh"
             );
 
             if (Communications has :startSync) {
@@ -31,10 +31,16 @@ class GarminSuplaMenuDelegate
                 );
             }
 
-        } else if (item == :item_2) {
+        } else if (item == :about) {
 
             System.println(
-                "item 2"
+                "Opening About"
+            );
+
+            WatchUi.pushView(
+                new GarminSuplaAboutView(),
+                new GarminSuplaAboutDelegate(),
+                WatchUi.SLIDE_UP
             );
         }
     }
