@@ -12,7 +12,6 @@ class GarminSuplaView extends WatchUi.View {
 	private var _itemId = null;
 	private var _itemType = null;
 	private var _itemName = null;
-	private var _statusEnabled = false;
 	private var _confirmationRequired = true;
 	private var _statusTimer;
 	private var _items = [];
@@ -1164,9 +1163,6 @@ class GarminSuplaView extends WatchUi.View {
 		_itemId = itemId.toString();
 		_itemType = itemType.toString();
 		_itemName = itemName.toString();
-
-		_statusEnabled =
-			item["status_enabled"] == true;
 
 		_confirmationRequired =
 			item["confirmation_required"] == true;
