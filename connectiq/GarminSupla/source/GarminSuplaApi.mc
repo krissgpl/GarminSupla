@@ -33,11 +33,6 @@ class GarminSuplaApi {
 				"serverUrl"
 			);
 
-		if (serverUrl == null) {
-			_baseUrl = null;
-			return;
-		}
-
 		var value =
 			serverUrl.toString();
 
