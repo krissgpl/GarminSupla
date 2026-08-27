@@ -24,4 +24,9 @@
     <string id="ConnectionStatusOffline">Offline</string>
     <string id="ConnectionStatusCached">Cached</string>
 
+    <string id="PairingConfigureServer">Configure server</string>
+    <string id="PairingTitle">Pair your watch</string>
+    <string id="PairingEnterCode">Enter this code</string>
+    <string id="PairingInGarminSupla">in GarminSupla</string>
+
 </strings>

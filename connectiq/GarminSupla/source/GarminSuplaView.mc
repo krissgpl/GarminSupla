@@ -58,6 +58,10 @@ class GarminSuplaView extends WatchUi.View {
 	private var _connectionStatusOnline = null;
 	private var _connectionStatusOffline = null;
 	private var _connectionStatusCached = null;
+	private var _pairingConfigureServer = null;
+	private var _pairingTitle = null;
+	private var _pairingEnterCode = null;
+	private var _pairingInGarminSupla = null;
 
 	function initialize() {
 		View.initialize();
@@ -247,6 +251,26 @@ class GarminSuplaView extends WatchUi.View {
         _connectionStatusCached =
             Application.loadResource(
                 Rez.Strings.ConnectionStatusCached
+            );
+
+        _pairingConfigureServer =
+            Application.loadResource(
+                Rez.Strings.PairingConfigureServer
+            );
+
+        _pairingTitle =
+            Application.loadResource(
+                Rez.Strings.PairingTitle
+            );
+
+        _pairingEnterCode =
+            Application.loadResource(
+                Rez.Strings.PairingEnterCode
+            );
+
+        _pairingInGarminSupla =
+            Application.loadResource(
+                Rez.Strings.PairingInGarminSupla
             );
 
 	}
@@ -958,8 +982,8 @@ class GarminSuplaView extends WatchUi.View {
 			pairingTitleY,
 			Graphics.FONT_TINY,
 			_serverNotConfigured
-				? "Configure server"
-				: "Pair your watch",
+                ? _pairingConfigureServer
+                : _pairingTitle,
 			Graphics.TEXT_JUSTIFY_CENTER
 		);
 
@@ -991,7 +1015,7 @@ class GarminSuplaView extends WatchUi.View {
 				width / 2,
 				instructionY,
 				Graphics.FONT_TINY,
-				"Enter this code",
+				_pairingEnterCode,
 				Graphics.TEXT_JUSTIFY_CENTER
 			);
 
@@ -1004,7 +1028,7 @@ class GarminSuplaView extends WatchUi.View {
 				width / 2,
 				instructionY,
 				Graphics.FONT_TINY,
-				"in GarminSupla",
+				_pairingInGarminSupla,
 				Graphics.TEXT_JUSTIFY_CENTER
 			);
 		}

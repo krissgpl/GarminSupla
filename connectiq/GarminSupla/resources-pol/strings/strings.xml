@@ -15,4 +15,9 @@
     <string id="ConnectionStatusOffline">Offline</string>
     <string id="ConnectionStatusCached">Z pamięci</string>
 
+    <string id="PairingConfigureServer">Skonfiguruj serwer</string>
+    <string id="PairingTitle">Sparuj zegarek</string>
+    <string id="PairingEnterCode">Wprowadź ten kod</string>
+    <string id="PairingInGarminSupla">w GarminSupla</string>
+
 </strings>
