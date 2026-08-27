@@ -20,4 +20,8 @@
     <string id="ServerUrlTitle">GarminSupla server</string>
     <string id="ServerUrlPrompt">Enter the URL of your GarminSupla server</string>
 
+    <string id="ConnectionStatusOnline">Online</string>
+    <string id="ConnectionStatusOffline">Offline</string>
+    <string id="ConnectionStatusCached">Cached</string>
+
 </strings>

@@ -11,4 +11,8 @@
     <string id="ServerUrlTitle">Serwer GarminSupla</string>
     <string id="ServerUrlPrompt">Wprowadź adres URL serwera GarminSupla</string>
 
+    <string id="ConnectionStatusOnline">Online</string>
+    <string id="ConnectionStatusOffline">Offline</string>
+    <string id="ConnectionStatusCached">Z pamięci</string>
+
 </strings>

@@ -55,6 +55,9 @@ class GarminSuplaView extends WatchUi.View {
 	private var _sceneOfflineBitmap = null;
 	private var _sceneUnknownBitmap = null;
 	private var _watchBackgroundBitmap = null;
+	private var _connectionStatusOnline = null;
+	private var _connectionStatusOffline = null;
+	private var _connectionStatusCached = null;
 
 	function initialize() {
 		View.initialize();
@@ -231,6 +234,21 @@ class GarminSuplaView extends WatchUi.View {
 				Rez.Drawables.WatchBackground
 			);
 
+        _connectionStatusOnline =
+            Application.loadResource(
+                Rez.Strings.ConnectionStatusOnline
+            );
+
+        _connectionStatusOffline =
+            Application.loadResource(
+                Rez.Strings.ConnectionStatusOffline
+            );
+
+        _connectionStatusCached =
+            Application.loadResource(
+                Rez.Strings.ConnectionStatusCached
+            );
+
 	}
 
     function setPairingCode(code) as Void {
@@ -366,20 +384,27 @@ class GarminSuplaView extends WatchUi.View {
 			var connectionText = null;
 			var connectionColor = Graphics.COLOR_WHITE;
 
-			if (_usingStoredWifiConfig) {
+            if (_usingStoredWifiConfig) {
 
-				connectionText = "Cached";
+                connectionText =
+                    _connectionStatusCached;
 
-			} else if (_itemConnected) {
+            } else if (_itemConnected) {
 
-				connectionText = "Online";
-				connectionColor = Graphics.COLOR_GREEN;
+                connectionText =
+                    _connectionStatusOnline;
 
-			} else {
+                connectionColor =
+                    Graphics.COLOR_GREEN;
 
-				connectionText = "Offline";
-				connectionColor = Graphics.COLOR_RED;
-			}
+            } else {
+
+                connectionText =
+                    _connectionStatusOffline;
+
+                connectionColor =
+                    Graphics.COLOR_RED;
+            }
 
 			var connectionY =
 				(height * 0.44).toNumber();
