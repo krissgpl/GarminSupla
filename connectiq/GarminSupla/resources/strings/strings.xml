@@ -35,4 +35,9 @@
     <string id="StatusWatchConnected">Watch connected</string>
     <string id="StatusConnectionError">Connection error</string>
 
+    <string id="StatusConnected">Connected</string>
+    <string id="StatusConfigureGarminSupla">Configure GarminSupla</string>
+    <string id="StatusSending">Sending...</string>
+    <string id="StatusActionSent">Action sent</string>
+
 </strings>

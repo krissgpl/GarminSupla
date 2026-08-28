@@ -66,6 +66,10 @@ class GarminSuplaView extends WatchUi.View {
 	private var _statusPairingApproved = null;
 	private var _statusWatchConnected = null;
 	private var _statusConnectionError = null;
+    private var _statusConnected = null;
+    private var _statusConfigureGarminSupla = null;
+    private var _statusSending = null;
+    private var _statusActionSent = null;
 
 	function initialize() {
 		View.initialize();
@@ -300,6 +304,26 @@ class GarminSuplaView extends WatchUi.View {
         _statusConnectionError =
             Application.loadResource(
                 Rez.Strings.StatusConnectionError
+            );
+
+        _statusConnected =
+            Application.loadResource(
+                Rez.Strings.StatusConnected
+            );
+
+        _statusConfigureGarminSupla =
+            Application.loadResource(
+                Rez.Strings.StatusConfigureGarminSupla
+            );
+
+        _statusSending =
+            Application.loadResource(
+                Rez.Strings.StatusSending
+            );
+
+        _statusActionSent =
+            Application.loadResource(
+                Rez.Strings.StatusActionSent
             );
 
         _status = _statusConnecting;
@@ -1189,7 +1213,7 @@ class GarminSuplaView extends WatchUi.View {
 			_itemIcon = "default";
 		}
 
-		_status = "Connected";
+		_status = _statusConnected;
 
 		System.println(
 			"Selected item "
@@ -1244,7 +1268,7 @@ class GarminSuplaView extends WatchUi.View {
 		_itemType = null;
 		_itemName = null;
 
-		_status = "Configure GarminSupla";
+		_status = _statusConfigureGarminSupla;
 
 		WatchUi.requestUpdate();
 	}
@@ -1270,18 +1294,18 @@ class GarminSuplaView extends WatchUi.View {
 	}
 
 	function resetActionStatus() as Void {
-		_status = "Connected";
+		_status = _statusConnected;
 
 		WatchUi.requestUpdate();
 	}
 
 	function setActionSending() as Void {
-        _status = "Sending...";
+        _status = _statusSending;
         WatchUi.requestUpdate();
     }
 
     function setActionSuccess() as Void {
-        _status = "Action sent";
+        _status = _statusActionSent;
 
 		WatchUi.requestUpdate();
 
