@@ -65,4 +65,9 @@
     <string id="ItemStateExpanded">EXPANDED</string>
     <string id="ItemStateUnknown">UNKNOWN</string>
 
+    <string id="WifiSyncErrorWatchTokenMissing">Watch token missing</string>
+    <string id="WifiSyncErrorStateMissing">Sync state missing</string>
+    <string id="WifiSyncErrorActionFailed">Action failed</string>
+    <string id="WifiSyncErrorInvalidConfig">Invalid config</string>
+
 </strings>

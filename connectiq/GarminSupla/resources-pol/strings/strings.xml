@@ -64,4 +64,9 @@
     <string id="ItemStateExpanded">ROZWINIĘTA</string>
     <string id="ItemStateUnknown">NIEZNANY</string>
 
+    <string id="WifiSyncErrorWatchTokenMissing">Brak tokenu zegarka</string>
+    <string id="WifiSyncErrorStateMissing">Brak danych synchronizacji</string>
+    <string id="WifiSyncErrorActionFailed">Błąd akcji</string>
+    <string id="WifiSyncErrorInvalidConfig">Błędna konfiguracja</string>
+
 </strings>

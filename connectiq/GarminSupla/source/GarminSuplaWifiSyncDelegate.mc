@@ -60,8 +60,10 @@ class GarminSuplaWifiSyncDelegate
             );
 
             Communications.notifySyncComplete(
-                "Watch token missing"
-            );
+				Application.loadResource(
+					Rez.Strings.WifiSyncErrorWatchTokenMissing
+				).toString()
+			);
 
             return;
         }
@@ -160,8 +162,10 @@ class GarminSuplaWifiSyncDelegate
             );
 
             Communications.notifySyncComplete(
-                "Sync state missing"
-            );
+				Application.loadResource(
+					Rez.Strings.WifiSyncErrorStateMissing
+				).toString()
+			);
 
             return;
         }
@@ -249,9 +253,11 @@ class GarminSuplaWifiSyncDelegate
             "wifi_sync_pending_action"
         );
 
-        Communications.notifySyncComplete(
-            "Action failed"
-        );
+       Communications.notifySyncComplete(
+			Application.loadResource(
+				Rez.Strings.WifiSyncErrorActionFailed
+			).toString()
+		);
     }
 
     function requestConfig() as Void {
@@ -266,8 +272,10 @@ class GarminSuplaWifiSyncDelegate
             );
 
             Communications.notifySyncComplete(
-                "Sync state missing"
-            );
+				Application.loadResource(
+					Rez.Strings.WifiSyncErrorStateMissing
+				).toString()
+			);
 
             return;
         }
@@ -349,8 +357,10 @@ class GarminSuplaWifiSyncDelegate
             );
 
             Communications.notifySyncComplete(
-                "Invalid config"
-            );
+				Application.loadResource(
+					Rez.Strings.WifiSyncErrorInvalidConfig
+				).toString()
+			);
 
             return;
         }
