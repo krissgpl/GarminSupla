@@ -39,4 +39,10 @@
     <string id="StatusSending">Wysyłanie...</string>
     <string id="StatusActionSent">Wysłano</string>
 
+    <string id="ConfirmationOpenClose">Otwórz / zamknij?</string>
+    <string id="ConfirmationTurnOnOff">Włącz / wyłącz?</string>
+    <string id="ConfirmationExecuteScene">Uruchomić scenę?</string>
+    <string id="ConfirmationConfirm">Potwierdź</string>
+    <string id="ConfirmationCancel">Anuluj</string>
+
 </strings>

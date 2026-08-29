@@ -40,4 +40,10 @@
     <string id="StatusSending">Sending...</string>
     <string id="StatusActionSent">Action sent</string>
 
+    <string id="ConfirmationOpenClose">Open / close?</string>
+    <string id="ConfirmationTurnOnOff">Turn on / off?</string>
+    <string id="ConfirmationExecuteScene">Execute scene?</string>
+    <string id="ConfirmationConfirm">Confirm</string>
+    <string id="ConfirmationCancel">Cancel</string>
+
 </strings>

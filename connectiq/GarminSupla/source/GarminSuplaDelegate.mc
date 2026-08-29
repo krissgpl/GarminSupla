@@ -1,3 +1,4 @@
+import Toybox.Application;
 import Toybox.Lang;
 import Toybox.System;
 import Toybox.WatchUi;
@@ -158,62 +159,81 @@ class GarminSuplaDelegate extends WatchUi.BehaviorDelegate {
 			return true;
 		}
 
-		if (_view.isConfirmationRequired()) {
+        if (_view.isConfirmationRequired()) {
 
-			var confirmationText =
-				"Execute action?";
+            var confirmationText = null;
 
-			if (itemType != null) {
+            if (itemType != null) {
 
-				if (itemType.equals("gate")) {
-					confirmationText =
-						"Open / close?";
-				} else if (
-					itemType.equals("light")
-					|| itemType.equals("switch")
-				) {
-					confirmationText =
-						"Turn on / off?";
-				} else if (itemType.equals("scene")) {
-					confirmationText =
-						"Execute scene?";
-				}
-			}
+                if (itemType.equals("gate")) {
+                    confirmationText =
+                        Application.loadResource(
+                            Rez.Strings.ConfirmationOpenClose
+                        ).toString();
 
-			var confirmation =
-				new WatchUi.Menu2({
-					:title => confirmationText
-				});
+                } else if (
+                    itemType.equals("light")
+                    || itemType.equals("switch")
+                ) {
+                    confirmationText =
+                        Application.loadResource(
+                            Rez.Strings.ConfirmationTurnOnOff
+                        ).toString();
 
-			confirmation.addItem(
-				new WatchUi.MenuItem(
-					"Confirm",
-					null,
-					:confirm,
-					{}
-				)
-			);
+                } else if (itemType.equals("scene")) {
+                    confirmationText =
+                        Application.loadResource(
+                            Rez.Strings.ConfirmationExecuteScene
+                        ).toString();
+                }
+            }
 
-			confirmation.addItem(
-				new WatchUi.MenuItem(
-					"Cancel",
-					null,
-					:cancel,
-					{}
-				)
-			);
+            if (confirmationText == null) {
+                System.println(
+                    "Confirmation ignored: unsupported item type"
+                );
 
-			WatchUi.pushView(
-				confirmation,
-				new GarminSuplaConfirmationDelegate(
-					_api,
-					itemId
-				),
-				WatchUi.SLIDE_IMMEDIATE
-			);
+                return true;
+            }
 
-			return true;
-		}
+            var confirmation =
+                new WatchUi.Menu2({
+                    :title => confirmationText
+                });
+
+            confirmation.addItem(
+                new WatchUi.MenuItem(
+                    Application.loadResource(
+                        Rez.Strings.ConfirmationConfirm
+                    ).toString(),
+                    null,
+                    :confirm,
+                    {}
+                )
+            );
+
+            confirmation.addItem(
+                new WatchUi.MenuItem(
+                    Application.loadResource(
+                        Rez.Strings.ConfirmationCancel
+                    ).toString(),
+                    null,
+                    :cancel,
+                    {}
+                )
+            );
+
+            WatchUi.pushView(
+                confirmation,
+                new GarminSuplaConfirmationDelegate(
+                    _api,
+                    itemId
+                ),
+                WatchUi.SLIDE_IMMEDIATE
+            );
+
+            return true;
+        }
 
         System.println(
             "Confirmation not required"
