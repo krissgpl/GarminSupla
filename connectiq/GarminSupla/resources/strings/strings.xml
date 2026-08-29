@@ -46,4 +46,13 @@
     <string id="ConfirmationConfirm">Confirm</string>
     <string id="ConfirmationCancel">Cancel</string>
 
+    <string id="RollerShutterMenuTitle">Roller shutter</string>
+    <string id="AwningMenuTitle">Awning</string>
+
+    <string id="ActionOpen">Open</string>
+    <string id="ActionClose">Close</string>
+    <string id="ActionStop">Stop</string>
+    <string id="ActionCollapse">Collapse</string>
+    <string id="ActionExpand">Expand</string>
+
 </strings>

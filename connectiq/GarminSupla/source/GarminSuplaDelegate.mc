@@ -68,12 +68,16 @@ class GarminSuplaDelegate extends WatchUi.BehaviorDelegate {
 
 			var menu =
 				new WatchUi.Menu2({
-					:title => "Roller shutter"
+					:title => Application.loadResource(
+						Rez.Strings.RollerShutterMenuTitle
+					).toString()
 				});
 
 			menu.addItem(
 				new WatchUi.MenuItem(
-					"Open",
+					Application.loadResource(
+						Rez.Strings.ActionOpen
+					).toString(),
 					null,
 					:open,
 					{}
@@ -82,7 +86,9 @@ class GarminSuplaDelegate extends WatchUi.BehaviorDelegate {
 
 			menu.addItem(
 				new WatchUi.MenuItem(
-					"Close",
+					Application.loadResource(
+						Rez.Strings.ActionClose
+					).toString(),
 					null,
 					:close,
 					{}
@@ -91,7 +97,9 @@ class GarminSuplaDelegate extends WatchUi.BehaviorDelegate {
 
 			menu.addItem(
 				new WatchUi.MenuItem(
-					"Stop",
+					Application.loadResource(
+						Rez.Strings.ActionStop
+					).toString(),
 					null,
 					:stop,
 					{}
@@ -117,12 +125,16 @@ class GarminSuplaDelegate extends WatchUi.BehaviorDelegate {
 
 			var menu =
 				new WatchUi.Menu2({
-					:title => "Awning"
+					:title => Application.loadResource(
+						Rez.Strings.AwningMenuTitle
+					).toString()
 				});
 
 			menu.addItem(
 				new WatchUi.MenuItem(
-					"Collapse",
+					Application.loadResource(
+						Rez.Strings.ActionCollapse
+					).toString(),
 					null,
 					:collapse,
 					{}
@@ -131,7 +143,9 @@ class GarminSuplaDelegate extends WatchUi.BehaviorDelegate {
 
 			menu.addItem(
 				new WatchUi.MenuItem(
-					"Expand",
+					Application.loadResource(
+						Rez.Strings.ActionExpand
+					).toString(),
 					null,
 					:expand,
 					{}
@@ -140,7 +154,9 @@ class GarminSuplaDelegate extends WatchUi.BehaviorDelegate {
 
 			menu.addItem(
 				new WatchUi.MenuItem(
-					"Stop",
+					Application.loadResource(
+						Rez.Strings.ActionStop
+					).toString(),
 					null,
 					:stop,
 					{}

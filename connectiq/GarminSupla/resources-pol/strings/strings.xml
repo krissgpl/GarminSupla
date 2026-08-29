@@ -45,4 +45,13 @@
     <string id="ConfirmationConfirm">Potwierdź</string>
     <string id="ConfirmationCancel">Anuluj</string>
 
+    <string id="RollerShutterMenuTitle">Roleta</string>
+    <string id="AwningMenuTitle">Markiza</string>
+
+    <string id="ActionOpen">Otwórz</string>
+    <string id="ActionClose">Zamknij</string>
+    <string id="ActionStop">Zatrzymaj</string>
+    <string id="ActionCollapse">Zwiń</string>
+    <string id="ActionExpand">Rozwiń</string>
+
 </strings>
