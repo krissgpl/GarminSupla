@@ -54,4 +54,14 @@
     <string id="ActionCollapse">Zwiń</string>
     <string id="ActionExpand">Rozwiń</string>
 
+    <string id="ItemStateOpened">OTWARTA</string>
+    <string id="ItemStateClosed">ZAMKNIĘTA</string>
+    <string id="ItemStateLightOn">WŁĄCZONE</string>
+    <string id="ItemStateLightOff">WYŁĄCZONE</string>
+    <string id="ItemStateSwitchOn">WŁĄCZONY</string>
+    <string id="ItemStateSwitchOff">WYŁĄCZONY</string>
+    <string id="ItemStateCollapsed">ZWINIĘTA</string>
+    <string id="ItemStateExpanded">ROZWINIĘTA</string>
+    <string id="ItemStateUnknown">NIEZNANY</string>
+
 </strings>

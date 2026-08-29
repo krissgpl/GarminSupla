@@ -55,4 +55,14 @@
     <string id="ActionCollapse">Collapse</string>
     <string id="ActionExpand">Expand</string>
 
+    <string id="ItemStateOpened">OPENED</string>
+    <string id="ItemStateClosed">CLOSED</string>
+    <string id="ItemStateLightOn">ON</string>
+    <string id="ItemStateLightOff">OFF</string>
+    <string id="ItemStateSwitchOn">ON</string>
+    <string id="ItemStateSwitchOff">OFF</string>
+    <string id="ItemStateCollapsed">COLLAPSED</string>
+    <string id="ItemStateExpanded">EXPANDED</string>
+    <string id="ItemStateUnknown">UNKNOWN</string>
+
 </strings>

@@ -70,6 +70,15 @@ class GarminSuplaView extends WatchUi.View {
     private var _statusConfigureGarminSupla = null;
     private var _statusSending = null;
     private var _statusActionSent = null;
+    private var _itemStateOpenedText = null;
+    private var _itemStateClosedText = null;
+    private var _itemStateLightOnText = null;
+    private var _itemStateLightOffText = null;
+    private var _itemStateSwitchOnText = null;
+    private var _itemStateSwitchOffText = null;
+    private var _itemStateCollapsedText = null;
+    private var _itemStateExpandedText = null;
+    private var _itemStateUnknownText = null;
 
 	function initialize() {
 		View.initialize();
@@ -326,6 +335,51 @@ class GarminSuplaView extends WatchUi.View {
                 Rez.Strings.StatusActionSent
             );
 
+        _itemStateOpenedText =
+            Application.loadResource(
+                Rez.Strings.ItemStateOpened
+            );
+
+        _itemStateClosedText =
+            Application.loadResource(
+                Rez.Strings.ItemStateClosed
+            );
+
+        _itemStateLightOnText =
+            Application.loadResource(
+                Rez.Strings.ItemStateLightOn
+            );
+
+        _itemStateLightOffText =
+            Application.loadResource(
+                Rez.Strings.ItemStateLightOff
+            );
+
+        _itemStateSwitchOnText =
+            Application.loadResource(
+                Rez.Strings.ItemStateSwitchOn
+            );
+
+        _itemStateSwitchOffText =
+            Application.loadResource(
+                Rez.Strings.ItemStateSwitchOff
+            );
+
+        _itemStateCollapsedText =
+            Application.loadResource(
+                Rez.Strings.ItemStateCollapsed
+            );
+
+        _itemStateExpandedText =
+            Application.loadResource(
+                Rez.Strings.ItemStateExpanded
+            );
+
+        _itemStateUnknownText =
+            Application.loadResource(
+                Rez.Strings.ItemStateUnknown
+            );
+
         _status = _statusConnecting;
 
 	}
@@ -388,6 +442,57 @@ class GarminSuplaView extends WatchUi.View {
 			+ "/"
 			+ _items.size().toString();
 	}
+
+    function getItemStateText() as Lang.String {
+
+        if (_itemState.equals("opened")) {
+            return _itemStateOpenedText.toString();
+        }
+
+        if (_itemState.equals("closed")) {
+            return _itemStateClosedText.toString();
+        }
+
+        if (_itemState.equals("collapsed")) {
+            return _itemStateCollapsedText.toString();
+        }
+
+        if (_itemState.equals("expanded")) {
+            return _itemStateExpandedText.toString();
+        }
+
+        if (_itemState.equals("unknown")) {
+            return _itemStateUnknownText.toString();
+        }
+
+        if (
+            _itemType != null
+            && _itemType.equals("light")
+        ) {
+            if (_itemState.equals("on")) {
+                return _itemStateLightOnText.toString();
+            }
+
+            if (_itemState.equals("off")) {
+                return _itemStateLightOffText.toString();
+            }
+        }
+
+        if (
+            _itemType != null
+            && _itemType.equals("switch")
+        ) {
+            if (_itemState.equals("on")) {
+                return _itemStateSwitchOnText.toString();
+            }
+
+            if (_itemState.equals("off")) {
+                return _itemStateSwitchOffText.toString();
+            }
+        }
+
+        return _itemState.toUpper();
+    }
 
     function onUpdate(dc as Dc) as Void {
 
@@ -568,7 +673,7 @@ class GarminSuplaView extends WatchUi.View {
 				width / 2,
 				height * 0.54,
 				Graphics.FONT_MEDIUM,
-				_itemState.toUpper(),
+				getItemStateText(),
 				Graphics.TEXT_JUSTIFY_CENTER
 			);
 
