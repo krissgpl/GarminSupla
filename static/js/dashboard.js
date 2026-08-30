@@ -248,7 +248,7 @@ function renderWatchItemIcon(icon) {
                 height="40"
                 viewBox="0 0 64 40"
                 role="img"
-                aria-label="Sliding gate"
+                aria-label="${t("slidingGate")}"
                 class="text-body"
             >
                 <g
@@ -288,7 +288,7 @@ function renderWatchItemIcon(icon) {
                 height="40"
                 viewBox="0 0 64 40"
                 role="img"
-                aria-label="Double swing gate"
+                aria-label="${t("doubleSwingGate")}"
                 class="text-body"
             >
                 <g
@@ -329,7 +329,7 @@ function renderWatchItemIcon(icon) {
                 height="40"
                 viewBox="0 0 64 40"
                 role="img"
-                aria-label="Garage gate"
+                aria-label="${t("garageGate")}"
                 class="text-body"
             >
                 <g
@@ -379,7 +379,7 @@ function renderWatchItemIcon(icon) {
                 height="40"
                 viewBox="0 0 64 40"
                 role="img"
-                aria-label="Scene"
+                aria-label="${t("scene")}"
                 class="text-body"
             >
                 <g
@@ -435,7 +435,7 @@ function renderWatchItemIcon(icon) {
                 height="40"
                 viewBox="0 0 64 40"
                 role="img"
-                aria-label="Light"
+                aria-label="${t("light")}"
                 class="text-body"
             >
                 <g
@@ -479,7 +479,7 @@ function renderWatchItemIcon(icon) {
                 height="40"
                 viewBox="0 0 64 40"
                 role="img"
-                aria-label="Switch"
+                aria-label="${t("switch")}"
                 class="text-body"
             >
                 <g
@@ -547,7 +547,7 @@ function renderWatchItemIcon(icon) {
                 height="40"
                 viewBox="0 0 64 40"
                 role="img"
-                aria-label="Roller shutter"
+                aria-label="${t("rollerShutter")}"
                 class="text-body"
             >
                 <g
@@ -596,7 +596,7 @@ function renderWatchItemIcon(icon) {
                 height="40"
                 viewBox="0 0 64 40"
                 role="img"
-                aria-label="Awning"
+                aria-label="${t("awning")}"
                 class="text-body"
             >
                 <g
@@ -659,7 +659,7 @@ function renderWatchItemIcon(icon) {
     return `
         <i
             class="bi bi-square fs-2 text-muted"
-            aria-label="Default icon"
+            aria-label="${t("defaultIcon")}"
         ></i>
     `;
 }
