@@ -162,7 +162,7 @@
   - `Polski` / `English` overrides come from backend configuration.
   - Language selection must be independent for each watch.
 
-- [ ] Add dashboard localization.
+- [X] Add dashboard localization.
   - `Auto`
   - `Polski`
   - `English`
