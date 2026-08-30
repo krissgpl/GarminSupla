@@ -1,3 +1,5 @@
+from typing import Literal
+
 from app.services.supla_service import SuplaService
 from app.models.api import SetupStatus, GateSummary, WatchStatus
 from app.models.setup import SetupForm
@@ -53,6 +55,24 @@ class SetupService:
         """Load current application settings."""
 
         return self._store.load()
+
+    def save_ui_language(
+        self,
+        language: Literal[
+            "auto",
+            "pl",
+            "en",
+        ],
+    ) -> str:
+        """Persist the dashboard language preference."""
+
+        settings = self._store.load()
+
+        settings.ui.language = language
+
+        self._store.save(settings)
+
+        return settings.ui.language
 
     def get_status(self) -> SetupStatus:
         """Return the current setup status."""
