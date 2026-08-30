@@ -2,6 +2,7 @@ from fastapi import APIRouter, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 
+from app.core.ui_language import resolve_ui_language
 from app.services.setup_service import SetupService
 
 
@@ -10,38 +11,6 @@ router = APIRouter()
 templates = Jinja2Templates(directory="templates")
 
 setup_service = SetupService()
-
-
-def resolve_ui_language(
-    request: Request,
-    language_setting: str,
-) -> str:
-    if language_setting == "pl":
-        return "pl"
-
-    if language_setting == "en":
-        return "en"
-
-    accept_language = request.headers.get(
-        "accept-language",
-        "",
-    )
-
-    preferred_language = (
-        accept_language
-        .split(",", 1)[0]
-        .split(";", 1)[0]
-        .strip()
-        .lower()
-    )
-
-    if (
-        preferred_language == "pl"
-        or preferred_language.startswith("pl-")
-    ):
-        return "pl"
-
-    return "en"
 
 
 @router.get("/")

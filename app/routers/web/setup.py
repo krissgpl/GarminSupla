@@ -5,6 +5,7 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 
 from app.config import settings
 from app.core.templates import templates
+from app.core.ui_language import resolve_ui_language
 from app.models.setup import SetupForm
 from app.services.setup_service import SetupService
 from app.api.admin_auth import verify_admin_csrf
@@ -18,6 +19,11 @@ setup_service = SetupService()
 async def setup_page(request: Request):
     current = setup_service.load_settings()
 
+    language = resolve_ui_language(
+        request,
+        current.ui.language,
+    )
+
     csrf_token = request.cookies.get(
         "garminsupla_csrf"
     )
@@ -28,6 +34,7 @@ async def setup_page(request: Request):
         context={
             "title": "Setup",
             "version": settings.app_version,
+            "language": language,
             "step": 1,
             "steps": 2,
             "form": {
@@ -65,6 +72,13 @@ async def setup_submit(
             field = error["loc"][-1]
             errors[field] = error["msg"]
 
+        current = setup_service.load_settings()
+
+        language = resolve_ui_language(
+            request,
+            current.ui.language,
+        )
+
         return templates.TemplateResponse(
             request=request,
             name="setup.html",
@@ -72,6 +86,7 @@ async def setup_submit(
             context={
                 "title": "Setup",
                 "version": settings.app_version,
+                "language": language,
                 "step": 1,
                 "steps": 2,
                 "form": form_data,
