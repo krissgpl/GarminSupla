@@ -50,6 +50,17 @@ const uiText = {
         typeSwitch: "Switch",
         typeRollerShutter: "Roller shutter",
         typeAwning: "Awning",
+        loadingSuplaItems: "Loading SUPLA items...",
+        noAdditionalSuplaItems: "No additional supported SUPLA items are available.",
+        gates: "Gates",
+        scenes: "Scenes",
+        otherDevices: "Other devices",
+        suplaItem: "SUPLA item",
+        add: "Add",
+        unableToLoadSuplaItems: "Unable to load SUPLA items.",
+        saving: "Saving...",
+        saved: "Saved",
+        unableToSaveConfiguration: "Unable to save configuration.",
     },
 
     pl: {
@@ -86,6 +97,17 @@ const uiText = {
         typeSwitch: "Przełącznik",
         typeRollerShutter: "Roleta",
         typeAwning: "Markiza",
+        loadingSuplaItems: "Ładowanie elementów SUPLA...",
+        noAdditionalSuplaItems: "Brak dodatkowych obsługiwanych elementów SUPLA.",
+        gates: "Bramy",
+        scenes: "Sceny",
+        otherDevices: "Inne urządzenia",
+        suplaItem: "Element SUPLA",
+        add: "Dodaj",
+        unableToLoadSuplaItems: "Nie można załadować elementów SUPLA.",
+        saving: "Zapisywanie...",
+        saved: "Zapisano",
+        unableToSaveConfiguration: "Nie można zapisać konfiguracji.",
     },
 };
 
@@ -113,6 +135,21 @@ function formatItemType(type) {
     }
 
     return t(key);
+}
+
+function getDefaultWatchItemIcon(type) {
+
+    const defaultIcons = {
+        gate: "garage_gate",
+        scene: "scene",
+        light: "light",
+        switch: "switch",
+        roller_shutter: "roller_shutter",
+        awning: "awning",
+    };
+
+    return defaultIcons[type]
+        ?? "default";
 }
 
 let watchItemsDirty = false;
@@ -1110,7 +1147,7 @@ async function showAddFromSupla(items) {
 
     content.innerHTML = `
         <div class="text-muted small">
-            Loading SUPLA items...
+            ${t("loadingSuplaItems")}
         </div>
     `;
 
@@ -1139,8 +1176,7 @@ async function showAddFromSupla(items) {
 
             content.innerHTML = `
                 <div class="alert alert-info mb-0">
-                    No additional supported SUPLA
-                    items are available.
+                    ${t("noAdditionalSuplaItems")}
                 </div>
             `;
 
@@ -1149,19 +1185,19 @@ async function showAddFromSupla(items) {
 
         const groups = [
             {
-                label: "Gates",
+                label: t("gates"),
                 items: availableItems.filter(
                     (item) => item.type === "gate"
                 ),
             },
             {
-                label: "Scenes",
+                label: t("scenes"),
                 items: availableItems.filter(
                     (item) => item.type === "scene"
                 ),
             },
             {
-                label: "Other devices",
+                label: t("otherDevices"),
                 items: availableItems.filter(
                     (item) =>
                         item.type !== "gate"
@@ -1183,7 +1219,7 @@ async function showAddFromSupla(items) {
                                     <option
                                         value="${item.type}:${item.supla_id}"
                                     >
-                                        ${item.name} (${item.type})
+                                        ${item.name} (${formatItemType(item.type)})
                                     </option>
                                 `)
                                 .join("")
@@ -1199,7 +1235,7 @@ async function showAddFromSupla(items) {
                     class="form-label fw-semibold"
                     for="supla-item-select"
                 >
-                    SUPLA item
+                    ${t("suplaItem")}
                 </label>
 
                 <div class="d-flex gap-2">
@@ -1216,13 +1252,9 @@ async function showAddFromSupla(items) {
                         class="btn btn-primary"
                         id="confirm-add-supla-item-btn"
                     >
-                        Add
+                        ${t("add")}
                     </button>
 
-                </div>
-
-                <div class="small text-muted mt-2">
-                    Currently supported: gates
                 </div>
 
             </div>
@@ -1244,7 +1276,7 @@ async function showAddFromSupla(items) {
 
         content.innerHTML = `
             <div class="alert alert-danger mb-0">
-                Unable to load SUPLA items.
+                ${t("unableToLoadSuplaItems")}
             </div>
         `;
 
@@ -1290,7 +1322,9 @@ function addSuplaItemLocally(
         id: crypto.randomUUID(),
         type: suplaItem.type,
         name: suplaItem.name,
-        icon: "default",
+        icon: getDefaultWatchItemIcon(
+            suplaItem.type
+        ),
         supla_id: suplaItem.supla_id,
         order: items.length,
         confirmation_required: true,
@@ -1392,7 +1426,7 @@ async function saveWatchItems(items) {
 
     button.disabled = true;
 
-    status.textContent = "Saving...";
+    status.textContent = t("saving");
     status.className =
         "small text-muted";
 
@@ -1411,7 +1445,7 @@ async function saveWatchItems(items) {
 
         setWatchItemsDirty(false);
 
-        status.textContent = "Saved";
+        status.textContent = t("saved");
         status.className =
             "small text-success";
 
@@ -1422,7 +1456,7 @@ async function saveWatchItems(items) {
                 error.message;
         } else {
             status.textContent =
-                "Unable to save configuration.";
+                t("unableToSaveConfiguration");
         }
 
         status.className =
