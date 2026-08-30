@@ -73,6 +73,28 @@ export async function getSetupStatus() {
 
 }
 
+export async function getUILanguage() {
+
+    return apiRequest(
+        "/api/v1/setup/ui/language",
+    );
+
+}
+
+export async function updateUILanguage(language) {
+
+    return apiRequest(
+        "/api/v1/setup/ui/language",
+        {
+            method: "PUT",
+            body: JSON.stringify({
+                language: language,
+            }),
+        },
+    );
+
+}
+
 export async function getWatchStatus() {
 
     return apiRequest(
