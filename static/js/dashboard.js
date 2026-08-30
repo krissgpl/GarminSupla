@@ -61,6 +61,21 @@ const uiText = {
         saving: "Saving...",
         saved: "Saved",
         unableToSaveConfiguration: "Unable to save configuration.",
+        noWatchConfigured: "No Garmin watch has been configured yet.",
+        configureWatch: "Configure Watch",
+        replaceWatch: "Replace Watch",
+        rePairCurrentWatch: "Re-pair current watch",
+        watchReplacementInfo:
+            "Replace Watch keeps the current watch active until the new watch completes pairing. Re-pair invalidates the current watch token immediately.",
+        pairGarminWatch: "Pair Garmin Watch",
+        pairingInstructions:
+            "Enter the 6-digit code displayed by GarminSupla on your watch.",
+        pairingCode: "Pairing code",
+        pairWatch: "Pair Watch",
+        pairingApproved: "Pairing approved",
+        completePairingOnWatch:
+            "Complete the pairing process on your Garmin watch.",
+        cancel: "Cancel",
     },
 
     pl: {
@@ -108,6 +123,21 @@ const uiText = {
         saving: "Zapisywanie...",
         saved: "Zapisano",
         unableToSaveConfiguration: "Nie można zapisać konfiguracji.",
+        noWatchConfigured: "Nie skonfigurowano jeszcze zegarka Garmin.",
+        configureWatch: "Skonfiguruj zegarek",
+        replaceWatch: "Zmień zegarek",
+        rePairCurrentWatch: "Sparuj ponownie zegarek",
+        watchReplacementInfo:
+            "Zmiana zegarka pozostawia obecny zegarek aktywny do czasu zakończenia parowania nowego. Ponowne parowanie natychmiast unieważnia token obecnego zegarka.",
+        pairGarminWatch: "Sparuj zegarek Garmin",
+        pairingInstructions:
+            "Wpisz 6-cyfrowy kod wyświetlany przez GarminSupla na zegarku.",
+        pairingCode: "Kod parowania",
+        pairWatch: "Sparuj zegarek",
+        pairingApproved: "Parowanie zatwierdzone",
+        completePairingOnWatch:
+            "Dokończ proces parowania na zegarku Garmin.",
+        cancel: "Anuluj",
     },
 };
 
@@ -1483,7 +1513,7 @@ function renderWatch(
                 <i class="bi bi-smartwatch fs-1 text-muted"></i>
 
                 <p class="mt-3 mb-3 text-muted">
-                    No Garmin watch has been configured yet.
+                    ${t("noWatchConfigured")}
                 </p>
 
                 <button
@@ -1492,7 +1522,7 @@ function renderWatch(
                     id="configure-watch-btn"
                 >
                     <i class="bi bi-plus-circle me-2"></i>
-                    Configure Watch
+                    ${t("configureWatch")}
                 </button>
 
             </div>
@@ -1574,7 +1604,7 @@ function renderWatch(
                     id="replace-watch-btn"
                 >
                     <i class="bi bi-arrow-repeat me-2"></i>
-                    Replace Watch
+                    ${t("replaceWatch")}
                 </button>
 
                 <button
@@ -1583,15 +1613,13 @@ function renderWatch(
                     id="reset-watch-pairing-btn"
                 >
                     <i class="bi bi-link-45deg me-2"></i>
-                    Re-pair current watch
+                    ${t("rePairCurrentWatch")}
                 </button>
 
             </div>
 
             <p class="small text-muted mt-2 mb-0">
-                Replace Watch keeps the current watch active
-                until the new watch completes pairing.
-                Re-pair invalidates the current watch token immediately.
+                ${t("watchReplacementInfo")}
             </p>
 
         </div>
@@ -1641,7 +1669,7 @@ async function handleWatchRePair() {
 
         await resetWatchPairing();
 
-        renderPairingForm();
+        renderPairingForm(false);
 
     } catch (error) {
 
@@ -1656,7 +1684,9 @@ async function handleWatchRePair() {
     }
 }
 
-function renderPairingForm() {
+function renderPairingForm(
+    allowCancel = true,
+) {
 
     const content =
         document.getElementById("watch-content");
@@ -1668,12 +1698,11 @@ function renderPairingForm() {
                 <i class="bi bi-smartwatch fs-1 text-primary"></i>
 
                 <h4 class="mt-3 mb-2">
-                    Pair Garmin Watch
+                    ${t("pairGarminWatch")}
                 </h4>
 
                 <p class="text-muted mb-0">
-                    Enter the 6-digit code displayed
-                    by GarminSupla on your watch.
+                    ${t("pairingInstructions")}
                 </p>
             </div>
 
@@ -1684,7 +1713,7 @@ function renderPairingForm() {
                         for="pairing-code"
                         class="form-label fw-semibold"
                     >
-                        Pairing code
+                        ${t("pairingCode")}
                     </label>
 
                     <input
@@ -1706,15 +1735,25 @@ function renderPairingForm() {
                     class="alert alert-danger d-none"
                 ></div>
 
-                <div class="d-grid">
+                <div class="d-grid gap-2">
                     <button
                         type="submit"
                         class="btn btn-primary btn-lg"
                         id="pair-watch-btn"
                     >
                         <i class="bi bi-link-45deg me-2"></i>
-                        Pair Watch
+                        ${t("pairWatch")}
                     </button>
+
+                    ${allowCancel ? `
+                        <button
+                            type="button"
+                            class="btn btn-outline-secondary"
+                            id="cancel-pairing-btn"
+                        >
+                            ${t("cancel")}
+                        </button>
+                    ` : ""}
                 </div>
 
             </form>
@@ -1728,6 +1767,18 @@ function renderPairingForm() {
             "submit",
             handlePairingSubmit,
         );
+
+    const cancelButton =
+        document.getElementById(
+            "cancel-pairing-btn"
+        );
+
+    if (cancelButton) {
+        cancelButton.addEventListener(
+            "click",
+            () => window.location.reload(),
+        );
+    }
 }
 
 async function handlePairingSubmit(event) {
@@ -1799,12 +1850,11 @@ function renderPairingApproved() {
             ></i>
 
             <h4 class="mt-3">
-                Pairing approved
+                ${t("pairingApproved")}
             </h4>
 
             <p class="text-muted mb-0">
-                Complete the pairing process
-                on your Garmin watch.
+                ${t("completePairingOnWatch")}
             </p>
 
         </div>
