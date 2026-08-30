@@ -15,7 +15,11 @@ from app.models.admin import AdminAccount
 from app.models.api.pairing import PairingApproveRequest
 from app.services.pairing_service import PairingService
 
-from app.models.api.setup import WatchItemsUpdateRequest, SuplaAvailableItem
+from app.models.api.setup import (
+    SuplaAvailableItem,
+    UILanguageSettings,
+    WatchItemsUpdateRequest,
+)
 
 router = APIRouter(
     prefix="/setup",
@@ -34,6 +38,42 @@ def get_status() -> SetupStatus:
     """Return the current setup status."""
 
     return setup_service.get_status()
+
+
+@router.get(
+    "/ui/language",
+    response_model=UILanguageSettings,
+)
+def get_ui_language() -> UILanguageSettings:
+    """Return the current dashboard language preference."""
+
+    settings = setup_service.load_settings()
+
+    return UILanguageSettings(
+        language=settings.ui.language,
+    )
+
+
+@router.put(
+    "/ui/language",
+    response_model=UILanguageSettings,
+)
+def update_ui_language(
+    request: UILanguageSettings,
+    admin: AdminAccount = Depends(
+        require_admin_csrf
+    ),
+) -> UILanguageSettings:
+    """Save the dashboard language preference."""
+
+    language = setup_service.save_ui_language(
+        request.language
+    )
+
+    return UILanguageSettings(
+        language=language,
+    )
+
 
 @router.get(
     "/gates",

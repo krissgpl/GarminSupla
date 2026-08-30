@@ -15,6 +15,14 @@ class SelectGateRequest(BaseModel):
     channel_id: int
 
 
+class UILanguageSettings(BaseModel):
+    language: Literal[
+        "auto",
+        "pl",
+        "en",
+    ]
+
+
 class SetupStatus(BaseModel):
     server: str
     authorized: bool
