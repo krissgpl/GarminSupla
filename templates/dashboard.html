@@ -1,5 +1,23 @@
 {% extends "base.html" %}
 
+{% if language == "pl" %}
+    {% set dashboard_title = "Panel" %}
+    {% set dashboard_description = "Zarządzaj integracją GarminSupla." %}
+    {% set language_label = "Język" %}
+    {% set logout_label = "Wyloguj" %}
+    {% set watch_title = "Zegarek Garmin" %}
+    {% set loading_label = "Ładowanie..." %}
+    {% set loading_watch_label = "Ładowanie konfiguracji zegarka..." %}
+{% else %}
+    {% set dashboard_title = "Dashboard" %}
+    {% set dashboard_description = "Manage your GarminSupla integration." %}
+    {% set language_label = "Language" %}
+    {% set logout_label = "Logout" %}
+    {% set watch_title = "Garmin Watch" %}
+    {% set loading_label = "Loading..." %}
+    {% set loading_watch_label = "Loading watch configuration..." %}
+{% endif %}
+
 {% block content %}
 
 <div class="card shadow-sm rounded-4 border-0">
@@ -9,11 +27,11 @@
 
             <div>
                 <h2 class="mb-1">
-                    Dashboard
+                    {{ dashboard_title }}
                 </h2>
 
                 <p class="text-muted mb-0">
-                    Manage your GarminSupla integration.
+                    {{ dashboard_description }}
                 </p>
             </div>
 
@@ -22,7 +40,7 @@
                 <select
                     id="ui-language-select"
                     class="form-select form-select-sm"
-                    aria-label="Language"
+                    aria-label="{{ language_label }}"
                     style="width: auto;"
                 >
                     <option value="auto">Auto</option>
@@ -45,7 +63,7 @@
                         class="btn btn-outline-secondary"
                     >
                         <i class="bi bi-box-arrow-right me-1"></i>
-                        Logout
+                        {{ logout_label }}
                     </button>
                 </form>
 
@@ -58,7 +76,7 @@
 
                 <h5 class="mb-3">
                     <i class="bi bi-smartwatch me-2"></i>
-                    Garmin Watch
+                    {{ watch_title }}
                 </h5>
 
                 <div id="watch-content">
@@ -70,12 +88,12 @@
                             role="status"
                         >
                             <span class="visually-hidden">
-                                Loading...
+                                {{ loading_label }}
                             </span>
                         </div>
 
                         <p class="mt-3 mb-0 text-muted">
-                            Loading watch configuration...
+                            {{ loading_watch_label }}
                         </p>
 
                     </div>
