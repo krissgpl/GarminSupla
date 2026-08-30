@@ -2,6 +2,7 @@ from fastapi import APIRouter, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 
+from app.config import settings as app_settings
 from app.core.ui_language import resolve_ui_language
 from app.services.setup_service import SetupService
 
@@ -53,10 +54,18 @@ async def dashboard(request: Request):
         settings.ui.language,
     )
 
+    page_title = (
+        "Panel"
+        if language == "pl"
+        else "Dashboard"
+    )
+
     return templates.TemplateResponse(
         "dashboard.html",
         {
             "request": request,
+            "title": page_title,
+            "version": app_settings.app_version,
             "csrf_token": csrf_token,
             "language": language,
         },
