@@ -4,6 +4,11 @@ from typing import Literal
 
 class UISettings(BaseModel):
     theme: str = "system"
+    language: Literal[
+        "auto",
+        "pl",
+        "en",
+    ] = "auto"
 
 
 class SelectedGate(BaseModel):
