@@ -6,12 +6,14 @@
     {% set server_label = "Serwer SUPLA" %}
     {% set server_help = "Wpisz adres URL swojego serwera SUPLA." %}
     {% set continue_label = "Kontynuuj" %}
+    {% set language_label = "Język" %}
 {% else %}
     {% set setup_title = "GarminSupla Setup" %}
     {% set server_prompt = "Enter the address of your SUPLA server:" %}
     {% set server_label = "SUPLA Server" %}
     {% set server_help = "Enter the URL of your SUPLA server." %}
     {% set continue_label = "Continue" %}
+    {% set language_label = "Language" %}
 {% endif %}
 
 {% block content %}
@@ -20,6 +22,19 @@
 
         <div class="card shadow-sm rounded-4 border-0">
             <div class="card-body p-4 p-lg-5">
+
+                <div class="d-flex justify-content-end mb-3">
+                    <select
+                        id="ui-language-select"
+                        class="form-select form-select-sm"
+                        aria-label="{{ language_label }}"
+                        style="width: auto;"
+                    >
+                        <option value="auto">Auto</option>
+                        <option value="pl">Polski</option>
+                        <option value="en">English</option>
+                    </select>
+                </div>
 
                 <div class="mb-5">
                     {% include "components/wizard_progress.html" %}
@@ -85,4 +100,10 @@
         </div>
     </div>
 </div>
+
+<script
+    type="module"
+    src="/static/js/setup.js"
+></script>
+
 {% endblock %}
