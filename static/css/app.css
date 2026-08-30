@@ -24,6 +24,34 @@ body {
     color: #1f4e79;
 }
 
+.app-logo-wrap {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.15em;
+    height: 1.15em;
+    flex-shrink: 0;
+}
+
+.app-logo {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.app-logo-dark {
+    display: none;
+}
+
+html[data-bs-theme="dark"] .app-logo-light {
+    display: none;
+}
+
+html[data-bs-theme="dark"] .app-logo-dark {
+    display: block;
+}
+
 /* ---------- Gate Card ---------- */
 
 .gate-card {
