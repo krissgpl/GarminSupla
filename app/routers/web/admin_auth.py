@@ -2,14 +2,18 @@ from fastapi import APIRouter, Form, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 
-from app.services.admin_auth_service import AdminAuthService
 from app.api.admin_auth import verify_admin_csrf
+from app.config import settings
+from app.core.ui_language import resolve_ui_language
+from app.services.admin_auth_service import AdminAuthService
+from app.services.setup_service import SetupService
 
 router = APIRouter()
 
 templates = Jinja2Templates(directory="templates")
 
 admin_auth_service = AdminAuthService()
+setup_service = SetupService()
 
 SESSION_COOKIE = "garminsupla_admin_session"
 CSRF_COOKIE = "garminsupla_csrf"
@@ -23,10 +27,26 @@ SESSION_MAX_AGE = 8 * 60 * 60
 async def login_page(request: Request):
     """Display administrator login page."""
 
+    current = setup_service.load_settings()
+
+    language = resolve_ui_language(
+        request,
+        current.ui.language,
+    )
+
+    page_title = (
+        "Logowanie"
+        if language == "pl"
+        else "Login"
+    )
+
     return templates.TemplateResponse(
         "login.html",
         {
             "request": request,
+            "title": page_title,
+            "version": settings.app_version,
+            "language": language,
             "error": None,
         },
     )
@@ -49,11 +69,33 @@ async def login(
     )
 
     if admin is None:
+        current = setup_service.load_settings()
+
+        language = resolve_ui_language(
+            request,
+            current.ui.language,
+        )
+
+        page_title = (
+            "Logowanie"
+            if language == "pl"
+            else "Login"
+        )
+
+        error = (
+            "Nieprawidłowa nazwa użytkownika lub hasło."
+            if language == "pl"
+            else "Invalid username or password."
+        )
+
         return templates.TemplateResponse(
             "login.html",
             {
                 "request": request,
-                "error": "Invalid username or password.",
+                "title": page_title,
+                "version": settings.app_version,
+                "language": language,
+                "error": error,
             },
             status_code=401,
         )
