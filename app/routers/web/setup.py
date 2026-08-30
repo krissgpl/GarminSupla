@@ -24,6 +24,12 @@ async def setup_page(request: Request):
         current.ui.language,
     )
 
+    page_title = (
+        "Konfiguracja"
+        if language == "pl"
+        else "Setup"
+    )
+
     csrf_token = request.cookies.get(
         "garminsupla_csrf"
     )
@@ -32,7 +38,7 @@ async def setup_page(request: Request):
         request=request,
         name="setup.html",
         context={
-            "title": "Setup",
+            "title": page_title,
             "version": settings.app_version,
             "language": language,
             "step": 1,
@@ -65,6 +71,12 @@ async def setup_submit(
         current.ui.language,
     )
 
+    page_title = (
+        "Konfiguracja"
+        if language == "pl"
+        else "Setup"
+    )
+
     form_data = {
         "server": server,
     }
@@ -92,7 +104,7 @@ async def setup_submit(
             name="setup.html",
             status_code=400,
             context={
-                "title": "Setup",
+                "title": page_title,
                 "version": settings.app_version,
                 "language": language,
                 "step": 1,
