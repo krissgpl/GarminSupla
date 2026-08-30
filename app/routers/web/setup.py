@@ -58,6 +58,13 @@ async def setup_submit(
         csrf_token,
     )
 
+    current = setup_service.load_settings()
+
+    language = resolve_ui_language(
+        request,
+        current.ui.language,
+    )
+
     form_data = {
         "server": server,
     }
@@ -70,14 +77,15 @@ async def setup_submit(
 
         for error in exc.errors():
             field = error["loc"][-1]
-            errors[field] = error["msg"]
 
-        current = setup_service.load_settings()
-
-        language = resolve_ui_language(
-            request,
-            current.ui.language,
-        )
+            if field == "server":
+                errors[field] = (
+                    "Wpisz prawidłowy adres URL serwera SUPLA."
+                    if language == "pl"
+                    else "Enter a valid SUPLA server URL."
+                )
+            else:
+                errors[field] = error["msg"]
 
         return templates.TemplateResponse(
             request=request,
