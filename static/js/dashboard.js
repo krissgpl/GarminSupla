@@ -22,6 +22,34 @@ const uiText = {
         disabled: "Disabled",
         created: "Created",
         lastSeen: "Last seen",
+        watchItems: "Watch items",
+        noWatchItems: "No items configured for the watch.",
+        type: "Type",
+        icon: "Icon",
+        visibility: "Visibility",
+        showOnWatch: "Show on watch",
+        action: "Action",
+        requireConfirmation: "Require confirmation",
+        moveUp: "Move up",
+        moveDown: "Move down",
+        remove: "Remove",
+        addFromSupla: "Add from SUPLA",
+        saveWatchConfiguration: "Save watch configuration",
+        garageGate: "Garage gate",
+        slidingGate: "Sliding gate",
+        doubleSwingGate: "Double swing gate",
+        light: "Light",
+        switch: "Switch",
+        scene: "Scene",
+        rollerShutter: "Roller shutter",
+        awning: "Awning",
+        defaultIcon: "Default",
+        typeGate: "Gate",
+        typeScene: "Scene",
+        typeLight: "Light",
+        typeSwitch: "Switch",
+        typeRollerShutter: "Roller shutter",
+        typeAwning: "Awning",
     },
 
     pl: {
@@ -30,6 +58,34 @@ const uiText = {
         disabled: "Wyłączony",
         created: "Utworzono",
         lastSeen: "Ostatnia aktywność",
+        watchItems: "Elementy zegarka",
+        noWatchItems: "Brak skonfigurowanych elementów zegarka.",
+        type: "Typ",
+        icon: "Ikona",
+        visibility: "Widoczność",
+        showOnWatch: "Pokaż na zegarku",
+        action: "Akcja",
+        requireConfirmation: "Wymagaj potwierdzenia",
+        moveUp: "Przenieś wyżej",
+        moveDown: "Przenieś niżej",
+        remove: "Usuń",
+        addFromSupla: "Dodaj z SUPLA",
+        saveWatchConfiguration: "Zapisz konfigurację zegarka",
+        garageGate: "Brama garażowa",
+        slidingGate: "Brama przesuwna",
+        doubleSwingGate: "Brama dwuskrzydłowa",
+        light: "Światło",
+        switch: "Przełącznik",
+        scene: "Scena",
+        rollerShutter: "Roleta",
+        awning: "Markiza",
+        defaultIcon: "Domyślna",
+        typeGate: "Brama",
+        typeScene: "Scena",
+        typeLight: "Światło",
+        typeSwitch: "Przełącznik",
+        typeRollerShutter: "Roleta",
+        typeAwning: "Markiza",
     },
 };
 
@@ -37,6 +93,26 @@ function t(key) {
     return uiText[uiLanguage][key]
         ?? uiText.en[key]
         ?? key;
+}
+
+function formatItemType(type) {
+
+    const typeKeys = {
+        gate: "typeGate",
+        scene: "typeScene",
+        light: "typeLight",
+        switch: "typeSwitch",
+        roller_shutter: "typeRollerShutter",
+        awning: "typeAwning",
+    };
+
+    const key = typeKeys[type];
+
+    if (!key) {
+        return type;
+    }
+
+    return t(key);
 }
 
 let watchItemsDirty = false;
@@ -504,36 +580,36 @@ function getWatchItemIconOptions(
 
     const iconsByType = {
         gate: [
-            ["garage_gate", "Garage gate"],
-            ["sliding_gate", "Sliding gate"],
-            ["double_swing_gate", "Double swing gate"],
+            ["garage_gate", t("garageGate")],
+            ["sliding_gate", t("slidingGate")],
+            ["double_swing_gate", t("doubleSwingGate")],
         ],
 
         light: [
-            ["light", "Light"],
+            ["light", t("light")],
         ],
 
         switch: [
-            ["switch", "Switch"],
+            ["switch", t("switch")],
         ],
 
         scene: [
-            ["scene", "Scene"],
+            ["scene", t("scene")],
         ],
 
         roller_shutter: [
-            ["roller_shutter", "Roller shutter"],
+            ["roller_shutter", t("rollerShutter")],
         ],
 
         awning: [
-            ["awning", "Awning"],
+            ["awning", t("awning")],
         ],
     };
 
     const icons =
         iconsByType[itemType]
         ?? [
-            ["default", "Default"],
+            ["default", t("defaultIcon")],
         ];
 
     return icons
@@ -561,11 +637,11 @@ function renderWatchItems(items) {
                 id="watch-items-section"
             >
                 <h5 class="mb-2">
-                    Watch items
+                    ${t("watchItems")}
                 </h5>
 
                 <p class="text-muted mb-0">
-                    No items configured for the watch.
+                    ${t("noWatchItems")}
                 </p>
             </div>
         `;
@@ -598,7 +674,7 @@ function renderWatchItems(items) {
                                 </strong>
 
                                 <div class="small text-muted mt-1">
-                                    Type: ${item.type}
+                                    ${t("type")}: ${formatItemType(item.type)}
                                 </div>
                             </div>
 
@@ -611,8 +687,8 @@ function renderWatchItems(items) {
                                 class="btn btn-outline-secondary btn-sm px-2"
                                 data-watch-item-up="${index}"
                                 ${index === 0 ? "disabled" : ""}
-                                title="Move up"
-                                aria-label="Move up"
+                                title="${t("moveUp")}"
+                                aria-label="${t("moveUp")}"
                             >
                                 <i class="bi bi-arrow-up"></i>
                             </button>
@@ -626,8 +702,8 @@ function renderWatchItems(items) {
                                         ? "disabled"
                                         : ""
                                 }
-                                title="Move down"
-                                aria-label="Move down"
+                                title="${t("moveDown")}"
+                                aria-label="${t("moveDown")}"
                             >
                                 <i class="bi bi-arrow-down"></i>
                             </button>
@@ -636,8 +712,8 @@ function renderWatchItems(items) {
                                 type="button"
                                 class="btn btn-outline-danger btn-sm px-2"
                                 data-watch-item-remove="${index}"
-                                title="Remove"
-                                aria-label="Remove"
+                                title="${t("remove")}"
+                                aria-label="${t("remove")}"
                             >
                                 <i class="bi bi-trash"></i>
                             </button>
@@ -653,7 +729,7 @@ function renderWatchItems(items) {
                             <label
                                 class="form-label small fw-semibold"
                             >
-                                Icon
+                                ${t("icon")}
                             </label>
 
                             <select
@@ -675,7 +751,7 @@ function renderWatchItems(items) {
                                 <label
                                     class="form-label small fw-semibold d-block"
                                 >
-                                    Visibility
+                                    ${t("visibility")}
                                 </label>
 
                                 <div class="form-check form-switch">
@@ -693,7 +769,7 @@ function renderWatchItems(items) {
                                     >
 
                                     <label class="form-check-label small">
-                                        Show on watch
+                                        ${t("showOnWatch")}
                                     </label>
 
                                 </div>
@@ -705,7 +781,7 @@ function renderWatchItems(items) {
                                 <label
                                     class="form-label small fw-semibold d-block"
                                 >
-                                    Action
+                                    ${t("action")}
                                 </label>
 
                                 <div class="form-check form-switch">
@@ -723,7 +799,7 @@ function renderWatchItems(items) {
                                     >
 
                                     <label class="form-check-label small">
-                                        Require confirmation
+                                        ${t("requireConfirmation")}
                                     </label>
 
                                 </div>
@@ -746,7 +822,7 @@ function renderWatchItems(items) {
             id="watch-items-section"
         >
             <h5 class="mb-3">
-                Watch items
+                ${t("watchItems")}
             </h5>
 
             <div class="row g-3">
@@ -761,7 +837,7 @@ function renderWatchItems(items) {
                     id="add-from-supla-btn"
                 >
                     <i class="bi bi-plus-lg me-1"></i>
-                    Add from SUPLA
+                    ${t("addFromSupla")}
                 </button>
 
                 <div
@@ -784,7 +860,7 @@ function renderWatchItems(items) {
                     ${watchItemsDirty ? "" : "disabled"}
                 >
                     <i class="bi bi-check-lg me-1"></i>
-                    Save watch configuration
+                    ${t("saveWatchConfiguration")}
                 </button>
 
                 <span
