@@ -1,11 +1,23 @@
+{% if language == "pl" %}
+    {% set wizard_label = "Kreator konfiguracji" %}
+    {% set step_label = "Krok" %}
+    {% set of_label = "z" %}
+    {% set progress_label = "Postęp konfiguracji" %}
+{% else %}
+    {% set wizard_label = "Setup Wizard" %}
+    {% set step_label = "Step" %}
+    {% set of_label = "of" %}
+    {% set progress_label = "Setup progress" %}
+{% endif %}
+
 <div class="mb-4">
     <div class="d-flex justify-content-between align-items-center mb-2">
         <h6 class="mb-0 text-muted">
-            Setup Wizard
+            {{ wizard_label }}
         </h6>
 
         <small class="text-muted">
-            Step {{ step }} of {{ steps }}
+            {{ step_label }} {{ step }} {{ of_label }} {{ steps }}
         </small>
     </div>
 
@@ -14,7 +26,7 @@
     <div
         class="progress"
         role="progressbar"
-        aria-label="Setup progress"
+        aria-label="{{ progress_label }}"
         aria-valuenow="{{ progress }}"
         aria-valuemin="0"
         aria-valuemax="100"

@@ -1,22 +1,36 @@
 {% extends "base.html" %}
 
+{% if language == "pl" %}
+    {% set setup_title = "Konfiguracja GarminSupla" %}
+    {% set server_prompt = "Wpisz adres serwera SUPLA:" %}
+    {% set server_label = "Serwer SUPLA" %}
+    {% set server_help = "Wpisz adres URL swojego serwera SUPLA." %}
+    {% set continue_label = "Kontynuuj" %}
+{% else %}
+    {% set setup_title = "GarminSupla Setup" %}
+    {% set server_prompt = "Enter the address of your SUPLA server:" %}
+    {% set server_label = "SUPLA Server" %}
+    {% set server_help = "Enter the URL of your SUPLA server." %}
+    {% set continue_label = "Continue" %}
+{% endif %}
+
 {% block content %}
 <div class="row justify-content-center w-100">
     <div class="col-12 col-md-8 col-lg-7 col-xl-5">
 
         <div class="card shadow-sm rounded-4 border-0">
             <div class="card-body p-4 p-lg-5">
-            
+
                 <div class="mb-5">
                     {% include "components/wizard_progress.html" %}
                 </div>
-                
+
                 <h2 class="h3 mb-2">
-                    GarminSupla Setup
+                    {{ setup_title }}
                 </h2>
 
                 <p class="text-muted mb-3">
-                    Enter the address of your SUPLA server:
+                    {{ server_prompt }}
                 </p>
 
                 <form method="post" novalidate>
@@ -32,7 +46,7 @@
                             for="server"
                             class="form-label fw-semibold"
                         >
-                            SUPLA Server
+                            {{ server_label }}
                         </label>
 
                         <input
@@ -53,15 +67,16 @@
                         {% endif %}
 
                         <div class="form-text">
-                            Enter the URL of your SUPLA server.
+                            {{ server_help }}
                         </div>
                     </div>
+
                     <div class="d-grid mt-3">
                         <button
                             type="submit"
                             class="btn btn-success btn-lg"
                         >
-                            Continue
+                            {{ continue_label }}
                             <i class="bi bi-arrow-right ms-2"></i>
                         </button>
                     </div>
