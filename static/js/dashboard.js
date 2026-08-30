@@ -233,12 +233,6 @@ function formatDate(value) {
 
 }
 
-function formatConfirmation(value) {
-    return value
-        ? "Required"
-        : "Not required";
-}
-
 function renderWatchItemIcon(icon) {
 
     if (icon === "sliding_gate") {
