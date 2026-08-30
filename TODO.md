@@ -170,6 +170,19 @@
   - Persist the selected dashboard language as a UI setting.
   - Dashboard language must be independent from watch languages.
 
+# Dashboard Theme
+
+- [ ] Add dashboard theme modes.
+  - `Auto`
+  - `Light`
+  - `Dark`
+  - `Auto` should use the browser / operating system color preference.
+  - Persist the selected dashboard theme as a UI setting.
+  - Add a theme selector to the dashboard.
+  - Use the dark-outline GarminSupla logo on light backgrounds.
+  - Use the white-outline GarminSupla logo on dark backgrounds.
+  - Keep dashboard theme independent from watch display settings.
+
 # Watch Metadata
 
 - [ ] Send device metadata from the Connect IQ application to the backend.
