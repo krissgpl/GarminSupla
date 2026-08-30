@@ -1499,13 +1499,13 @@ async function saveWatchItems(items) {
 
     } catch (error) {
 
-        if (error instanceof ApiError) {
-            status.textContent =
-                error.message;
-        } else {
-            status.textContent =
-                t("unableToSaveConfiguration");
-        }
+        console.error(
+            "Unable to save watch configuration:",
+            error,
+        );
+
+        status.textContent =
+            t("unableToSaveConfiguration");
 
         status.className =
             "small text-danger";
@@ -1689,13 +1689,14 @@ async function handleWatchRePair() {
 
     } catch (error) {
 
-        if (error instanceof ApiError) {
-            showError(error.message);
-        } else {
-            showError(
-                t("unableToResetWatchPairing")
-            );
-        }
+        console.error(
+            "Unable to reset watch pairing:",
+            error,
+        );
+
+        showError(
+            t("unableToResetWatchPairing")
+        );
 
     }
 }
@@ -1839,7 +1840,7 @@ async function handlePairingSubmit(event) {
                     t("pairingCodeNotFound");
             } else {
                 errorBox.textContent =
-                    error.message;
+                    t("unableToPairWatch");
             }
 
         } else {
@@ -2038,10 +2039,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     } catch (error) {
 
-        if (error instanceof ApiError) {
-            showError(error.message);
-            return;
-        }
+        console.error(
+            "Unable to load watch configuration:",
+            error,
+        );
 
         showError(
             t("unableToLoadWatchConfiguration")
