@@ -76,6 +76,18 @@ const uiText = {
         completePairingOnWatch:
             "Complete the pairing process on your Garmin watch.",
         cancel: "Cancel",
+        rePairConfirmation:
+            "Re-pair the current watch?\n\nThe current watch token will be invalidated. The watch will need to pair again.",
+        unableToResetWatchPairing:
+            "Unable to reset watch pairing.",
+        invalidPairingCode:
+            "Enter a valid 6-digit pairing code.",
+        pairingCodeNotFound:
+            "Pairing code not found or expired.",
+        unableToPairWatch:
+            "Unable to pair Garmin watch.",
+        unableToLoadWatchConfiguration:
+            "Unable to load Garmin watch configuration.",
     },
 
     pl: {
@@ -138,6 +150,18 @@ const uiText = {
         completePairingOnWatch:
             "Dokończ proces parowania na zegarku Garmin.",
         cancel: "Anuluj",
+        rePairConfirmation:
+            "Sparować ponownie obecny zegarek?\n\nToken obecnego zegarka zostanie unieważniony. Zegarek będzie wymagał ponownego sparowania.",
+        unableToResetWatchPairing:
+            "Nie można zresetować parowania zegarka.",
+        invalidPairingCode:
+            "Wpisz prawidłowy 6-cyfrowy kod parowania.",
+        pairingCodeNotFound:
+            "Nie znaleziono kodu parowania lub kod wygasł.",
+        unableToPairWatch:
+            "Nie można sparować zegarka Garmin.",
+        unableToLoadWatchConfiguration:
+            "Nie można załadować konfiguracji zegarka Garmin.",
     },
 };
 
@@ -1647,9 +1671,7 @@ function renderWatch(
 async function handleWatchRePair() {
 
     const confirmed = window.confirm(
-        "Re-pair the current watch?\n\n"
-        + "The current watch token will be invalidated. "
-        + "The watch will need to pair again."
+        t("rePairConfirmation")
     );
 
     if (!confirmed) {
@@ -1677,7 +1699,7 @@ async function handleWatchRePair() {
             showError(error.message);
         } else {
             showError(
-                "Unable to reset watch pairing."
+                t("unableToResetWatchPairing")
             );
         }
 
@@ -1800,7 +1822,7 @@ async function handlePairingSubmit(event) {
 
     if (!/^\d{6}$/.test(code)) {
         errorBox.textContent =
-            "Enter a valid 6-digit pairing code.";
+            t("invalidPairingCode");
 
         errorBox.classList.remove("d-none");
         return;
@@ -1820,7 +1842,7 @@ async function handlePairingSubmit(event) {
 
             if (error.status === 404) {
                 errorBox.textContent =
-                    "Pairing code not found or expired.";
+                    t("pairingCodeNotFound");
             } else {
                 errorBox.textContent =
                     error.message;
@@ -1828,7 +1850,7 @@ async function handlePairingSubmit(event) {
 
         } else {
             errorBox.textContent =
-                "Unable to pair Garmin watch.";
+                t("unableToPairWatch");
         }
 
         errorBox.classList.remove("d-none");
@@ -2028,7 +2050,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
         showError(
-            "Unable to load Garmin watch configuration."
+            t("unableToLoadWatchConfiguration")
         );
 
     }
