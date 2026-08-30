@@ -10,6 +10,35 @@ import {
     updateWatchItems,
 } from "./api.js";
 
+const uiLanguage =
+    document.documentElement.lang === "pl"
+        ? "pl"
+        : "en";
+
+const uiText = {
+    en: {
+        never: "Never",
+        enabled: "Enabled",
+        disabled: "Disabled",
+        created: "Created",
+        lastSeen: "Last seen",
+    },
+
+    pl: {
+        never: "Nigdy",
+        enabled: "Włączony",
+        disabled: "Wyłączony",
+        created: "Utworzono",
+        lastSeen: "Ostatnia aktywność",
+    },
+};
+
+function t(key) {
+    return uiText[uiLanguage][key]
+        ?? uiText.en[key]
+        ?? key;
+}
+
 let watchItemsDirty = false;
 
 function setWatchItemsDirty(dirty) {
@@ -28,10 +57,12 @@ function setWatchItemsDirty(dirty) {
 function formatDate(value) {
 
     if (!value) {
-        return "Never";
+        return t("never");
     }
 
-    return new Date(value).toLocaleString();
+    return new Date(value).toLocaleString(
+        uiLanguage
+    );
 
 }
 
@@ -1374,8 +1405,8 @@ function renderWatch(
 
     const statusText =
         watch.enabled
-            ? "Enabled"
-            : "Disabled";
+            ? t("enabled")
+            : t("disabled");
 
     content.innerHTML = `
         <div class="d-flex justify-content-between align-items-start">
@@ -1398,7 +1429,7 @@ function renderWatch(
             <div class="col-12 col-md-6 mb-3">
 
                 <small class="text-muted d-block">
-                    Created
+                    ${t("created")}
                 </small>
 
                 <strong>
@@ -1410,7 +1441,7 @@ function renderWatch(
             <div class="col-12 col-md-6 mb-3">
 
                 <small class="text-muted d-block">
-                    Last seen
+                    ${t("lastSeen")}
                 </small>
 
                 <strong>
