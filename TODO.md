@@ -148,7 +148,7 @@
 
 # Localization
 
-- [ ] Add Polish and English support to the Connect IQ application.
+- [X] Add Polish and English support to the Connect IQ application.
   - Use English as the default fallback language.
   - Add complete Polish translations.
   - Remove hardcoded user-facing strings from the watch code.
