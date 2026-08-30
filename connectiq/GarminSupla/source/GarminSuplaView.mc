@@ -384,6 +384,31 @@ class GarminSuplaView extends WatchUi.View {
 
 	}
 
+	function prepareForPairing() as Void {
+
+		_statusTimer.stop();
+
+		_serverNotConfigured = false;
+		_pairingCode = null;
+
+		_items = [];
+		_selectedIndex = 0;
+
+		_itemId = null;
+		_itemType = null;
+		_itemName = null;
+
+		_confirmationRequired = true;
+		_itemConnected = false;
+		_itemState = "unknown";
+		_usingStoredWifiConfig = false;
+		_itemIcon = "default";
+
+		_status = _statusConnecting;
+
+		WatchUi.requestUpdate();
+	}
+
     function setPairingCode(code) as Void {
 		_serverNotConfigured = false;
         _pairingCode = code;

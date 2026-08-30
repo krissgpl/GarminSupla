@@ -464,6 +464,8 @@ class GarminSuplaApi {
 
 		stopConfigPolling();
 
+		_view.prepareForPairing();
+
         var url = _baseUrl + "/watch/pair";
 
         var options = {
