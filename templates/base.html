@@ -1,5 +1,12 @@
 <!DOCTYPE html>
 <html lang="{{ language | default('en') }}" data-bs-theme="light">
+{% if language | default('en') == "pl" %}
+    {% set app_tagline = "Integracja Garmin Connect IQ z SUPLA" %}
+    {% set version_label = "Wersja" %}
+{% else %}
+    {% set app_tagline = "Garmin Connect IQ integration for SUPLA" %}
+    {% set version_label = "Version" %}
+{% endif %}
 
 <head>
     <meta charset="UTF-8">
@@ -47,7 +54,7 @@
         </h1>
 
         <p class="text-muted mb-0">
-            Garmin Connect IQ integration for SUPLA
+            {{ app_tagline }}
         </p>
     </header>
 
@@ -59,7 +66,7 @@
     </main>
 
     <footer class="py-2 text-center text-muted small">
-        Version {{ version }}
+        {{ version_label }} {{ version }}
     </footer>
 
 </div>
