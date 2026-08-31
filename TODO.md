@@ -254,7 +254,7 @@
 
 # Branding
 
-- [ ] Prepare a shared GarminSupla icon / logo.
+- [X] Prepare a shared GarminSupla icon / logo.
   - Use the same visual theme in:
     - Garmin Connect IQ application,
     - watch launcher icon,
