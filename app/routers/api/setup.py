@@ -18,6 +18,7 @@ from app.services.pairing_service import PairingService
 from app.models.api.setup import (
     SuplaAvailableItem,
     UILanguageSettings,
+    UIThemeSettings,
     WatchItemsUpdateRequest,
 )
 
@@ -51,6 +52,41 @@ def get_ui_language() -> UILanguageSettings:
 
     return UILanguageSettings(
         language=settings.ui.language,
+    )
+
+
+@router.get(
+    "/ui/theme",
+    response_model=UIThemeSettings,
+)
+def get_ui_theme() -> UIThemeSettings:
+    """Return the current dashboard theme preference."""
+
+    settings = setup_service.load_settings()
+
+    return UIThemeSettings(
+        theme=settings.ui.theme,
+    )
+
+
+@router.put(
+    "/ui/theme",
+    response_model=UIThemeSettings,
+)
+def update_ui_theme(
+    request: UIThemeSettings,
+    admin: AdminAccount = Depends(
+        require_admin_csrf
+    ),
+) -> UIThemeSettings:
+    """Save the dashboard theme preference."""
+
+    theme = setup_service.save_ui_theme(
+        request.theme
+    )
+
+    return UIThemeSettings(
+        theme=theme,
     )
 
 

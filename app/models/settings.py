@@ -1,14 +1,33 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 from typing import Literal
 
 
 class UISettings(BaseModel):
-    theme: str = "system"
+    theme: Literal[
+        "auto",
+        "light",
+        "dark",
+    ] = "auto"
+
     language: Literal[
         "auto",
         "pl",
         "en",
     ] = "auto"
+
+    @field_validator(
+        "theme",
+        mode="before",
+    )
+    @classmethod
+    def migrate_legacy_theme(
+        cls,
+        value: object,
+    ) -> object:
+        if value == "system":
+            return "auto"
+
+        return value
 
 
 class SelectedGate(BaseModel):

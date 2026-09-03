@@ -74,6 +74,24 @@ class SetupService:
 
         return settings.ui.language
 
+    def save_ui_theme(
+        self,
+        theme: Literal[
+            "auto",
+            "light",
+            "dark",
+        ],
+    ) -> str:
+        """Persist the dashboard theme preference."""
+
+        settings = self._store.load()
+
+        settings.ui.theme = theme
+
+        self._store.save(settings)
+
+        return settings.ui.theme
+
     def get_status(self) -> SetupStatus:
         """Return the current setup status."""
 

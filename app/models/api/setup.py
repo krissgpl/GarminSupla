@@ -23,6 +23,14 @@ class UILanguageSettings(BaseModel):
     ]
 
 
+class UIThemeSettings(BaseModel):
+    theme: Literal[
+        "auto",
+        "light",
+        "dark",
+    ]
+
+
 class SetupStatus(BaseModel):
     server: str
     authorized: bool
