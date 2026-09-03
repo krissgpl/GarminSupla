@@ -1,4 +1,9 @@
-from fastapi import APIRouter, Depends
+from fastapi import (
+    APIRouter,
+    Depends,
+    HTTPException,
+    status,
+)
 
 from app.api.watch_auth import authenticate_watch
 from app.models.settings import WatchDevice
@@ -8,6 +13,7 @@ from app.models.api.watch import (
     WatchActionResponse,
     WatchConfig,
     WatchItemConfig,
+    WatchMetadataUpdate,
 )
 
 from app.services.watch_config_service import (
@@ -18,6 +24,10 @@ from app.services.watch_action_service import (
     WatchActionService,
 )
 
+from app.services.watch_service import (
+    WatchService,
+)
+
 router = APIRouter(
     prefix="/watch",
     tags=["Watch"],
@@ -25,6 +35,8 @@ router = APIRouter(
 
 watch_config_service = WatchConfigService()
 watch_action_service = WatchActionService()
+watch_service = WatchService()
+
 
 @router.get("/me")
 def get_watch(
@@ -39,6 +51,42 @@ def get_watch(
         "name": watch.name,
         "enabled": watch.enabled,
     }
+
+
+@router.put(
+    "/metadata",
+    response_model=WatchMetadataUpdate,
+)
+def update_watch_metadata(
+    request: WatchMetadataUpdate,
+    watch: WatchDevice = Depends(
+        authenticate_watch
+    ),
+) -> WatchMetadataUpdate:
+    """Update metadata for the authenticated Garmin watch."""
+
+    updated = watch_service.update_metadata(
+        watch_id=watch.id,
+        metadata=request.model_dump(
+            exclude_unset=True
+        ),
+    )
+
+    if updated is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Watch no longer registered.",
+        )
+
+    return WatchMetadataUpdate(
+        device_model=updated.device_model,
+        device_id=updated.device_id,
+        part_number=updated.part_number,
+        firmware_version=updated.firmware_version,
+        connect_iq_version=updated.connect_iq_version,
+        system_language=updated.system_language,
+        app_version=updated.app_version,
+    )
 
 
 @router.get(
