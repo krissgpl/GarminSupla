@@ -10,8 +10,15 @@ from app.stores.settings_store import SettingsStore
 class WatchService:
     """Manage Garmin watch registration and authentication."""
 
-    def __init__(self):
-        self._store = SettingsStore()
+    def __init__(
+        self,
+        store: SettingsStore | None = None,
+    ):
+        self._store = (
+            store
+            if store is not None
+            else SettingsStore()
+        )
 
     @staticmethod
     def _hash_token(token: str) -> str:
@@ -44,6 +51,47 @@ class WatchService:
             watch.token_hash,
         ):
             return None
+
+        return watch
+
+    def update_metadata(
+        self,
+        watch_id: str,
+        metadata: dict[str, str | None],
+    ) -> WatchDevice | None:
+        """Update metadata for the registered Garmin watch."""
+
+        settings = self._store.load()
+
+        watch = settings.watch
+
+        if watch is None:
+            return None
+
+        if watch.id != watch_id:
+            return None
+
+        allowed_fields = {
+            "device_model",
+            "device_id",
+            "part_number",
+            "firmware_version",
+            "connect_iq_version",
+            "system_language",
+            "app_version",
+        }
+
+        for field, value in metadata.items():
+            if field not in allowed_fields:
+                continue
+
+            setattr(
+                watch,
+                field,
+                value,
+            )
+
+        self._store.save(settings)
 
         return watch
 
