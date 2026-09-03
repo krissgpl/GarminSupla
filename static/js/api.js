@@ -95,6 +95,28 @@ export async function updateUILanguage(language) {
 
 }
 
+export async function getUITheme() {
+
+    return apiRequest(
+        "/api/v1/setup/ui/theme",
+    );
+
+}
+
+export async function updateUITheme(theme) {
+
+    return apiRequest(
+        "/api/v1/setup/ui/theme",
+        {
+            method: "PUT",
+            body: JSON.stringify({
+                theme: theme,
+            }),
+        },
+    );
+
+}
+
 export async function getWatchStatus() {
 
     return apiRequest(
