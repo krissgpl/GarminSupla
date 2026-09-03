@@ -3,10 +3,12 @@ import {
     approveWatchPairing,
     getAvailableSuplaItems,
     getUILanguage,
+    getUITheme,
     getWatchItems,
     getWatchStatus,
     resetWatchPairing,
     updateUILanguage,
+    updateUITheme,
     updateWatchItems,
 } from "./api.js";
 
@@ -2007,6 +2009,84 @@ async function initializeUILanguageSelector() {
     }
 }
 
+async function initializeUIThemeSelector() {
+
+    const select =
+        document.getElementById(
+            "ui-theme-select"
+        );
+
+    if (!select) {
+        return;
+    }
+
+    try {
+
+        const settings =
+            await getUITheme();
+
+        let currentTheme =
+            settings.theme;
+
+        select.value =
+            currentTheme;
+
+        select.addEventListener(
+            "change",
+            async () => {
+
+                const nextTheme =
+                    select.value;
+
+                if (
+                    nextTheme
+                    === currentTheme
+                ) {
+                    return;
+                }
+
+                select.disabled = true;
+
+                try {
+
+                    const saved =
+                        await updateUITheme(
+                            nextTheme
+                        );
+
+                    currentTheme =
+                        saved.theme;
+
+                    select.disabled = false;
+
+                } catch (error) {
+
+                    select.value =
+                        currentTheme;
+
+                    select.disabled = false;
+
+                    console.error(
+                        "Unable to save UI theme:",
+                        error,
+                    );
+
+                }
+            },
+        );
+
+    } catch (error) {
+
+        select.disabled = true;
+
+        console.error(
+            "Unable to load UI theme:",
+            error,
+        );
+
+    }
+}
+
 function showError(message) {
 
     document.getElementById("watch-content").innerHTML = `
@@ -2021,6 +2101,7 @@ function showError(message) {
 document.addEventListener("DOMContentLoaded", async () => {
 
     initializeUILanguageSelector();
+    initializeUIThemeSelector();
 
     try {
 

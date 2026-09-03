@@ -4,6 +4,9 @@
     {% set dashboard_title = "Panel" %}
     {% set dashboard_description = "Zarządzaj integracją GarminSupla." %}
     {% set language_label = "Język" %}
+    {% set theme_label = "Motyw" %}
+    {% set theme_light_label = "Jasny" %}
+    {% set theme_dark_label = "Ciemny" %}
     {% set logout_label = "Wyloguj" %}
     {% set watch_title = "Zegarek Garmin" %}
     {% set loading_label = "Ładowanie..." %}
@@ -12,6 +15,9 @@
     {% set dashboard_title = "Dashboard" %}
     {% set dashboard_description = "Manage your GarminSupla integration." %}
     {% set language_label = "Language" %}
+    {% set theme_label = "Theme" %}
+    {% set theme_light_label = "Light" %}
+    {% set theme_dark_label = "Dark" %}
     {% set logout_label = "Logout" %}
     {% set watch_title = "Garmin Watch" %}
     {% set loading_label = "Loading..." %}
@@ -46,6 +52,23 @@
                     <option value="auto">Auto</option>
                     <option value="pl">Polski</option>
                     <option value="en">English</option>
+                </select>
+
+                <select
+                    id="ui-theme-select"
+                    class="form-select form-select-sm"
+                    aria-label="{{ theme_label }}"
+                    style="width: auto;"
+                >
+                    <option value="auto">
+                        Auto
+                    </option>
+                    <option value="light">
+                        {{ theme_light_label }}
+                    </option>
+                    <option value="dark">
+                        {{ theme_dark_label }}
+                    </option>
                 </select>
 
                 <form
