@@ -2009,6 +2009,32 @@ async function initializeUILanguageSelector() {
     }
 }
 
+const systemDarkTheme =
+    window.matchMedia(
+        "(prefers-color-scheme: dark)"
+    );
+
+function resolveUITheme(theme) {
+    if (theme === "dark") {
+        return "dark";
+    }
+
+    if (theme === "light") {
+        return "light";
+    }
+
+    return systemDarkTheme.matches
+        ? "dark"
+        : "light";
+}
+
+function applyUITheme(theme) {
+    document.documentElement.setAttribute(
+        "data-bs-theme",
+        resolveUITheme(theme),
+    );
+}
+
 async function initializeUIThemeSelector() {
 
     const select =
@@ -2030,6 +2056,10 @@ async function initializeUIThemeSelector() {
 
         select.value =
             currentTheme;
+
+        applyUITheme(
+            currentTheme
+        );
 
         select.addEventListener(
             "change",
@@ -2057,6 +2087,10 @@ async function initializeUIThemeSelector() {
                     currentTheme =
                         saved.theme;
 
+                    applyUITheme(
+                        currentTheme
+                    );
+
                     select.disabled = false;
 
                 } catch (error) {
@@ -2071,6 +2105,17 @@ async function initializeUIThemeSelector() {
                         error,
                     );
 
+                }
+            },
+        );
+
+        systemDarkTheme.addEventListener(
+            "change",
+            () => {
+                if (currentTheme === "auto") {
+                    applyUITheme(
+                        currentTheme
+                    );
                 }
             },
         );
