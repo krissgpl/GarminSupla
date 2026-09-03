@@ -70,6 +70,15 @@ class SuplaSettings(BaseModel):
 class WatchDevice(BaseModel):
     id: str
     name: str = "Garmin Watch"
+
+    device_model: str | None = None
+    device_id: str | None = None
+    part_number: str | None = None
+    firmware_version: str | None = None
+    connect_iq_version: str | None = None
+    system_language: str | None = None
+    app_version: str | None = None
+
     token_hash: str
     created_at: str
     last_seen_at: str | None = None
