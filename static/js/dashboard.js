@@ -2037,17 +2037,6 @@ function applyUITheme(theme) {
         resolvedTheme,
     );
 
-    const favicon =
-        document.querySelector(
-            'link[rel="icon"]'
-        );
-
-    if (favicon) {
-        favicon.href =
-            resolvedTheme === "dark"
-                ? "/static/img/favicon-dark.png"
-                : "/static/img/favicon-light.png";
-    }
 }
 
 async function initializeUIThemeSelector() {
