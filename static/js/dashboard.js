@@ -2029,10 +2029,25 @@ function resolveUITheme(theme) {
 }
 
 function applyUITheme(theme) {
+    const resolvedTheme =
+        resolveUITheme(theme);
+
     document.documentElement.setAttribute(
         "data-bs-theme",
-        resolveUITheme(theme),
+        resolvedTheme,
     );
+
+    const favicon =
+        document.querySelector(
+            'link[rel="icon"]'
+        );
+
+    if (favicon) {
+        favicon.href =
+            resolvedTheme === "dark"
+                ? "/static/img/favicon-dark.png"
+                : "/static/img/favicon-light.png";
+    }
 }
 
 async function initializeUIThemeSelector() {
