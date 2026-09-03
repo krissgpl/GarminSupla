@@ -172,7 +172,7 @@
 
 # Dashboard Theme
 
-- [ ] Add dashboard theme modes.
+- [X] Add dashboard theme modes.
   - `Auto`
   - `Light`
   - `Dark`
