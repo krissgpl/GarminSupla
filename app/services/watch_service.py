@@ -4,6 +4,9 @@ import uuid
 from datetime import datetime, timezone
 
 from app.models.settings import WatchDevice
+from app.services.watch_device_resolver import (
+    resolve_watch_model,
+)
 from app.stores.settings_store import SettingsStore
 
 
@@ -72,7 +75,6 @@ class WatchService:
             return None
 
         allowed_fields = {
-            "device_model",
             "device_id",
             "part_number",
             "firmware_version",
@@ -89,6 +91,13 @@ class WatchService:
                 watch,
                 field,
                 value,
+            )
+
+        if "part_number" in metadata:
+            watch.device_model = (
+                resolve_watch_model(
+                    watch.part_number
+                )
             )
 
         self._store.save(settings)
