@@ -67,6 +67,88 @@ class GarminSuplaApi {
 		_configTimer = new Timer.Timer();
     }
 
+	function getSystemLanguageCode(
+		language
+	) as Lang.String {
+
+		switch (language) {
+			case System.LANGUAGE_ARA:
+				return "ara";
+			case System.LANGUAGE_BUL:
+				return "bul";
+			case System.LANGUAGE_CES:
+				return "ces";
+			case System.LANGUAGE_CHS:
+				return "chs";
+			case System.LANGUAGE_CHT:
+				return "cht";
+			case System.LANGUAGE_DAN:
+				return "dan";
+			case System.LANGUAGE_DEU:
+				return "deu";
+			case System.LANGUAGE_DUT:
+				return "dut";
+			case System.LANGUAGE_ENG:
+				return "eng";
+			case System.LANGUAGE_EST:
+				return "est";
+			case System.LANGUAGE_FIN:
+				return "fin";
+			case System.LANGUAGE_FRE:
+				return "fre";
+			case System.LANGUAGE_GRE:
+				return "gre";
+			case System.LANGUAGE_HEB:
+				return "heb";
+			case System.LANGUAGE_HRV:
+				return "hrv";
+			case System.LANGUAGE_HUN:
+				return "hun";
+			case System.LANGUAGE_IND:
+				return "ind";
+			case System.LANGUAGE_ITA:
+				return "ita";
+			case System.LANGUAGE_JPN:
+				return "jpn";
+			case System.LANGUAGE_KOR:
+				return "kor";
+			case System.LANGUAGE_LAV:
+				return "lav";
+			case System.LANGUAGE_LIT:
+				return "lit";
+			case System.LANGUAGE_NOB:
+				return "nob";
+			case System.LANGUAGE_POL:
+				return "pol";
+			case System.LANGUAGE_POR:
+				return "por";
+			case System.LANGUAGE_RON:
+				return "ron";
+			case System.LANGUAGE_RUS:
+				return "rus";
+			case System.LANGUAGE_SLO:
+				return "slo";
+			case System.LANGUAGE_SLV:
+				return "slv";
+			case System.LANGUAGE_SPA:
+				return "spa";
+			case System.LANGUAGE_SWE:
+				return "swe";
+			case System.LANGUAGE_THA:
+				return "tha";
+			case System.LANGUAGE_TUR:
+				return "tur";
+			case System.LANGUAGE_UKR:
+				return "ukr";
+			case System.LANGUAGE_VIE:
+				return "vie";
+			case System.LANGUAGE_ZSM:
+				return "zsm";
+		}
+
+		return "unknown";
+	}
+
 	function getWatchMetadata()
 		as Lang.Dictionary {
 
@@ -93,6 +175,11 @@ class GarminSuplaApi {
 				Lang.format(
 					"$1$.$2$.$3$",
 					connectIqVersion
+				),
+
+			"system_language" =>
+				getSystemLanguageCode(
+					deviceSettings.systemLanguage
 				),
 
 			"app_version" =>
