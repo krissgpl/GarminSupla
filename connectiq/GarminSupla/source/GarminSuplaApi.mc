@@ -67,6 +67,139 @@ class GarminSuplaApi {
 		_configTimer = new Timer.Timer();
     }
 
+	function getWatchMetadata()
+		as Lang.Dictionary {
+
+		var deviceSettings =
+			System.getDeviceSettings();
+
+		var firmwareVersion =
+			deviceSettings.firmwareVersion;
+
+		var connectIqVersion =
+			deviceSettings.monkeyVersion;
+
+		var metadata = {
+			"part_number" =>
+				deviceSettings.partNumber,
+
+			"firmware_version" =>
+				Lang.format(
+					"$1$.$2$",
+					firmwareVersion
+				),
+
+			"connect_iq_version" =>
+				Lang.format(
+					"$1$.$2$.$3$",
+					connectIqVersion
+				),
+
+			"app_version" =>
+				Application.loadResource(
+					Rez.Strings.AboutVersion
+				).toString()
+		};
+
+		var deviceId =
+			deviceSettings.uniqueIdentifier;
+
+		if (deviceId != null) {
+			metadata["device_id"] =
+				deviceId;
+		}
+
+		return metadata;
+	}
+
+	function sendMetadata() as Void {
+
+		var token =
+			Application.Storage.getValue(
+				"watch_token"
+			);
+
+		if (token == null) {
+
+			System.println(
+				"Cannot send watch metadata: no watch token"
+			);
+
+			loadConfig();
+
+			return;
+		}
+
+		var url =
+			_baseUrl + "/watch/metadata";
+
+		var params =
+			getWatchMetadata();
+
+		var options = {
+			:method =>
+				Communications.HTTP_REQUEST_METHOD_PUT,
+
+			:headers => {
+				"Authorization" =>
+					"Bearer " + token.toString(),
+
+				"Content-Type" =>
+					Communications.REQUEST_CONTENT_TYPE_JSON
+			},
+
+			:responseType =>
+				Communications.HTTP_RESPONSE_CONTENT_TYPE_JSON
+		};
+
+		System.println(
+			"PUT " + url
+		);
+
+		System.println(
+			"Watch metadata: "
+			+ params
+		);
+
+		Communications.makeWebRequest(
+			url,
+			params,
+			options,
+			method(:onMetadataResponse)
+		);
+	}
+
+	function onMetadataResponse(
+		responseCode as Lang.Number,
+		data as WebResponseData
+	) as Void {
+
+		System.println(
+			"Watch metadata HTTP: "
+			+ responseCode
+		);
+
+		if (responseCode == 401) {
+
+			System.println(
+				"Watch token rejected while sending metadata"
+			);
+
+			clearCredentials();
+			startPairing();
+
+			return;
+		}
+
+		if (responseCode != 200) {
+			System.println(
+				"Unable to update watch metadata"
+			);
+		}
+
+		loadConfig();
+	}
+
 	function start() as Void {
 
 		if (_baseUrl == null) {
@@ -421,7 +554,7 @@ class GarminSuplaApi {
 				"Stored watch credentials valid"
 			);
 
-			loadConfig();
+			sendMetadata();
 
 			return;
 		}
@@ -694,7 +827,7 @@ class GarminSuplaApi {
 
 				_view.setAuthenticated();
 
-				loadConfig();
+				sendMetadata();
 
 				return;
 			}
