@@ -24,6 +24,16 @@ const uiText = {
         disabled: "Disabled",
         created: "Created",
         lastSeen: "Last seen",
+        deviceModel: "Model",
+        deviceId: "Device ID",
+        partNumber: "Part number",
+        firmwareVersion: "Firmware",
+        connectIqVersion: "Connect IQ",
+        garminSuplaVersion: "GarminSupla",
+        systemLanguage: "System language",
+        notAvailable: "Not available",
+        polish: "Polish",
+        english: "English",
         watchItems: "Watch items",
         noWatchItems: "No items configured for the watch.",
         type: "Type",
@@ -98,6 +108,16 @@ const uiText = {
         disabled: "Wyłączony",
         created: "Utworzono",
         lastSeen: "Ostatnia aktywność",
+        deviceModel: "Model",
+        deviceId: "Device ID",
+        partNumber: "Numer części",
+        firmwareVersion: "Firmware",
+        connectIqVersion: "Connect IQ",
+        garminSuplaVersion: "GarminSupla",
+        systemLanguage: "Język systemowy",
+        notAvailable: "Brak danych",
+        polish: "Polski",
+        english: "Angielski",
         watchItems: "Elementy zegarka",
         noWatchItems: "Brak skonfigurowanych elementów zegarka.",
         type: "Typ",
@@ -233,6 +253,39 @@ function formatDate(value) {
         uiLanguage
     );
 
+}
+
+function formatMetadataValue(value) {
+
+    if (
+        value === null
+        || value === undefined
+        || value === ""
+    ) {
+        return t("notAvailable");
+    }
+
+    return value;
+}
+
+function formatSystemLanguage(value) {
+
+    if (
+        !value
+        || value === "unknown"
+    ) {
+        return t("notAvailable");
+    }
+
+    if (value === "pol") {
+        return t("polish");
+    }
+
+    if (value === "eng") {
+        return t("english");
+    }
+
+    return value.toUpperCase();
 }
 
 function renderWatchItemIcon(icon) {
@@ -1573,7 +1626,6 @@ function renderWatch(
 
             <div>
                 <h4 class="mb-2">
-                    <i class="bi bi-smartwatch me-2"></i>
                     ${watch.name}
                 </h4>
 
@@ -1584,30 +1636,114 @@ function renderWatch(
 
         </div>
 
-        <div class="row mt-4">
+                <div class="row g-3 mt-3">
 
-            <div class="col-12 col-md-6 mb-3">
+            <div class="col-12 col-md-6 col-xl-4">
+                <small class="text-muted d-block">
+                    ${t("deviceModel")}
+                </small>
 
+                <strong>
+                    ${formatMetadataValue(
+                        watch.device_model
+                    )}
+                </strong>
+            </div>
+
+            <div class="col-12 col-md-6 col-xl-4">
+                <small class="text-muted d-block">
+                    ${t("partNumber")}
+                </small>
+
+                <strong>
+                    ${formatMetadataValue(
+                        watch.part_number
+                    )}
+                </strong>
+            </div>
+
+            <div class="col-12 col-md-6 col-xl-4">
+                <small class="text-muted d-block">
+                    ${t("deviceId")}
+                </small>
+
+                <strong class="text-break">
+                    ${formatMetadataValue(
+                        watch.device_id
+                    )}
+                </strong>
+            </div>
+
+            <div class="col-12 col-md-6 col-xl-4">
+                <small class="text-muted d-block">
+                    ${t("firmwareVersion")}
+                </small>
+
+                <strong>
+                    ${formatMetadataValue(
+                        watch.firmware_version
+                    )}
+                </strong>
+            </div>
+
+            <div class="col-12 col-md-6 col-xl-4">
+                <small class="text-muted d-block">
+                    ${t("connectIqVersion")}
+                </small>
+
+                <strong>
+                    ${formatMetadataValue(
+                        watch.connect_iq_version
+                    )}
+                </strong>
+            </div>
+
+            <div class="col-12 col-md-6 col-xl-4">
+                <small class="text-muted d-block">
+                    ${t("garminSuplaVersion")}
+                </small>
+
+                <strong>
+                    ${formatMetadataValue(
+                        watch.app_version
+                    )}
+                </strong>
+            </div>
+
+            <div class="col-12 col-md-6 col-xl-4">
+                <small class="text-muted d-block">
+                    ${t("systemLanguage")}
+                </small>
+
+                <strong>
+                    ${formatSystemLanguage(
+                        watch.system_language
+                    )}
+                </strong>
+            </div>
+
+            <div class="col-12 col-md-6 col-xl-4">
                 <small class="text-muted d-block">
                     ${t("created")}
                 </small>
 
                 <strong>
-                    ${formatDate(watch.created_at)}
+                    ${formatDate(
+                        watch.created_at
+                    )}
                 </strong>
-
             </div>
 
-            <div class="col-12 col-md-6 mb-3">
-
+            <div class="col-12 col-md-6 col-xl-4">
                 <small class="text-muted d-block">
                     ${t("lastSeen")}
                 </small>
 
                 <strong>
-                    ${formatDate(watch.last_seen_at)}
+                    ${formatDate(
+                        watch.last_seen_at
+                    )}
                 </strong>
-
             </div>
 
         </div>
