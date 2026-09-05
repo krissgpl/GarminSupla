@@ -130,6 +130,13 @@ class SetupService:
             id=watch.id,
             name=watch.name,
             enabled=watch.enabled,
+            device_model=watch.device_model,
+            device_id=watch.device_id,
+            part_number=watch.part_number,
+            firmware_version=watch.firmware_version,
+            connect_iq_version=watch.connect_iq_version,
+            system_language=watch.system_language,
+            app_version=watch.app_version,
             created_at=watch.created_at,
             last_seen_at=watch.last_seen_at,
         )

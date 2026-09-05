@@ -43,6 +43,15 @@ class WatchStatus(BaseModel):
     id: str | None = None
     name: str | None = None
     enabled: bool = False
+
+    device_model: str | None = None
+    device_id: str | None = None
+    part_number: str | None = None
+    firmware_version: str | None = None
+    connect_iq_version: str | None = None
+    system_language: str | None = None
+    app_version: str | None = None
+
     created_at: str | None = None
     last_seen_at: str | None = None
 
