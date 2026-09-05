@@ -100,6 +100,10 @@ class WatchService:
                 )
             )
 
+        watch.last_seen_at = (
+            datetime.now(timezone.utc).isoformat()
+        )
+
         self._store.save(settings)
 
         return watch
