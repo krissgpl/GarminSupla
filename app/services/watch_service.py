@@ -39,23 +39,19 @@ class WatchService:
 
         settings = self._store.load()
 
-        watch = settings.watch
-
-        if watch is None:
-            return None
-
-        if not watch.enabled:
-            return None
-
         token_hash = self._hash_token(token)
 
-        if not secrets.compare_digest(
-            token_hash,
-            watch.token_hash,
-        ):
-            return None
+        for watch in settings.watches:
+            if not watch.enabled:
+                continue
 
-        return watch
+            if secrets.compare_digest(
+                token_hash,
+                watch.token_hash,
+            ):
+                return watch
+
+        return None
 
     def update_metadata(
         self,
