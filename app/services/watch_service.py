@@ -131,6 +131,10 @@ class WatchService:
             enabled=True,
         )
 
+        settings.watches.append(
+            watch
+        )
+
         settings.watch = watch
 
         self._store.save(settings)
