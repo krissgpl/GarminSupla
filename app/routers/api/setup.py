@@ -193,6 +193,32 @@ def get_watch_status_by_id(
     return watch
 
 @router.patch(
+    "/watches/{watch_id}",
+    response_model=WatchStatus,
+)
+def update_watch_name_by_id(
+    watch_id: str,
+    request: WatchNameUpdate,
+    admin: AdminAccount = Depends(
+        require_admin_csrf
+    ),
+) -> WatchStatus:
+    """Update one Garmin watch user-defined name."""
+
+    watch = setup_service.save_watch_name(
+        request.name,
+        watch_id=watch_id,
+    )
+
+    if watch is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Garmin watch not found.",
+        )
+
+    return watch
+
+@router.patch(
     "/watch",
     response_model=WatchStatus,
 )
