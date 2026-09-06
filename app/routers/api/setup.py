@@ -20,6 +20,7 @@ from app.models.api.setup import (
     UILanguageSettings,
     UIThemeSettings,
     WatchItemsUpdateRequest,
+    WatchNameUpdate,
 )
 
 router = APIRouter(
@@ -159,6 +160,30 @@ def get_watch_status() -> WatchStatus:
     """Return Garmin watch setup status."""
 
     return setup_service.get_watch_status()
+
+@router.patch(
+    "/watch",
+    response_model=WatchStatus,
+)
+def update_watch_name(
+    request: WatchNameUpdate,
+    admin: AdminAccount = Depends(
+        require_admin_csrf
+    ),
+) -> WatchStatus:
+    """Update the user-defined Garmin watch name."""
+
+    watch = setup_service.save_watch_name(
+        request.name
+    )
+
+    if watch is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Garmin watch is not configured.",
+        )
+
+    return watch
 
 @router.get(
     "/watch/items",

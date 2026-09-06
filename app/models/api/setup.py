@@ -1,6 +1,10 @@
 from typing import Literal
 
-from pydantic import BaseModel, model_validator
+from pydantic import (
+    BaseModel,
+    field_validator,
+    model_validator,
+)
 
 from app.models.settings import SelectedGate
 
@@ -54,6 +58,30 @@ class WatchStatus(BaseModel):
 
     created_at: str | None = None
     last_seen_at: str | None = None
+
+
+class WatchNameUpdate(BaseModel):
+    name: str
+
+    @field_validator("name")
+    @classmethod
+    def validate_name(
+        cls,
+        value: str,
+    ) -> str:
+        name = value.strip()
+
+        if not name:
+            raise ValueError(
+                "Watch name must not be empty."
+            )
+
+        if len(name) > 50:
+            raise ValueError(
+                "Watch name must not exceed 50 characters."
+            )
+
+        return name
 
 
 class WatchItemUpdate(BaseModel):

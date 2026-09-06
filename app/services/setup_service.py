@@ -141,6 +141,25 @@ class SetupService:
             last_seen_at=watch.last_seen_at,
         )
 
+    def save_watch_name(
+        self,
+        name: str,
+    ) -> WatchStatus | None:
+        """Persist the user-defined Garmin watch name."""
+
+        settings = self._store.load()
+
+        watch = settings.watch
+
+        if watch is None:
+            return None
+
+        watch.name = name
+
+        self._store.save(settings)
+
+        return self.get_watch_status()
+
     def reset_watch_pairing(self) -> None:
         """Invalidate the currently paired Garmin watch."""
 
