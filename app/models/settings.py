@@ -142,6 +142,9 @@ class Settings(BaseModel):
     ) -> None:
         """Keep legacy and collection fields synchronized."""
 
+        if len(self.watches) > 1:
+            return
+
         if self.watch is None:
             self.watches = []
             return
