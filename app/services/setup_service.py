@@ -8,6 +8,7 @@ from app.models.api.setup import SuplaAvailableItem
 from app.models.settings import (
     Settings,
     SelectedGate,
+    WatchDevice,
     WatchItem,
 )
 
@@ -113,17 +114,43 @@ class SetupService:
         setup_completed=setup_completed,
         )
 
-    def get_watch_status(self) -> WatchStatus:
-        """Return safe Garmin watch status information."""
+    @staticmethod
+    def _find_watch(
+        settings: Settings,
+        watch_id: str | None = None,
+    ) -> WatchDevice | None:
+        """Find a Garmin watch by ID or use the legacy current watch."""
 
-        settings = self._store.load()
+        target_id = watch_id
 
-        watch = settings.watch
+        if target_id is None:
+            if settings.watch is None:
+                return None
+
+            target_id = settings.watch.id
+
+        for watch in settings.watches:
+            if watch.id == target_id:
+                return watch
+
+        if (
+            settings.watch is not None
+            and settings.watch.id == target_id
+        ):
+            return settings.watch
+
+        return None
+
+    @staticmethod
+    def _build_watch_status(
+        watch: WatchDevice | None,
+    ) -> WatchStatus:
+        """Build safe Garmin watch status information."""
 
         if watch is None:
             return WatchStatus(
-               configured=False,
-           )
+                configured=False,
+            )
 
         return WatchStatus(
             configured=True,
@@ -141,24 +168,53 @@ class SetupService:
             last_seen_at=watch.last_seen_at,
         )
 
+    def get_watch_status(
+        self,
+        watch_id: str | None = None,
+    ) -> WatchStatus:
+        """Return safe Garmin watch status information."""
+
+        settings = self._store.load()
+
+        watch = self._find_watch(
+            settings,
+            watch_id,
+        )
+
+        return self._build_watch_status(
+            watch
+        )
+
     def save_watch_name(
         self,
         name: str,
+        watch_id: str | None = None,
     ) -> WatchStatus | None:
         """Persist the user-defined Garmin watch name."""
 
         settings = self._store.load()
 
-        watch = settings.watch
+        watch = self._find_watch(
+            settings,
+            watch_id,
+        )
 
         if watch is None:
             return None
 
         watch.name = name
 
+        if (
+            settings.watch is not None
+            and settings.watch.id == watch.id
+        ):
+            settings.watch = watch
+
         self._store.save(settings)
 
-        return self.get_watch_status()
+        return self._build_watch_status(
+            watch
+        )
 
     def reset_watch_pairing(self) -> None:
         """Invalidate the currently paired Garmin watch."""
