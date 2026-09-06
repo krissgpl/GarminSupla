@@ -45,9 +45,11 @@
   - Refresh the configuration after a successful action.
   - Delete the pending action before requesting refreshed configuration to prevent accidental action replay.
 
-- [ ] Improve the UI state transition after Wi-Fi Sync.
-  - Avoid or reduce the short `Offline -> Cached` transition.
-  - Do not change the currently working Wi-Fi fallback logic.
+- [X] Improve the UI state transition after Wi-Fi Sync.
+  - Avoid the short `Offline -> Cached` transition during manual Wi-Fi refresh.
+  - Keep the current view during a short Wi-Fi refresh grace period.
+  - Retry foreground verification / configuration while Wi-Fi Sync is completing.
+  - Preserve the existing Wi-Fi snapshot fallback logic.
 
 # Multi-watch
 
