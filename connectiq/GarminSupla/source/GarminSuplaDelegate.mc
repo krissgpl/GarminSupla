@@ -34,7 +34,9 @@ class GarminSuplaDelegate extends WatchUi.BehaviorDelegate {
     function onMenu() as Boolean {
         WatchUi.pushView(
             new Rez.Menus.MainMenu(),
-            new GarminSuplaMenuDelegate(),
+            new GarminSuplaMenuDelegate(
+                _api
+            ),
             WatchUi.SLIDE_UP
         );
 

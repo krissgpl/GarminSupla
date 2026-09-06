@@ -199,6 +199,24 @@ class GarminSuplaApi {
 		return metadata;
 	}
 
+	function startWifiRefresh() as Void {
+
+		System.println(
+			"Starting WIFI refresh"
+		);
+
+		if (!(Communications has :startSync)) {
+
+			System.println(
+				"WIFI sync not supported"
+			);
+
+			return;
+		}
+
+		Communications.startSync();
+	}
+
 	function sendMetadata() as Void {
 
 		var token =

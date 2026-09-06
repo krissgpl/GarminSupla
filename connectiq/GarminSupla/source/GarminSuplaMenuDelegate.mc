@@ -1,4 +1,3 @@
-import Toybox.Communications;
 import Toybox.Lang;
 import Toybox.System;
 import Toybox.WatchUi;
@@ -6,8 +5,12 @@ import Toybox.WatchUi;
 class GarminSuplaMenuDelegate
     extends WatchUi.MenuInputDelegate {
 
-    function initialize() {
+    private var _api;
+
+    function initialize(api) {
         MenuInputDelegate.initialize();
+
+        _api = api;
     }
 
     function onMenuItem(
@@ -16,20 +19,7 @@ class GarminSuplaMenuDelegate
 
         if (item == :wifi_refresh) {
 
-            System.println(
-                "Starting WIFI refresh"
-            );
-
-            if (Communications has :startSync) {
-
-                Communications.startSync();
-
-            } else {
-
-                System.println(
-                    "WIFI sync not supported"
-                );
-            }
+            _api.startWifiRefresh();
 
         } else if (item == :about) {
 
