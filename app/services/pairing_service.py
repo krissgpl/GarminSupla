@@ -30,16 +30,24 @@ class PairingService:
     def create_pairing(self) -> PairingSession:
         """Create a new temporary pairing session."""
 
-        existing = self._store.load()
+        existing_codes = {
+            session.code
+            for session in self._store.load_all()
+        }
 
-        if existing is not None:
-            return existing
+        while True:
+            code = (
+                f"{secrets.randbelow(1_000_000):06d}"
+            )
+
+            if code not in existing_codes:
+                break
 
         now = datetime.now(timezone.utc)
 
         session = PairingSession(
             pairing_id=secrets.token_urlsafe(32),
-            code=f"{secrets.randbelow(1_000_000):06d}",
+            code=code,
             created_at=now,
             expires_at=now + timedelta(
                 seconds=PAIRING_TTL_SECONDS,
@@ -56,25 +64,23 @@ class PairingService:
     ) -> PairingSession | None:
         """Approve a pairing using its six-digit code."""
 
-        session = self._store.load()
+        for session in self._store.load_all():
+            if not secrets.compare_digest(
+                session.code,
+                code,
+            ):
+                continue
 
-        if session is None:
-            return None
+            if session.approved:
+                return session
 
-        if not secrets.compare_digest(
-            session.code,
-            code,
-        ):
-            return None
+            session.approved = True
 
-        if session.approved:
+            self._store.save(session)
+
             return session
 
-        session.approved = True
-
-        self._store.save(session)
-
-        return session
+        return None
 
     def get_pairing(
         self,
@@ -82,18 +88,14 @@ class PairingService:
     ) -> PairingSession | None:
         """Return a pairing session by its secret identifier."""
 
-        session = self._store.load()
+        for session in self._store.load_all():
+            if secrets.compare_digest(
+                session.pairing_id,
+                pairing_id,
+            ):
+                return session
 
-        if session is None:
-            return None
-
-        if not secrets.compare_digest(
-            session.pairing_id,
-            pairing_id,
-        ):
-            return None
-
-        return session
+        return None
 
     def consume_pairing(
         self,
@@ -116,7 +118,9 @@ class PairingService:
             name=name,
         )
 
-        self._store.delete()
+        self._store.delete(
+            pairing_id
+        )
 
         return PairingResult(
             watch_id=watch.id,
