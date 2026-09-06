@@ -15,6 +15,8 @@ class GarminSuplaApi {
 
     private const POLL_INTERVAL_MS = 3000;
 	private const CONFIG_REFRESH_INTERVAL_MS = 5000;
+	private const WIFI_REFRESH_GRACE_MS = 10000;
+    private const WIFI_REFRESH_RETRY_MS = 1000;
 
 	private var _baseUrl;
     private var _view;
@@ -25,6 +27,7 @@ class GarminSuplaApi {
 	private var _configTimer;
 	private var _configInProgress = false;
 	private var _ignoreNextConfigResponse = false;
+	private var _wifiRefreshStartedAt = null;
 
 	function reloadServerUrl() as Void {
 
@@ -199,6 +202,51 @@ class GarminSuplaApi {
 		return metadata;
 	}
 
+    function isWifiRefreshGraceActive()
+        as Lang.Boolean {
+
+        if (_wifiRefreshStartedAt == null) {
+            return false;
+        }
+
+        var elapsed =
+            System.getTimer()
+            - _wifiRefreshStartedAt;
+
+        if (
+            elapsed < 0
+            || elapsed >= WIFI_REFRESH_GRACE_MS
+        ) {
+            _wifiRefreshStartedAt = null;
+
+            return false;
+        }
+
+        return true;
+    }
+
+    function scheduleWifiConfigRetry() as Void {
+
+        _configTimer.stop();
+
+        _configTimer.start(
+            method(:refreshConfig),
+            WIFI_REFRESH_RETRY_MS,
+            false
+        );
+    }
+
+    function scheduleWifiVerifyRetry() as Void {
+
+        _configTimer.stop();
+
+        _configTimer.start(
+            method(:retryVerifyWatch),
+            WIFI_REFRESH_RETRY_MS,
+            false
+        );
+    }
+
 	function startWifiRefresh() as Void {
 
 		System.println(
@@ -213,6 +261,9 @@ class GarminSuplaApi {
 
 			return;
 		}
+
+        _wifiRefreshStartedAt =
+            System.getTimer();
 
 		Communications.startSync();
 	}
@@ -475,6 +526,8 @@ class GarminSuplaApi {
 			&& data instanceof Lang.Dictionary
 		) {
 
+			_wifiRefreshStartedAt = null;
+
 			var configured =
 				data["configured"];
 
@@ -536,20 +589,33 @@ class GarminSuplaApi {
 			"Unable to load watch config"
 		);
 
-		if (loadStoredWifiConfig()) {
+        if (loadStoredWifiConfig()) {
 
-			System.println(
-				"Watch config restored from WIFI snapshot"
-			);
+            System.println(
+                "Watch config restored from WIFI snapshot"
+            );
 
-			scheduleNextConfigRefresh();
+            _wifiRefreshStartedAt = null;
 
-			return;
-		}
+            scheduleNextConfigRefresh();
 
-		_view.setError();
+            return;
+        }
 
-		scheduleNextConfigRefresh();
+        if (isWifiRefreshGraceActive()) {
+
+            System.println(
+                "Keeping current view while WIFI refresh completes"
+            );
+
+            scheduleWifiConfigRetry();
+
+            return;
+        }
+
+        _view.setError();
+
+        scheduleNextConfigRefresh();
 	}
 
 	function clearCredentials() as Void {
@@ -681,20 +747,33 @@ class GarminSuplaApi {
 			"Watch verification failed"
 		);
 
-		if (loadStoredWifiConfig()) {
+        if (loadStoredWifiConfig()) {
 
-			System.println(
-				"Watch view restored from WIFI snapshot"
-			);
+            System.println(
+                "Watch view restored from WIFI snapshot"
+            );
 
-			scheduleVerifyRetry();
+            _wifiRefreshStartedAt = null;
 
-			return;
-		}
+            scheduleVerifyRetry();
 
-		_view.setError();
+            return;
+        }
 
-		scheduleVerifyRetry();
+        if (isWifiRefreshGraceActive()) {
+
+            System.println(
+                "Keeping current view while WIFI refresh completes"
+            );
+
+            scheduleWifiVerifyRetry();
+
+            return;
+        }
+
+        _view.setError();
+
+        scheduleVerifyRetry();
 
 	}
 
