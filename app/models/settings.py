@@ -1,3 +1,5 @@
+from copy import deepcopy
+
 from pydantic import (
     BaseModel,
     Field,
@@ -89,6 +91,10 @@ class WatchDevice(BaseModel):
     last_seen_at: str | None = None
     enabled: bool = True
 
+    items: list[WatchItem] = Field(
+        default_factory=list
+    )
+
 
 class Settings(BaseModel):
     version: int = 1
@@ -114,6 +120,80 @@ class Settings(BaseModel):
     watch_settings: WatchSettings = Field(
         default_factory=WatchSettings
     )
+
+    @model_validator(mode="before")
+    @classmethod
+    def migrate_watch_items(
+        cls,
+        data: object,
+    ) -> object:
+        """Copy legacy global watch items into watch entries once."""
+
+        if not isinstance(data, dict):
+            return data
+
+        legacy_settings = data.get(
+            "watch_settings"
+        )
+
+        if not isinstance(
+            legacy_settings,
+            dict,
+        ):
+            return data
+
+        legacy_items = legacy_settings.get(
+            "items"
+        )
+
+        if not isinstance(
+            legacy_items,
+            list,
+        ):
+            return data
+
+        migrated = dict(data)
+
+        raw_watch = migrated.get("watch")
+
+        if (
+            isinstance(raw_watch, dict)
+            and "items" not in raw_watch
+        ):
+            migrated["watch"] = {
+                **raw_watch,
+                "items": deepcopy(
+                    legacy_items
+                ),
+            }
+
+        raw_watches = migrated.get(
+            "watches"
+        )
+
+        if isinstance(raw_watches, list):
+            migrated["watches"] = [
+                (
+                    {
+                        **raw_entry,
+                        "items": deepcopy(
+                            legacy_items
+                        ),
+                    }
+                    if (
+                        isinstance(
+                            raw_entry,
+                            dict,
+                        )
+                        and "items"
+                        not in raw_entry
+                    )
+                    else raw_entry
+                )
+                for raw_entry in raw_watches
+            ]
+
+        return migrated
 
     @model_validator(mode="after")
     def migrate_watch_collection(
