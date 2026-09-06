@@ -172,6 +172,7 @@ def execute_watch_action(
     """Execute an action requested by the authenticated Garmin watch."""
 
     return watch_action_service.execute(
+        watch_id=watch.id,
         item_id=request.item_id,
         action=request.action,
     )

@@ -15,16 +15,32 @@ class WatchActionService:
 
     def execute(
         self,
+        watch_id: str,
         item_id: str,
         action: WatchAction,
     ) -> WatchActionResponse:
 
         settings = self._settings_store.load()
 
+        configured_watch = next(
+            (
+                watch
+                for watch in settings.watches
+                if watch.id == watch_id
+            ),
+            None,
+        )
+
+        if configured_watch is None:
+            return WatchActionResponse(
+                success=False,
+                message="Watch not found.",
+            )
+
         item = next(
             (
                 item
-                for item in settings.watch_settings.items
+                for item in configured_watch.items
                 if item.id == item_id
             ),
             None,
