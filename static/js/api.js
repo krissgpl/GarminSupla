@@ -125,6 +125,20 @@ export async function getWatchStatus() {
 
 }
 
+export async function updateWatchName(name) {
+
+    return apiRequest(
+        "/api/v1/setup/watch",
+        {
+            method: "PATCH",
+            body: JSON.stringify({
+                name: name,
+            }),
+        },
+    );
+
+}
+
 export async function getWatchItems() {
 
     return apiRequest(
