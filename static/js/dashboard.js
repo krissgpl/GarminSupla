@@ -10,6 +10,7 @@ import {
     updateUILanguage,
     updateUITheme,
     updateWatchItems,
+    updateWatchName,
 } from "./api.js";
 
 const uiLanguage =
@@ -34,6 +35,13 @@ const uiText = {
         notAvailable: "Not available",
         polish: "Polish",
         english: "English",
+        renameWatch: "Rename",
+        watchName: "Watch name",
+        save: "Save",
+        invalidWatchName:
+            "Enter a watch name up to 50 characters.",
+        unableToRenameWatch:
+            "Unable to rename Garmin watch.",
         watchItems: "Watch items",
         noWatchItems: "No items configured for the watch.",
         type: "Type",
@@ -118,6 +126,13 @@ const uiText = {
         notAvailable: "Brak danych",
         polish: "Polski",
         english: "Angielski",
+        renameWatch: "Zmień nazwę",
+        watchName: "Nazwa zegarka",
+        save: "Zapisz",
+        invalidWatchName:
+            "Wpisz nazwę zegarka o długości do 50 znaków.",
+        unableToRenameWatch:
+            "Nie można zmienić nazwy zegarka Garmin.",
         watchItems: "Elementy zegarka",
         noWatchItems: "Brak skonfigurowanych elementów zegarka.",
         type: "Typ",
@@ -1570,6 +1585,191 @@ async function saveWatchItems(items) {
     }
 }
 
+function bindWatchNameEditor(watch) {
+
+    const nameElement =
+        document.getElementById(
+            "watch-name"
+        );
+
+    const renameButton =
+        document.getElementById(
+            "rename-watch-btn"
+        );
+
+    const form =
+        document.getElementById(
+            "rename-watch-form"
+        );
+
+    const input =
+        document.getElementById(
+            "watch-name-input"
+        );
+
+    const saveButton =
+        document.getElementById(
+            "save-watch-name-btn"
+        );
+
+    const cancelButton =
+        document.getElementById(
+            "cancel-watch-name-btn"
+        );
+
+    const errorBox =
+        document.getElementById(
+            "watch-name-error"
+        );
+
+    if (
+        !nameElement
+        || !renameButton
+        || !form
+        || !input
+        || !saveButton
+        || !cancelButton
+        || !errorBox
+    ) {
+        return;
+    }
+
+    nameElement.textContent =
+        watch.name ?? "";
+
+    input.value =
+        watch.name ?? "";
+
+    renameButton.addEventListener(
+        "click",
+        () => {
+
+            input.value =
+                watch.name ?? "";
+
+            errorBox.textContent = "";
+            errorBox.classList.add(
+                "d-none"
+            );
+
+            form.classList.remove(
+                "d-none"
+            );
+
+            renameButton.classList.add(
+                "d-none"
+            );
+
+            input.focus();
+            input.select();
+        },
+    );
+
+    cancelButton.addEventListener(
+        "click",
+        () => {
+
+            input.value =
+                watch.name ?? "";
+
+            errorBox.textContent = "";
+            errorBox.classList.add(
+                "d-none"
+            );
+
+            form.classList.add(
+                "d-none"
+            );
+
+            renameButton.classList.remove(
+                "d-none"
+            );
+        },
+    );
+
+    form.addEventListener(
+        "submit",
+        async (event) => {
+
+            event.preventDefault();
+
+            const name =
+                input.value.trim();
+
+            errorBox.textContent = "";
+            errorBox.classList.add(
+                "d-none"
+            );
+
+            if (
+                !name
+                || name.length > 50
+            ) {
+                errorBox.textContent =
+                    t("invalidWatchName");
+
+                errorBox.classList.remove(
+                    "d-none"
+                );
+
+                return;
+            }
+
+            saveButton.disabled = true;
+            cancelButton.disabled = true;
+            input.disabled = true;
+
+            try {
+
+                const updatedWatch =
+                    await updateWatchName(
+                        name
+                    );
+
+                watch.name =
+                    updatedWatch.name;
+
+                nameElement.textContent =
+                    updatedWatch.name;
+
+                input.value =
+                    updatedWatch.name;
+
+                form.classList.add(
+                    "d-none"
+                );
+
+                renameButton.classList.remove(
+                    "d-none"
+                );
+
+            } catch (error) {
+
+                console.error(
+                    "Unable to rename Garmin watch:",
+                    error,
+                );
+
+                errorBox.textContent =
+                    error instanceof ApiError
+                    && error.status === 422
+                        ? t("invalidWatchName")
+                        : t("unableToRenameWatch");
+
+                errorBox.classList.remove(
+                    "d-none"
+                );
+
+            } finally {
+
+                saveButton.disabled = false;
+                cancelButton.disabled = false;
+                input.disabled = false;
+            }
+        },
+    );
+}
+
 function renderWatch(
     watch,
     items = [],
@@ -1622,17 +1822,85 @@ function renderWatch(
             : t("disabled");
 
     content.innerHTML = `
-        <div class="d-flex justify-content-between align-items-start">
+        <div>
 
-            <div>
-                <h4 class="mb-2">
-                    ${watch.name}
+            <div
+                class="
+                    d-flex
+                    flex-wrap
+                    align-items-center
+                    gap-2
+                "
+            >
+                <h4 class="mb-0">
+                    <span id="watch-name"></span>
                 </h4>
 
+                <button
+                    type="button"
+                    class="btn btn-sm btn-outline-secondary"
+                    id="rename-watch-btn"
+                >
+                    <i class="bi bi-pencil me-1"></i>
+                    ${t("renameWatch")}
+                </button>
+            </div>
+
+            <div class="mt-2">
                 <span class="badge ${statusClass}">
                     ${statusText}
                 </span>
             </div>
+
+            <form
+                id="rename-watch-form"
+                class="d-none mt-3"
+                style="max-width: 520px;"
+            >
+                <label
+                    for="watch-name-input"
+                    class="form-label fw-semibold"
+                >
+                    ${t("watchName")}
+                </label>
+
+                <div
+                    class="
+                        d-flex
+                        flex-column
+                        flex-sm-row
+                        gap-2
+                    "
+                >
+                    <input
+                        type="text"
+                        class="form-control"
+                        id="watch-name-input"
+                        maxlength="50"
+                    >
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary"
+                        id="save-watch-name-btn"
+                    >
+                        ${t("save")}
+                    </button>
+
+                    <button
+                        type="button"
+                        class="btn btn-outline-secondary"
+                        id="cancel-watch-name-btn"
+                    >
+                        ${t("cancel")}
+                    </button>
+                </div>
+
+                <div
+                    id="watch-name-error"
+                    class="small text-danger mt-2 d-none"
+                ></div>
+            </form>
 
         </div>
 
@@ -1795,6 +2063,7 @@ function renderWatch(
             handleWatchRePair,
         );
 
+    bindWatchNameEditor(watch);
     bindWatchItemEditors();
     bindWatchItemActions(items);
 
