@@ -102,10 +102,25 @@ def get_watch_config(
 
     settings = watch_config_service.get_settings()
 
+    configured_watch = next(
+        (
+            candidate
+            for candidate in settings.watches
+            if candidate.id == watch.id
+        ),
+        None,
+    )
+
+    if configured_watch is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Watch no longer registered.",
+        )
+
     enabled_items = [
         item
         for item in sorted(
-            settings.watch_settings.items,
+            configured_watch.items,
             key=lambda item: item.order,
         )
         if item.enabled
