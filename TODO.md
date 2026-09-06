@@ -92,14 +92,19 @@
     - status.
   - Adding a new watch must not replace the currently paired watch.
 
-- [ ] Add user-defined watch names.
+- [ ] Extend user-defined watch names to multi-watch.
+  - Single-watch rename is already implemented.
+  - Each paired watch must have its own user-defined name.
   - Examples:
     - `Krzysztof Fenix`,
     - `Anna Watch`,
     - `Training Fenix`.
-  - The user-defined name must be separate from the hardware model.
-  - Add a `Rename` action.
-  - Validate empty values and limit the maximum name length.
+  - The user-defined name must remain separate from the hardware model.
+  - Reuse the existing validation:
+    - trim surrounding whitespace,
+    - reject empty values,
+    - maximum length: 50 characters.
+  - Add per-watch `Rename` actions and API endpoints.
 
 - [ ] Add the ability to copy `Watch items` configuration.
   - From an existing watch to a newly paired watch.
@@ -185,25 +190,26 @@
 
 # Watch Metadata
 
-- [ ] Send device metadata from the Connect IQ application to the backend.
-  - device model,
-  - Device ID,
-  - part number,
-  - firmware version,
-  - Connect IQ version,
-  - detected system language,
+- [X] Send device metadata from the Connect IQ application to the backend.
+  - Device ID.
+  - Part number.
+  - Firmware version.
+  - Connect IQ version.
+  - Detected system language.
   - GarminSupla app version.
+  - Resolve the device model on the backend from the Garmin part number.
 
-- [ ] Do not label `uniqueIdentifier` as a serial number.
+- [X] Do not label `uniqueIdentifier` as a serial number.
   - Use `Device ID` in the dashboard.
   - The Garmin hardware serial number is not exposed to Connect IQ applications.
 
-- [ ] Update watch metadata periodically.
+- [X] Update watch metadata automatically at relevant lifecycle points.
   - During first pairing.
-  - During application startup / communication with the backend.
-  - After firmware or GarminSupla version changes.
+  - During application startup after successful watch authentication.
+  - Firmware and GarminSupla version changes are captured on the next application start.
+  - Update `last_seen_at` when metadata is successfully received by the backend.
 
-- [ ] Display watch metadata in the dashboard.
+- [X] Display watch metadata in the dashboard.
   - User-defined name.
   - Device model.
   - Device ID.
@@ -211,7 +217,7 @@
   - Firmware version.
   - Connect IQ version.
   - GarminSupla version.
-  - Language.
+  - Detected system language.
   - Last seen.
 
 # Watch UI
