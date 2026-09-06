@@ -1,4 +1,9 @@
-from pydantic import BaseModel, Field, field_validator
+from pydantic import (
+    BaseModel,
+    Field,
+    field_validator,
+    model_validator,
+)
 from typing import Literal
 
 
@@ -88,9 +93,59 @@ class WatchDevice(BaseModel):
 class Settings(BaseModel):
     version: int = 1
     configured: bool = False
-    ui: UISettings = Field(default_factory=UISettings)
-    supla: SuplaSettings = Field(default_factory=SuplaSettings)
+
+    ui: UISettings = Field(
+        default_factory=UISettings
+    )
+
+    supla: SuplaSettings = Field(
+        default_factory=SuplaSettings
+    )
+
+    # Legacy single-watch field.
+    # Kept temporarily during the multi-watch migration.
     watch: WatchDevice | None = None
+
+    # New multi-watch collection.
+    watches: list[WatchDevice] = Field(
+        default_factory=list
+    )
+
     watch_settings: WatchSettings = Field(
         default_factory=WatchSettings
     )
+
+    @model_validator(mode="after")
+    def migrate_watch_collection(
+        self,
+    ) -> "Settings":
+        """Populate the compatibility watch representation."""
+
+        if (
+            self.watch is not None
+            and not self.watches
+        ):
+            self.watches = [
+                self.watch
+            ]
+
+        elif (
+            self.watch is None
+            and len(self.watches) == 1
+        ):
+            self.watch = self.watches[0]
+
+        return self
+
+    def sync_single_watch_compatibility(
+        self,
+    ) -> None:
+        """Keep legacy and collection fields synchronized."""
+
+        if self.watch is None:
+            self.watches = []
+            return
+
+        self.watches = [
+            self.watch
+        ]

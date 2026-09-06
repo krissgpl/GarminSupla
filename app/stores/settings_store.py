@@ -28,7 +28,12 @@ class SettingsStore:
         """Persist application configuration to disk."""
 
         with self._lock:
-            self.path.parent.mkdir(parents=True, exist_ok=True)
+            settings.sync_single_watch_compatibility()
+
+            self.path.parent.mkdir(
+                parents=True,
+                exist_ok=True,
+            )
 
             tmp_path = self.path.with_suffix(".tmp")
 
