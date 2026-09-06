@@ -165,7 +165,22 @@ class SetupService:
 
         settings = self._store.load()
 
-        settings.watch = None
+        current_watch = settings.watch
+
+        if current_watch is None:
+            return
+
+        settings.watches = [
+            watch
+            for watch in settings.watches
+            if watch.id != current_watch.id
+        ]
+
+        settings.watch = (
+            settings.watches[-1]
+            if settings.watches
+            else None
+        )
 
         self._store.save(settings)
 
