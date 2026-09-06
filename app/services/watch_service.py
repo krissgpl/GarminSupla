@@ -58,16 +58,18 @@ class WatchService:
         watch_id: str,
         metadata: dict[str, str | None],
     ) -> WatchDevice | None:
-        """Update metadata for the registered Garmin watch."""
+        """Update metadata for a registered Garmin watch."""
 
         settings = self._store.load()
 
-        watch = settings.watch
+        watch = None
+
+        for candidate in settings.watches:
+            if candidate.id == watch_id:
+                watch = candidate
+                break
 
         if watch is None:
-            return None
-
-        if watch.id != watch_id:
             return None
 
         allowed_fields = {
@@ -99,6 +101,12 @@ class WatchService:
         watch.last_seen_at = (
             datetime.now(timezone.utc).isoformat()
         )
+
+        if (
+            settings.watch is not None
+            and settings.watch.id == watch.id
+        ):
+            settings.watch = watch
 
         self._store.save(settings)
 
