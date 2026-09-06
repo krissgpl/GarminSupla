@@ -161,6 +161,37 @@ def get_watch_status() -> WatchStatus:
 
     return setup_service.get_watch_status()
 
+@router.get(
+    "/watches",
+    response_model=list[WatchStatus],
+)
+def get_watch_statuses() -> list[WatchStatus]:
+    """Return all configured Garmin watches."""
+
+    return setup_service.get_watch_statuses()
+
+
+@router.get(
+    "/watches/{watch_id}",
+    response_model=WatchStatus,
+)
+def get_watch_status_by_id(
+    watch_id: str,
+) -> WatchStatus:
+    """Return one configured Garmin watch."""
+
+    watch = setup_service.get_watch_status(
+        watch_id
+    )
+
+    if not watch.configured:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Garmin watch not found.",
+        )
+
+    return watch
+
 @router.patch(
     "/watch",
     response_model=WatchStatus,

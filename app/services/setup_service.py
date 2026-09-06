@@ -185,6 +185,20 @@ class SetupService:
             watch
         )
 
+    def get_watch_statuses(
+        self,
+    ) -> list[WatchStatus]:
+        """Return safe status information for all Garmin watches."""
+
+        settings = self._store.load()
+
+        return [
+            self._build_watch_status(
+                watch
+            )
+            for watch in settings.watches
+        ]
+
     def save_watch_name(
         self,
         name: str,
