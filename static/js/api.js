@@ -125,10 +125,45 @@ export async function getWatchStatus() {
 
 }
 
+export async function getWatchStatuses() {
+
+    return apiRequest(
+        "/api/v1/setup/watches",
+    );
+
+}
+
+export async function getWatchStatusById(
+    watchId,
+) {
+
+    return apiRequest(
+        `/api/v1/setup/watches/${encodeURIComponent(watchId)}`,
+    );
+
+}
+
 export async function updateWatchName(name) {
 
     return apiRequest(
         "/api/v1/setup/watch",
+        {
+            method: "PATCH",
+            body: JSON.stringify({
+                name: name,
+            }),
+        },
+    );
+
+}
+
+export async function updateWatchNameById(
+    watchId,
+    name,
+) {
+
+    return apiRequest(
+        `/api/v1/setup/watches/${encodeURIComponent(watchId)}`,
         {
             method: "PATCH",
             body: JSON.stringify({
@@ -147,6 +182,16 @@ export async function getWatchItems() {
 
 }
 
+export async function getWatchItemsById(
+    watchId,
+) {
+
+    return apiRequest(
+        `/api/v1/setup/watches/${encodeURIComponent(watchId)}/items`,
+    );
+
+}
+
 export async function updateWatchItems(items) {
 
     return apiRequest(
@@ -156,6 +201,36 @@ export async function updateWatchItems(items) {
             body: JSON.stringify({
                 items: items,
             }),
+        },
+    );
+
+}
+
+export async function updateWatchItemsById(
+    watchId,
+    items,
+) {
+
+    return apiRequest(
+        `/api/v1/setup/watches/${encodeURIComponent(watchId)}/items`,
+        {
+            method: "PUT",
+            body: JSON.stringify({
+                items: items,
+            }),
+        },
+    );
+
+}
+
+export async function deleteWatchById(
+    watchId,
+) {
+
+    return apiRequest(
+        `/api/v1/setup/watches/${encodeURIComponent(watchId)}`,
+        {
+            method: "DELETE",
         },
     );
 
