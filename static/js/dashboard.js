@@ -5,6 +5,7 @@ import {
     getUILanguage,
     getUITheme,
     getWatchItems,
+    getWatchItemsById,
     getWatchStatus,
     resetWatchPairing,
     updateUILanguage,
@@ -2593,13 +2594,15 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     try {
 
-        const [
-            watch,
-            items,
-        ] = await Promise.all([
-            getWatchStatus(),
-            getWatchItems(),
-        ]);
+        const watch =
+            await getWatchStatus();
+
+        const items =
+            watch.configured
+                ? await getWatchItemsById(
+                    watch.id
+                )
+                : [];
 
         renderWatch(
             watch,
