@@ -269,20 +269,38 @@ class SetupService:
 
         return self._supla_service.get_available_gates()
 
-    def get_watch_items(self) -> list[WatchItem]:
+    def get_watch_items(
+        self,
+        watch_id: str | None = None,
+    ) -> list[WatchItem] | None:
         """Return configured Garmin watch items."""
 
         settings = self._store.load()
 
+        watch = self._find_watch(
+            settings,
+            watch_id,
+        )
+
+        if watch is None:
+            if watch_id is not None:
+                return None
+
+            return sorted(
+                settings.watch_settings.items,
+                key=lambda item: item.order,
+            )
+
         return sorted(
-            settings.watch_settings.items,
+            watch.items,
             key=lambda item: item.order,
         )
 
     def save_watch_items(
         self,
         items: list[WatchItem],
-    ) -> list[WatchItem]:
+        watch_id: str | None = None,
+    ) -> list[WatchItem] | None:
         """Replace Garmin watch item configuration."""
 
         settings = self._store.load()
@@ -292,7 +310,36 @@ class SetupService:
             key=lambda item: item.order,
         )
 
-        settings.watch_settings.items = sorted_items
+        watch = self._find_watch(
+            settings,
+            watch_id,
+        )
+
+        if watch is None:
+            if watch_id is not None:
+                return None
+
+            settings.watch_settings.items = (
+                sorted_items
+            )
+
+            self._store.save(settings)
+
+            return sorted_items
+
+        watch.items = sorted_items
+
+        if (
+            settings.watch is not None
+            and settings.watch.id == watch.id
+        ):
+            settings.watch = watch
+
+            # Keep the legacy dashboard representation
+            # synchronized with the current watch.
+            settings.watch_settings.items = (
+                sorted_items
+            )
 
         self._store.save(settings)
 
