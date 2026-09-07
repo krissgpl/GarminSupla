@@ -218,6 +218,61 @@ def update_watch_name_by_id(
 
     return watch
 
+@router.get(
+    "/watches/{watch_id}/items",
+    response_model=list[WatchItem],
+)
+def get_watch_items_by_id(
+    watch_id: str,
+) -> list[WatchItem]:
+    """Return one Garmin watch item configuration."""
+
+    items = setup_service.get_watch_items(
+        watch_id=watch_id,
+    )
+
+    if items is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Garmin watch not found.",
+        )
+
+    return items
+
+
+@router.put(
+    "/watches/{watch_id}/items",
+    response_model=list[WatchItem],
+)
+def update_watch_items_by_id(
+    watch_id: str,
+    request: WatchItemsUpdateRequest,
+    admin: AdminAccount = Depends(
+        require_admin_csrf
+    ),
+) -> list[WatchItem]:
+    """Replace one Garmin watch item configuration."""
+
+    items = [
+        WatchItem.model_validate(
+            item.model_dump()
+        )
+        for item in request.items
+    ]
+
+    saved_items = setup_service.save_watch_items(
+        items,
+        watch_id=watch_id,
+    )
+
+    if saved_items is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Garmin watch not found.",
+        )
+
+    return saved_items
+
 @router.patch(
     "/watch",
     response_model=WatchStatus,
