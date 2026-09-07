@@ -7,6 +7,7 @@ import {
     getWatchItems,
     getWatchItemsById,
     getWatchStatus,
+    getWatchStatuses,
     resetWatchPairing,
     updateUILanguage,
     updateUITheme,
@@ -245,6 +246,7 @@ function getDefaultWatchItemIcon(type) {
 }
 
 let watchItemsDirty = false;
+let selectedWatchId = null;
 
 function setWatchItemsDirty(dirty) {
     watchItemsDirty = dirty;
@@ -2594,13 +2596,25 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     try {
 
+        const watches =
+            await getWatchStatuses();
+
         const watch =
-            await getWatchStatus();
+            watches.length
+                ? watches[watches.length - 1]
+                : {
+                    configured: false,
+                };
+
+        selectedWatchId =
+            watch.configured
+                ? watch.id
+                : null;
 
         const items =
-            watch.configured
+            selectedWatchId !== null
                 ? await getWatchItemsById(
-                    watch.id
+                    selectedWatchId
                 )
                 : [];
 
