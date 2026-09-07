@@ -2588,6 +2588,28 @@ function showError(message) {
 
 }
 
+async function selectWatch(watch) {
+
+    selectedWatchId =
+        watch.configured
+            ? watch.id
+            : null;
+
+    setWatchItemsDirty(false);
+
+    const items =
+        selectedWatchId !== null
+            ? await getWatchItemsById(
+                selectedWatchId
+            )
+            : [];
+
+    renderWatch(
+        watch,
+        items,
+    );
+}
+
 
 document.addEventListener("DOMContentLoaded", async () => {
 
@@ -2606,21 +2628,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                     configured: false,
                 };
 
-        selectedWatchId =
-            watch.configured
-                ? watch.id
-                : null;
-
-        const items =
-            selectedWatchId !== null
-                ? await getWatchItemsById(
-                    selectedWatchId
-                )
-                : [];
-
-        renderWatch(
-            watch,
-            items,
+        await selectWatch(
+            watch
         );
 
     } catch (error) {
