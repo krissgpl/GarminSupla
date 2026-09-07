@@ -254,6 +254,54 @@ class SetupService:
 
         self._store.save(settings)
 
+    def delete_watch(
+        self,
+        watch_id: str,
+    ) -> bool:
+        """Delete one registered Garmin watch."""
+
+        settings = self._store.load()
+
+        watch = next(
+            (
+                candidate
+                for candidate in settings.watches
+                if candidate.id == watch_id
+            ),
+            None,
+        )
+
+        if watch is None:
+            return False
+
+        settings.watches = [
+            candidate
+            for candidate in settings.watches
+            if candidate.id != watch_id
+        ]
+
+        current_id = (
+            settings.watch.id
+            if settings.watch is not None
+            else None
+        )
+
+        remaining_ids = {
+            candidate.id
+            for candidate in settings.watches
+        }
+
+        if current_id not in remaining_ids:
+            settings.watch = (
+                settings.watches[-1]
+                if settings.watches
+                else None
+            )
+
+        self._store.save(settings)
+
+        return True
+
     def save_selected_gate(
         self,
         channel_id: int,

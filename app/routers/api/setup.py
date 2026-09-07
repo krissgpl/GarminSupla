@@ -273,6 +273,28 @@ def update_watch_items_by_id(
 
     return saved_items
 
+@router.delete(
+    "/watches/{watch_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+)
+def delete_watch_by_id(
+    watch_id: str,
+    admin: AdminAccount = Depends(
+        require_admin_csrf
+    ),
+) -> None:
+    """Delete one registered Garmin watch."""
+
+    deleted = setup_service.delete_watch(
+        watch_id
+    )
+
+    if not deleted:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Garmin watch not found.",
+        )
+
 @router.patch(
     "/watch",
     response_model=WatchStatus,
