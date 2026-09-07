@@ -9,7 +9,7 @@ import {
     resetWatchPairing,
     updateUILanguage,
     updateUITheme,
-    updateWatchItems,
+    updateWatchItemsById,
     updateWatchNameById,
 } from "./api.js";
 
@@ -1083,7 +1083,10 @@ function bindWatchItemEditors() {
         });
 }
 
-function bindWatchItemActions(items) {
+function bindWatchItemActions(
+    items,
+    watchId,
+) {
 
     document
         .querySelectorAll(
@@ -1124,7 +1127,8 @@ function bindWatchItemActions(items) {
                     setWatchItemsDirty(true);
 
                     renderWatchItemsInPlace(
-                        items
+                        items,
+                        watchId,
                     );
                 },
             );
@@ -1170,7 +1174,8 @@ function bindWatchItemActions(items) {
                     setWatchItemsDirty(true);
 
                     renderWatchItemsInPlace(
-                        items
+                        items,
+                        watchId,
                     );
                 },
             );
@@ -1213,7 +1218,8 @@ function bindWatchItemActions(items) {
                     setWatchItemsDirty(true);
 
                     renderWatchItemsInPlace(
-                        items
+                        items,
+                        watchId,
                     );
                 },
             );
@@ -1228,7 +1234,10 @@ function bindWatchItemActions(items) {
     if (addButton) {
         addButton.addEventListener(
             "click",
-            () => showAddFromSupla(items),
+            () => showAddFromSupla(
+                items,
+                watchId,
+            ),
         );
     }
 
@@ -1240,12 +1249,18 @@ function bindWatchItemActions(items) {
     if (saveButton) {
         saveButton.addEventListener(
             "click",
-            () => saveWatchItems(items),
+            () => saveWatchItems(
+                items,
+                watchId,
+            ),
         );
     }
 }
 
-async function showAddFromSupla(items) {
+async function showAddFromSupla(
+    items,
+    watchId,
+) {
 
     const button =
         document.getElementById(
@@ -1387,6 +1402,7 @@ async function showAddFromSupla(items) {
                 () => addSuplaItemLocally(
                     items,
                     availableItems,
+                    watchId,
                 ),
             );
 
@@ -1406,6 +1422,7 @@ async function showAddFromSupla(items) {
 function addSuplaItemLocally(
     items,
     availableItems,
+    watchId,
 ) {
 
     const select =
@@ -1457,10 +1474,16 @@ function addSuplaItemLocally(
 
     setWatchItemsDirty(true);
 
-    renderWatchItemsInPlace(items);
+    renderWatchItemsInPlace(
+        items,
+        watchId,
+    );
 }
 
-function renderWatchItemsInPlace(items) {
+function renderWatchItemsInPlace(
+    items,
+    watchId,
+) {
 
     const current =
         document.getElementById(
@@ -1485,10 +1508,16 @@ function renderWatchItemsInPlace(items) {
     );
 
     bindWatchItemEditors();
-    bindWatchItemActions(items);
+    bindWatchItemActions(
+        items,
+        watchId,
+    );
 }
 
-async function saveWatchItems(items) {
+async function saveWatchItems(
+    items,
+    watchId,
+) {
 
     const button =
         document.getElementById(
@@ -1551,8 +1580,9 @@ async function saveWatchItems(items) {
     try {
 
         const savedItems =
-            await updateWatchItems(
-                updatedItems
+            await updateWatchItemsById(
+                watchId,
+                updatedItems,
             );
 
         items.splice(
@@ -2066,7 +2096,10 @@ function renderWatch(
 
     bindWatchNameEditor(watch);
     bindWatchItemEditors();
-    bindWatchItemActions(items);
+    bindWatchItemActions(
+        items,
+        watch.id,
+    );
 
 }
 
