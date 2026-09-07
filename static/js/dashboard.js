@@ -10,7 +10,7 @@ import {
     updateUILanguage,
     updateUITheme,
     updateWatchItems,
-    updateWatchName,
+    updateWatchNameById,
 } from "./api.js";
 
 const uiLanguage =
@@ -1722,8 +1722,9 @@ function bindWatchNameEditor(watch) {
             try {
 
                 const updatedWatch =
-                    await updateWatchName(
-                        name
+                    await updateWatchNameById(
+                        watch.id,
+                        name,
                     );
 
                 watch.name =
