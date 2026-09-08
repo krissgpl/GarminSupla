@@ -6,7 +6,7 @@ import {
     getUITheme,
     getWatchItemsById,
     getWatchStatuses,
-    resetWatchPairing,
+    deleteWatchById,
     updateUILanguage,
     updateUITheme,
     updateWatchItemsById,
@@ -2108,7 +2108,9 @@ function renderWatch(
         .getElementById("reset-watch-pairing-btn")
         .addEventListener(
             "click",
-            handleWatchRePair,
+            () => handleWatchRePair(
+                watch.id
+            ),
         );
 
     bindWatchNameEditor(watch);
@@ -2120,7 +2122,9 @@ function renderWatch(
 
 }
 
-async function handleWatchRePair() {
+async function handleWatchRePair(
+    watchId,
+) {
 
     const confirmed = window.confirm(
         t("rePairConfirmation")
@@ -2141,7 +2145,23 @@ async function handleWatchRePair() {
 
     try {
 
-        await resetWatchPairing();
+        await deleteWatchById(
+            watchId
+        );
+
+        selectedWatchId = null;
+        setWatchItemsDirty(false);
+
+        const selectorContainer =
+            document.getElementById(
+                "watch-selector-container"
+            );
+
+        if (selectorContainer) {
+            selectorContainer.classList.add(
+                "d-none"
+            );
+        }
 
         renderPairingForm(false);
 
