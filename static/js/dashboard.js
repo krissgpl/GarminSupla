@@ -110,6 +110,7 @@ const uiText = {
             "Unable to pair Garmin watch.",
         unableToLoadWatchConfiguration:
             "Unable to load Garmin watch configuration.",
+        selectWatch: "Select watch",
     },
 
     pl: {
@@ -201,6 +202,7 @@ const uiText = {
             "Nie można sparować zegarka Garmin.",
         unableToLoadWatchConfiguration:
             "Nie można załadować konfiguracji zegarka Garmin.",
+        selectWatch: "Wybierz zegarek",
     },
 };
 
@@ -259,6 +261,16 @@ function setWatchItemsDirty(dirty) {
     if (button) {
         button.disabled = !dirty;
     }
+
+    const watchSelector =
+        document.getElementById(
+            "watch-selector"
+        );
+
+    if (watchSelector) {
+        watchSelector.disabled = dirty;
+    }
+
 }
 
 function formatDate(value) {
@@ -1763,6 +1775,10 @@ function bindWatchNameEditor(watch) {
                 watch.name =
                     updatedWatch.name;
 
+                updateWatchSelectorOption(
+                    watch
+                );
+
                 nameElement.textContent =
                     updatedWatch.name;
 
@@ -2588,21 +2604,210 @@ function showError(message) {
 
 }
 
+function getWatchSelectorLabel(watch) {
+
+    const name =
+        watch.name
+        ?? watch.device_model
+        ?? watch.id;
+
+    if (
+        watch.device_model
+        && watch.device_model !== name
+    ) {
+        return `${name} — ${watch.device_model}`;
+    }
+
+    return name;
+}
+
+
+function updateWatchSelectorOption(watch) {
+
+    const selector =
+        document.getElementById(
+            "watch-selector"
+        );
+
+    if (!selector || !watch.id) {
+        return;
+    }
+
+    const option = [
+        ...selector.options,
+    ].find(
+        (candidate) =>
+            candidate.value === watch.id
+    );
+
+    if (option) {
+        option.textContent =
+            getWatchSelectorLabel(watch);
+    }
+}
+
+
+function renderWatchSelector(watches) {
+
+    const container =
+        document.getElementById(
+            "watch-selector-container"
+        );
+
+    if (!container) {
+        return;
+    }
+
+    container.replaceChildren();
+
+    const selectableWatches =
+        watches.filter(
+            (watch) =>
+                watch.configured
+                && watch.id
+        );
+
+    if (!selectableWatches.length) {
+        container.classList.add(
+            "d-none"
+        );
+
+        return;
+    }
+
+    const label =
+        document.createElement("label");
+
+    label.className =
+        "form-label fw-semibold";
+
+    label.htmlFor =
+        "watch-selector";
+
+    label.textContent =
+        t("selectWatch");
+
+    const selector =
+        document.createElement("select");
+
+    selector.id =
+        "watch-selector";
+
+    selector.className =
+        "form-select";
+
+    selector.style.maxWidth =
+        "520px";
+
+    for (const watch of selectableWatches) {
+
+        const option =
+            document.createElement(
+                "option"
+            );
+
+        option.value =
+            watch.id;
+
+        option.textContent =
+            getWatchSelectorLabel(
+                watch
+            );
+
+        selector.appendChild(
+            option
+        );
+    }
+
+    if (selectedWatchId !== null) {
+        selector.value =
+            selectedWatchId;
+    }
+
+    selector.disabled =
+        watchItemsDirty;
+
+    selector.addEventListener(
+        "change",
+        async () => {
+
+            const previousWatchId =
+                selectedWatchId;
+
+            const watch =
+                selectableWatches.find(
+                    (candidate) =>
+                        candidate.id
+                        === selector.value
+                );
+
+            if (!watch) {
+                selector.value =
+                    previousWatchId ?? "";
+
+                return;
+            }
+
+            selector.disabled = true;
+
+            try {
+
+                await selectWatch(
+                    watch
+                );
+
+            } catch (error) {
+
+                console.error(
+                    "Unable to select Garmin watch:",
+                    error,
+                );
+
+                selector.value =
+                    previousWatchId ?? "";
+
+                showError(
+                    t(
+                        "unableToLoadWatchConfiguration"
+                    )
+                );
+
+            } finally {
+
+                selector.disabled =
+                    watchItemsDirty;
+            }
+        },
+    );
+
+    container.append(
+        label,
+        selector,
+    );
+
+    container.classList.remove(
+        "d-none"
+    );
+}
+
 async function selectWatch(watch) {
 
-    selectedWatchId =
+    const nextWatchId =
         watch.configured
             ? watch.id
             : null;
 
-    setWatchItemsDirty(false);
-
     const items =
-        selectedWatchId !== null
+        nextWatchId !== null
             ? await getWatchItemsById(
-                selectedWatchId
+                nextWatchId
             )
             : [];
+
+    selectedWatchId =
+        nextWatchId;
+
+    setWatchItemsDirty(false);
 
     renderWatch(
         watch,
@@ -2630,6 +2835,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         await selectWatch(
             watch
+        );
+
+        renderWatchSelector(
+            watches
         );
 
     } catch (error) {
