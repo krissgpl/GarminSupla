@@ -35,7 +35,7 @@
     <string id="StatusConnectionError">Błąd połączenia</string>
 
     <string id="StatusConnected">Połączono</string>
-    <string id="StatusConfigureGarminSupla">Skonfiguruj GarminSupla</string>
+    <string id="StatusConfigureGarminSupla">Skonfiguruj</string>
     <string id="StatusSending">Wysyłanie...</string>
     <string id="StatusActionSent">Wysłano</string>
 
