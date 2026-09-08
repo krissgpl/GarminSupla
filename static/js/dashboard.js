@@ -4,9 +4,7 @@ import {
     getAvailableSuplaItems,
     getUILanguage,
     getUITheme,
-    getWatchItems,
     getWatchItemsById,
-    getWatchStatus,
     getWatchStatuses,
     resetWatchPairing,
     updateUILanguage,
@@ -2287,9 +2285,23 @@ async function handlePairingSubmit(event) {
 
     try {
 
+        const existingWatches =
+            await getWatchStatuses();
+
+        const existingWatchIds =
+            new Set(
+                existingWatches
+                    .map(
+                        (watch) => watch.id
+                    )
+                    .filter(Boolean)
+            );
+
         await approveWatchPairing(code);
 
-        renderPairingApproved();
+        renderPairingApproved(
+            existingWatchIds
+        );
 
     } catch (error) {
 
@@ -2313,7 +2325,9 @@ async function handlePairingSubmit(event) {
     }
 }
 
-function renderPairingApproved() {
+function renderPairingApproved(
+    existingWatchIds,
+) {
 
     const content =
         document.getElementById("watch-content");
@@ -2337,10 +2351,14 @@ function renderPairingApproved() {
         </div>
     `;
 
-    waitForWatchPairingCompletion();
+    waitForWatchPairingCompletion(
+        existingWatchIds
+    );
 }
 
-async function waitForWatchPairingCompletion() {
+async function waitForWatchPairingCompletion(
+    existingWatchIds,
+) {
 
     const maxAttempts = 30;
     const delayMs = 2000;
@@ -2361,19 +2379,29 @@ async function waitForWatchPairingCompletion() {
 
         try {
 
-            const watch =
-                await getWatchStatus();
+            const watches =
+                await getWatchStatuses();
 
-            if (!watch.configured) {
+            const watch =
+                watches.find(
+                    (candidate) =>
+                        candidate.configured
+                        && candidate.id
+                        && !existingWatchIds.has(
+                            candidate.id
+                        )
+                );
+
+            if (!watch) {
                 continue;
             }
 
-            const items =
-                await getWatchItems();
+            await selectWatch(
+                watch
+            );
 
-            renderWatch(
-                watch,
-                items,
+            renderWatchSelector(
+                watches
             );
 
             return;
