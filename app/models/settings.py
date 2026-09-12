@@ -87,6 +87,7 @@ class WatchDevice(BaseModel):
     app_version: str | None = None
 
     token_hash: str
+    credential_revision: int = 1
     created_at: str
     last_seen_at: str | None = None
     enabled: bool = True

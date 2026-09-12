@@ -53,6 +53,44 @@ class WatchService:
 
         return None
 
+    def reissue_token(
+        self,
+        watch_id: str,
+    ) -> tuple[WatchDevice, str] | None:
+        """Issue a new token for an existing Garmin watch."""
+
+        settings = self._store.load()
+
+        watch = next(
+            (
+                candidate
+                for candidate in settings.watches
+                if candidate.id == watch_id
+            ),
+            None,
+        )
+
+        if watch is None:
+            return None
+
+        token = secrets.token_urlsafe(32)
+
+        watch.token_hash = self._hash_token(
+            token
+        )
+
+        watch.credential_revision += 1
+
+        if (
+            settings.watch is not None
+            and settings.watch.id == watch.id
+        ):
+            settings.watch = watch
+
+        self._store.save(settings)
+
+        return watch, token
+
     def update_metadata(
         self,
         watch_id: str,
@@ -115,20 +153,53 @@ class WatchService:
     def register_watch(
         self,
         name: str = "Garmin Watch",
-    ) -> tuple[WatchDevice, str]:
+        copy_from_watch_id: str | None = None,
+    ) -> tuple[WatchDevice, str] | None:
         """Register a watch and return its one-time plaintext token."""
 
         settings = self._store.load()
+
+        source = None
+
+        if copy_from_watch_id is not None:
+            source = next(
+                (
+                    candidate
+                    for candidate in settings.watches
+                    if (
+                        candidate.id
+                        == copy_from_watch_id
+                    )
+                ),
+                None,
+            )
+
+            if source is None:
+                return None
 
         token = secrets.token_urlsafe(32)
 
         watch = WatchDevice(
             id=str(uuid.uuid4()),
             name=name,
-            token_hash=self._hash_token(token),
-            created_at=datetime.now(timezone.utc).isoformat(),
+            token_hash=self._hash_token(
+                token
+            ),
+            created_at=datetime.now(
+                timezone.utc
+            ).isoformat(),
             last_seen_at=None,
             enabled=True,
+            items=(
+                [
+                    item.model_copy(
+                        deep=True
+                    )
+                    for item in source.items
+                ]
+                if source is not None
+                else []
+            ),
         )
 
         settings.watches.append(
@@ -136,6 +207,15 @@ class WatchService:
         )
 
         settings.watch = watch
+
+        # Keep the legacy current-watch
+        # configuration synchronized.
+        settings.watch_settings.items = [
+            item.model_copy(
+                deep=True
+            )
+            for item in watch.items
+        ]
 
         self._store.save(settings)
 

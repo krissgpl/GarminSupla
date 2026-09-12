@@ -166,6 +166,9 @@ class SetupService:
             app_version=watch.app_version,
             created_at=watch.created_at,
             last_seen_at=watch.last_seen_at,
+            credential_revision=(
+                watch.credential_revision
+            ),
         )
 
     def get_watch_status(
@@ -229,30 +232,6 @@ class SetupService:
         return self._build_watch_status(
             watch
         )
-
-    def reset_watch_pairing(self) -> None:
-        """Invalidate the currently paired Garmin watch."""
-
-        settings = self._store.load()
-
-        current_watch = settings.watch
-
-        if current_watch is None:
-            return
-
-        settings.watches = [
-            watch
-            for watch in settings.watches
-            if watch.id != current_watch.id
-        ]
-
-        settings.watch = (
-            settings.watches[-1]
-            if settings.watches
-            else None
-        )
-
-        self._store.save(settings)
 
     def delete_watch(
         self,

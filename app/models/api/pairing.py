@@ -25,3 +25,5 @@ class PairingApproveRequest(BaseModel):
     code: str = Field(
         pattern=r"^\d{6}$",
     )
+    watch_id: str | None = None
+    copy_from_watch_id: str | None = None

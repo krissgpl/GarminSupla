@@ -58,6 +58,7 @@ class WatchStatus(BaseModel):
 
     created_at: str | None = None
     last_seen_at: str | None = None
+    credential_revision: int | None = None
 
 
 class WatchNameUpdate(BaseModel):

@@ -273,6 +273,28 @@ def update_watch_items_by_id(
 
     return saved_items
 
+@router.post(
+    "/watches/{watch_id}/re-pair",
+    status_code=status.HTTP_204_NO_CONTENT,
+)
+def start_watch_repair(
+    watch_id: str,
+    admin: AdminAccount = Depends(
+        require_admin_csrf
+    ),
+) -> None:
+    """Invalidate one Garmin watch token to start re-pairing."""
+
+    started = pairing_service.start_repair(
+        watch_id
+    )
+
+    if not started:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Garmin watch not found.",
+        )
+
 @router.delete(
     "/watches/{watch_id}",
     status_code=status.HTTP_204_NO_CONTENT,
@@ -364,7 +386,11 @@ def approve_watch_pairing(
     """Approve Garmin watch pairing using its six-digit code."""
 
     session = pairing_service.approve_pairing(
-        request.code
+        request.code,
+        watch_id=request.watch_id,
+        copy_from_watch_id=(
+            request.copy_from_watch_id
+        ),
     )
 
     if session is None:
@@ -381,16 +407,3 @@ def get_available_supla_items() -> list[SuplaAvailableItem]:
     """Return currently available executable SUPLA items."""
 
     return setup_service.get_available_supla_items()
-
-@router.post(
-    "/watch/reset",
-    status_code=status.HTTP_204_NO_CONTENT,
-)
-def reset_watch_pairing(
-    admin: AdminAccount = Depends(
-        require_admin_csrf
-    ),
-) -> None:
-    """Invalidate the currently paired Garmin watch."""
-
-    setup_service.reset_watch_pairing()

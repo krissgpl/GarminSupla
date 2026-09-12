@@ -1,12 +1,13 @@
 import {
     ApiError,
     approveWatchPairing,
+    deleteWatchById,
     getAvailableSuplaItems,
     getUILanguage,
     getUITheme,
     getWatchItemsById,
     getWatchStatuses,
-    deleteWatchById,
+    startWatchRePair,
     updateUILanguage,
     updateUITheme,
     updateWatchItemsById,
@@ -85,6 +86,11 @@ const uiText = {
         configureWatch: "Configure Watch",
         replaceWatch: "Replace Watch",
         rePairCurrentWatch: "Re-pair current watch",
+        deleteWatch: "Delete watch",
+        deleteWatchConfirmation:
+            "Delete this watch?\n\nIts configuration will be permanently removed and its token will stop working.",
+        unableToDeleteWatch:
+            "Unable to delete Garmin watch.",
         watchReplacementInfo:
             "Replace Watch keeps the current watch active until the new watch completes pairing. Re-pair invalidates the current watch token immediately.",
         pairGarminWatch: "Pair Garmin Watch",
@@ -109,6 +115,11 @@ const uiText = {
         unableToLoadWatchConfiguration:
             "Unable to load Garmin watch configuration.",
         selectWatch: "Select watch",
+        addWatch: "Add watch",
+        copyWatchConfiguration:
+            "Copy configuration from",
+        emptyWatchConfiguration:
+            "Start with empty configuration",
     },
 
     pl: {
@@ -177,6 +188,11 @@ const uiText = {
         configureWatch: "Skonfiguruj zegarek",
         replaceWatch: "Zmień zegarek",
         rePairCurrentWatch: "Sparuj ponownie zegarek",
+        deleteWatch: "Usuń zegarek",
+        deleteWatchConfirmation:
+            "Usunąć ten zegarek?\n\nJego konfiguracja zostanie trwale usunięta, a token przestanie działać.",
+        unableToDeleteWatch:
+            "Nie można usunąć zegarka Garmin.",
         watchReplacementInfo:
             "Zmiana zegarka pozostawia obecny zegarek aktywny do czasu zakończenia parowania nowego. Ponowne parowanie natychmiast unieważnia token obecnego zegarka.",
         pairGarminWatch: "Sparuj zegarek Garmin",
@@ -201,6 +217,11 @@ const uiText = {
         unableToLoadWatchConfiguration:
             "Nie można załadować konfiguracji zegarka Garmin.",
         selectWatch: "Wybierz zegarek",
+        addWatch: "Dodaj zegarek",
+        copyWatchConfiguration:
+            "Skopiuj konfigurację z",
+        emptyWatchConfiguration:
+            "Zacznij z pustą konfiguracją",
     },
 };
 
@@ -267,6 +288,42 @@ function setWatchItemsDirty(dirty) {
 
     if (watchSelector) {
         watchSelector.disabled = dirty;
+    }
+
+    const addWatchButton =
+        document.getElementById(
+            "add-watch-btn"
+        );
+
+    if (addWatchButton) {
+        addWatchButton.disabled = dirty;
+    }
+
+    const deleteWatchButton =
+        document.getElementById(
+            "delete-watch-btn"
+        );
+
+    if (deleteWatchButton) {
+        deleteWatchButton.disabled = dirty;
+    }
+
+    const replaceWatchButton =
+        document.getElementById(
+            "replace-watch-btn"
+        );
+
+    if (replaceWatchButton) {
+        replaceWatchButton.disabled = dirty;
+    }
+
+    const rePairWatchButton =
+        document.getElementById(
+            "reset-watch-pairing-btn"
+        );
+
+    if (rePairWatchButton) {
+        rePairWatchButton.disabled = dirty;
     }
 
 }
@@ -808,9 +865,23 @@ function renderWatchItems(items) {
                     ${t("watchItems")}
                 </h5>
 
-                <p class="text-muted mb-0">
+                <p class="text-muted mb-3">
                     ${t("noWatchItems")}
                 </p>
+
+                <button
+                    type="button"
+                    class="btn btn-outline-primary"
+                    id="add-from-supla-btn"
+                >
+                    <i class="bi bi-plus-lg me-1"></i>
+                    ${t("addFromSupla")}
+                </button>
+
+                <div
+                    id="add-from-supla-content"
+                    class="mt-3"
+                ></div>
             </div>
         `;
     }
@@ -2074,6 +2145,7 @@ function renderWatch(
                     type="button"
                     class="btn btn-outline-primary"
                     id="replace-watch-btn"
+                    ${watchItemsDirty ? "disabled" : ""}
                 >
                     <i class="bi bi-arrow-repeat me-2"></i>
                     ${t("replaceWatch")}
@@ -2083,9 +2155,20 @@ function renderWatch(
                     type="button"
                     class="btn btn-outline-danger"
                     id="reset-watch-pairing-btn"
+                    ${watchItemsDirty ? "disabled" : ""}
                 >
                     <i class="bi bi-link-45deg me-2"></i>
                     ${t("rePairCurrentWatch")}
+                </button>
+
+                <button
+                    type="button"
+                    class="btn btn-outline-danger"
+                    id="delete-watch-btn"
+                    ${watchItemsDirty ? "disabled" : ""}
+                >
+                    <i class="bi bi-trash me-2"></i>
+                    ${t("deleteWatch")}
                 </button>
 
             </div>
@@ -2101,7 +2184,10 @@ function renderWatch(
         .getElementById("replace-watch-btn")
         .addEventListener(
             "click",
-            renderPairingForm,
+            () => renderPairingForm(
+                true,
+                watch.id,
+            ),
         );
 
     document
@@ -2113,6 +2199,15 @@ function renderWatch(
             ),
         );
 
+    document
+        .getElementById("delete-watch-btn")
+        .addEventListener(
+            "click",
+            () => handleWatchDelete(
+                watch.id
+            ),
+        );
+
     bindWatchNameEditor(watch);
     bindWatchItemEditors();
     bindWatchItemActions(
@@ -2120,6 +2215,52 @@ function renderWatch(
         watch.id,
     );
 
+}
+
+async function handleWatchDelete(
+    watchId,
+) {
+
+    const confirmed = window.confirm(
+        t("deleteWatchConfirmation")
+    );
+
+    if (!confirmed) {
+        return;
+    }
+
+    const button =
+        document.getElementById(
+            "delete-watch-btn"
+        );
+
+    if (button) {
+        button.disabled = true;
+    }
+
+    try {
+
+        await deleteWatchById(
+            watchId
+        );
+
+        window.location.reload();
+
+    } catch (error) {
+
+        console.error(
+            "Unable to delete Garmin watch:",
+            error,
+        );
+
+        if (button) {
+            button.disabled = false;
+        }
+
+        showError(
+            t("unableToDeleteWatch")
+        );
+    }
 }
 
 async function handleWatchRePair(
@@ -2145,11 +2286,10 @@ async function handleWatchRePair(
 
     try {
 
-        await deleteWatchById(
+        await startWatchRePair(
             watchId
         );
 
-        selectedWatchId = null;
         setWatchItemsDirty(false);
 
         const selectorContainer =
@@ -2163,12 +2303,15 @@ async function handleWatchRePair(
             );
         }
 
-        renderPairingForm(false);
+        renderPairingForm(
+            false,
+            watchId,
+        );
 
     } catch (error) {
 
         console.error(
-            "Unable to reset watch pairing:",
+            "Unable to start watch re-pairing:",
             error,
         );
 
@@ -2181,6 +2324,8 @@ async function handleWatchRePair(
 
 function renderPairingForm(
     allowCancel = true,
+    targetWatchId = null,
+    copySourceWatches = [],
 ) {
 
     const content =
@@ -2225,6 +2370,35 @@ function renderPairingForm(
                     >
                 </div>
 
+                ${
+                    targetWatchId === null
+                    && copySourceWatches.length
+                        ? `
+                            <div class="mb-3">
+                                <label
+                                    for="copy-watch-config"
+                                    class="form-label fw-semibold"
+                                >
+                                    ${t(
+                                        "copyWatchConfiguration"
+                                    )}
+                                </label>
+
+                                <select
+                                    class="form-select"
+                                    id="copy-watch-config"
+                                >
+                                    <option value="">
+                                        ${t(
+                                            "emptyWatchConfiguration"
+                                        )}
+                                    </option>
+                                </select>
+                            </div>
+                        `
+                        : ""
+                }
+
                 <div
                     id="pairing-error"
                     class="alert alert-danger d-none"
@@ -2256,12 +2430,46 @@ function renderPairingForm(
         </div>
     `;
 
-    document
-        .getElementById("pair-watch-form")
-        .addEventListener(
-            "submit",
-            handlePairingSubmit,
+    const form =
+        document.getElementById(
+            "pair-watch-form"
         );
+
+    form.dataset.watchId =
+        targetWatchId ?? "";
+
+    const copySelector =
+        document.getElementById(
+            "copy-watch-config"
+        );
+
+    if (copySelector) {
+        for (
+            const watch
+            of copySourceWatches
+        ) {
+            const option =
+                document.createElement(
+                    "option"
+                );
+
+            option.value = watch.id;
+
+            option.textContent =
+                getWatchSelectorLabel(
+                    watch
+                );
+
+            copySelector.append(
+                option
+            );
+        }
+    }
+
+    form.addEventListener(
+        "submit",
+        handlePairingSubmit,
+    );
 
     const cancelButton =
         document.getElementById(
@@ -2279,6 +2487,22 @@ function renderPairingForm(
 async function handlePairingSubmit(event) {
 
     event.preventDefault();
+
+    const targetWatchId =
+        event.currentTarget.dataset.watchId
+        || null;
+
+    const copySelector =
+        document.getElementById(
+            "copy-watch-config"
+        );
+
+    const copyFromWatchId =
+        targetWatchId === null
+        && copySelector
+        && copySelector.value
+            ? copySelector.value
+            : null;
 
     const input =
         document.getElementById("pairing-code");
@@ -2317,10 +2541,34 @@ async function handlePairingSubmit(event) {
                     .filter(Boolean)
             );
 
-        await approveWatchPairing(code);
+        const targetWatch =
+            targetWatchId === null
+                ? null
+                : existingWatches.find(
+                    (watch) =>
+                        watch.id
+                        === targetWatchId
+                );
+
+        const targetLastSeenAt =
+            targetWatch?.last_seen_at
+            ?? null;
+
+        const targetCredentialRevision =
+            targetWatch?.credential_revision
+            ?? null;
+
+        await approveWatchPairing(
+            code,
+            targetWatchId,
+            copyFromWatchId,
+        );
 
         renderPairingApproved(
-            existingWatchIds
+            existingWatchIds,
+            targetWatchId,
+            targetLastSeenAt,
+            targetCredentialRevision,
         );
 
     } catch (error) {
@@ -2347,6 +2595,9 @@ async function handlePairingSubmit(event) {
 
 function renderPairingApproved(
     existingWatchIds,
+    targetWatchId = null,
+    targetLastSeenAt = null,
+    targetCredentialRevision = null,
 ) {
 
     const content =
@@ -2372,12 +2623,18 @@ function renderPairingApproved(
     `;
 
     waitForWatchPairingCompletion(
-        existingWatchIds
+        existingWatchIds,
+        targetWatchId,
+        targetLastSeenAt,
+        targetCredentialRevision,
     );
 }
 
 async function waitForWatchPairingCompletion(
     existingWatchIds,
+    targetWatchId = null,
+    targetLastSeenAt = null,
+    targetCredentialRevision = null,
 ) {
 
     const maxAttempts = 30;
@@ -2403,14 +2660,26 @@ async function waitForWatchPairingCompletion(
                 await getWatchStatuses();
 
             const watch =
-                watches.find(
-                    (candidate) =>
-                        candidate.configured
-                        && candidate.id
-                        && !existingWatchIds.has(
-                            candidate.id
-                        )
-                );
+                targetWatchId === null
+                    ? watches.find(
+                        (candidate) =>
+                            candidate.configured
+                            && candidate.id
+                            && !existingWatchIds.has(
+                                candidate.id
+                            )
+                    )
+                    : watches.find(
+                        (candidate) =>
+                            candidate.configured
+                            && candidate.id
+                                === targetWatchId
+                            && candidate.credential_revision
+                                > targetCredentialRevision
+                            && candidate.last_seen_at
+                            && candidate.last_seen_at
+                                !== targetLastSeenAt
+                    );
 
             if (!watch) {
                 continue;
@@ -2828,9 +3097,50 @@ function renderWatchSelector(watches) {
         },
     );
 
+    const addButton =
+        document.createElement(
+            "button"
+        );
+
+    addButton.type = "button";
+    addButton.id = "add-watch-btn";
+
+    addButton.className =
+        "btn btn-outline-primary flex-shrink-0";
+
+    addButton.innerHTML = `
+        <i class="bi bi-plus-circle me-1"></i>
+        ${t("addWatch")}
+    `;
+
+    addButton.disabled =
+        watchItemsDirty;
+
+    addButton.addEventListener(
+        "click",
+        () => renderPairingForm(
+            true,
+            null,
+            selectableWatches,
+        ),
+    );
+
+    const controls =
+        document.createElement(
+            "div"
+        );
+
+    controls.className =
+        "d-flex flex-column flex-sm-row gap-2 align-items-stretch";
+
+    controls.append(
+        selector,
+        addButton,
+    );
+
     container.append(
         label,
-        selector,
+        controls,
     );
 
     container.classList.remove(

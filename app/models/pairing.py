@@ -11,6 +11,8 @@ class PairingSession(BaseModel):
     created_at: datetime
     expires_at: datetime
     approved: bool = False
+    target_watch_id: str | None = None
+    copy_from_watch_id: str | None = None
 
 class PairingResult(BaseModel):
     """Credentials issued after successful pairing."""

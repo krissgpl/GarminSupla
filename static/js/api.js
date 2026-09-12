@@ -236,6 +236,19 @@ export async function deleteWatchById(
 
 }
 
+export async function startWatchRePair(
+    watchId,
+) {
+
+    return apiRequest(
+        `/api/v1/setup/watches/${encodeURIComponent(watchId)}/re-pair`,
+        {
+            method: "POST",
+        },
+    );
+
+}
+
 export async function getAvailableGates() {
     return apiRequest("/api/v1/setup/gates");
 }
@@ -254,15 +267,31 @@ export async function selectGate(channelId) {
 
 }
 
-export async function approveWatchPairing(code) {
+export async function approveWatchPairing(
+    code,
+    watchId = null,
+    copyFromWatchId = null,
+) {
+
+    const payload = {
+        code: code,
+    };
+
+    if (watchId !== null) {
+        payload.watch_id = watchId;
+
+    } else if (copyFromWatchId !== null) {
+        payload.copy_from_watch_id =
+            copyFromWatchId;
+    }
 
     return apiRequest(
         "/api/v1/setup/watch/pair",
         {
             method: "POST",
-            body: JSON.stringify({
-                code: code,
-            }),
+            body: JSON.stringify(
+                payload
+            ),
         },
     );
 
@@ -272,17 +301,6 @@ export async function getAvailableSuplaItems() {
 
     return apiRequest(
         "/api/v1/setup/supla/items",
-    );
-
-}
-
-export async function resetWatchPairing() {
-
-    return apiRequest(
-        "/api/v1/setup/watch/reset",
-        {
-            method: "POST",
-        },
     );
 
 }

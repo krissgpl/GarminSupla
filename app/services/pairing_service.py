@@ -61,6 +61,8 @@ class PairingService:
     def approve_pairing(
         self,
         code: str,
+        watch_id: str | None = None,
+        copy_from_watch_id: str | None = None,
     ) -> PairingSession | None:
         """Approve a pairing using its six-digit code."""
 
@@ -73,6 +75,16 @@ class PairingService:
 
             if session.approved:
                 return session
+
+            if watch_id is not None:
+                session.target_watch_id = (
+                    watch_id
+                )
+
+            elif copy_from_watch_id is not None:
+                session.copy_from_watch_id = (
+                    copy_from_watch_id
+                )
 
             session.approved = True
 
@@ -97,6 +109,20 @@ class PairingService:
 
         return None
 
+    def start_repair(
+        self,
+        watch_id: str,
+    ) -> bool:
+        """Invalidate a watch token to start re-pairing."""
+
+        reissued = (
+            self._watch_service.reissue_token(
+                watch_id
+            )
+        )
+
+        return reissued is not None
+
     def consume_pairing(
         self,
         pairing_id: str,
@@ -114,9 +140,32 @@ class PairingService:
         if not session.approved:
             return None
 
-        watch, token = self._watch_service.register_watch(
-            name=name,
-        )
+        if session.target_watch_id is None:
+            registered = (
+                self._watch_service.register_watch(
+                    name=name,
+                    copy_from_watch_id=(
+                        session.copy_from_watch_id
+                    ),
+                )
+            )
+
+            if registered is None:
+                return None
+
+            watch, token = registered
+
+        else:
+            reissued = (
+                self._watch_service.reissue_token(
+                    session.target_watch_id
+                )
+            )
+
+            if reissued is None:
+                return None
+
+            watch, token = reissued
 
         self._store.delete(
             pairing_id
