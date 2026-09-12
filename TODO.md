@@ -53,105 +53,97 @@
 
 # Multi-watch
 
-- [ ] Refactor the backend from a single `watch` to a collection of paired watches.
-  - Each watch should have its own:
+- [X] Refactor the backend from a single `watch` to a collection of paired watches.
+  - Each watch has its own:
     - `id`,
     - token,
     - user-defined name,
-    - device model,
-    - Device ID,
-    - part number,
-    - firmware version,
-    - Connect IQ version,
-    - GarminSupla app version,
-    - detected system language,
-    - application language,
+    - device metadata,
     - `enabled` status,
     - `created_at`,
     - `last_seen_at`,
     - independent list of `Watch items`.
 
-- [ ] Move `Watch items` configuration to individual watches.
-  - Each watch should have its own:
-    - item order,
-    - visibility,
-    - icon,
-    - confirmation setting,
-    - remaining per-item settings.
-  - Changing one watch configuration must not affect other watches.
+- [X] Move `Watch items` configuration to individual watches.
+  - Item order and per-item settings are isolated per watch.
+  - Changing one watch configuration does not affect other watches.
 
-- [ ] Refactor watch authentication for multi-watch support.
+- [X] Refactor watch authentication for multi-watch support.
   - Identify the watch by its token.
   - Support multiple simultaneously valid watch tokens.
-  - Adding a new watch must not invalidate existing watches.
+  - Adding a new watch does not invalidate existing watches.
 
-- [ ] Refactor pairing for multiple watches.
+- [X] Refactor pairing for multiple watches.
   - Support multiple active pairing sessions.
-  - Each pairing session should have its own:
+  - Each pairing session has its own:
     - `pairing_id`,
     - pairing code,
     - expiration time,
-    - status.
-  - Adding a new watch must not replace the currently paired watch.
+    - approval state.
+  - Adding a new watch does not replace an existing watch.
 
-- [ ] Extend user-defined watch names to multi-watch.
-  - Single-watch rename is already implemented.
-  - Each paired watch must have its own user-defined name.
-  - Examples:
-    - `Krzysztof Fenix`,
-    - `Anna Watch`,
-    - `Training Fenix`.
-  - The user-defined name must remain separate from the hardware model.
-  - Reuse the existing validation:
+- [X] Add complete watch lifecycle operations.
+  - `Add watch` creates a new logical watch with a new `watch_id`.
+  - `Re-pair` preserves the logical watch and configuration but invalidates the current token immediately.
+  - `Replace watch` preserves the same `watch_id`, name and items.
+  - During replacement, the old physical watch stays valid until the new watch consumes the pairing session.
+  - `Delete watch` removes the logical watch and its configuration.
+
+- [X] Extend user-defined watch names to multi-watch.
+  - Each paired watch has its own user-defined name.
+  - Keep the user-defined name separate from the hardware model.
+  - Reuse name validation:
     - trim surrounding whitespace,
     - reject empty values,
     - maximum length: 50 characters.
-  - Add per-watch `Rename` actions and API endpoints.
 
-- [ ] Add the ability to copy `Watch items` configuration.
-  - From an existing watch to a newly paired watch.
-  - Optionally between already paired watches.
+- [X] Add configuration copying when adding a new watch.
+  - Allow starting with an empty configuration.
+  - Allow deep-copying `Watch items` from an existing watch.
+  - Do not copy global UI or SUPLA settings.
+
+- [ ] Optionally allow copying `Watch items` between already paired watches.
+
 
 # Multi-watch Dashboard
 
-- [ ] Rebuild the upper part of the dashboard as watch cards.
-  - Display watch cards side by side on wide screens.
-  - Use a responsive layout on smaller screens.
-  - Each watch card should show:
-    - user-defined name,
-    - device model,
-    - connection / activity status,
-    - firmware version,
-    - GarminSupla version,
-    - application language,
-    - `last_seen_at`.
-  - Additional technical details may be available through `Details`.
+- [X] Add active watch selection in the dashboard.
+  - Keep `selectedWatchId`.
+  - Show only the selected watch's `Watch items`.
+  - Switching watches updates the configuration without reloading the page.
 
-- [ ] Add active watch selection in the dashboard.
-  - Clicking a watch card sets `selectedWatchId`.
-  - Clearly highlight the currently selected watch.
-  - Show only the selected watch's `Watch items` below the watch cards.
-  - Switching the selected watch should update the lower configuration section without reloading the whole page.
+- [X] Add an `Add watch` action.
+  - Pair another Garmin watch without affecting existing watches.
+  - Allow optional configuration copy from an existing watch.
 
-- [ ] Add an `Add watch` card / action.
-  - Allow pairing another Garmin watch.
-  - Do not disable already paired watches.
-
-- [ ] Add watch management actions to each watch card.
+- [X] Add watch management actions.
   - `Rename`
-  - `Repair / Re-pair`
-  - `Remove`
-  - `Details`
-  - optionally `Refresh`
+  - `Replace watch`
+  - `Re-pair`
+  - `Delete`
 
-- [ ] Prepare dashboard API endpoints for multi-watch.
-  - Target endpoints:
-    - `GET /api/v1/setup/watches`
-    - `GET /api/v1/setup/watches/{watch_id}`
-    - `PATCH /api/v1/setup/watches/{watch_id}`
-    - `DELETE /api/v1/setup/watches/{watch_id}`
-    - `GET /api/v1/setup/watches/{watch_id}/items`
-    - `PUT /api/v1/setup/watches/{watch_id}/items`
+- [X] Add multi-watch dashboard API endpoints.
+  - `GET /api/v1/setup/watches`
+  - `GET /api/v1/setup/watches/{watch_id}`
+  - `PATCH /api/v1/setup/watches/{watch_id}`
+  - `DELETE /api/v1/setup/watches/{watch_id}`
+  - `GET /api/v1/setup/watches/{watch_id}/items`
+  - `PUT /api/v1/setup/watches/{watch_id}/items`
+
+- [X] Protect watch management while `Watch items` contain unsaved changes.
+  - Disable watch selection.
+  - Disable Add, Replace, Re-pair and Delete until changes are saved.
+
+- [X] Detect successful targeted pairing using credential revision.
+  - Do not treat an old physical watch updating `last_seen_at` as completed replacement.
+  - Return automatically to the selected watch after replacement completes.
+
+- [ ] Optionally rebuild the watch selector as responsive watch cards.
+  - Display watch cards side by side on wide screens.
+  - Clearly highlight the selected watch.
+  - Keep responsive behavior on smaller screens.
+
+- [ ] Optionally add a dedicated `Details` view for extended watch metadata.
 
 # Localization
 
@@ -234,6 +226,12 @@
   - Author: `Krzysztof Zawadzki`
   - E-mail: `garminsupla@home-dev.eu`
   - Prepare the screen for future Polish / English localization.
+
+- [X] Automatically refresh an expired pairing code.
+  - Detect an expired pairing session.
+  - Request and display a new pairing code without restarting the application.
+  - Reject the expired code.
+  - Handle expiration both during status polling and immediately before consume.
 
 - [ ] Rebuild the main Connect IQ UI toward a more native Garmin / Menu2 style.
 
