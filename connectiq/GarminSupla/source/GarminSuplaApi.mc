@@ -977,6 +977,19 @@ class GarminSuplaApi {
 			+ data
 		);
 
+		if (responseCode == 404) {
+
+			System.println(
+				"Pairing session expired before consume; requesting new code"
+			);
+
+			_pairingId = null;
+
+			startPairing();
+
+			return;
+		}
+
 		if (
 			responseCode == 200
 			&& data instanceof Lang.Dictionary
@@ -1040,6 +1053,21 @@ class GarminSuplaApi {
 			"Pairing status response: "
 			+ data
 		);
+
+		if (responseCode == 404) {
+
+			System.println(
+				"Pairing session expired; requesting new code"
+			);
+
+			stopPolling();
+
+			_pairingId = null;
+
+			startPairing();
+
+			return;
+		}
 
 		if (
 			responseCode == 200
