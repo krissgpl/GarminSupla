@@ -3,7 +3,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class AppSettings(BaseSettings):
     app_name: str = "GarminSupla"
-    app_version: str = "0.1.0"
+    app_version: str = "0.2.0"
 
     api_key: str
     api_port: int = 8008
