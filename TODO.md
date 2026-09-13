@@ -153,7 +153,7 @@
   - Remove hardcoded user-facing strings from the watch code.
   - Introduce a shared localization layer for application UI strings.
 
-- [ ] Add per-watch application language modes.
+- [X] Add per-watch application language modes.
   - `Auto`
   - `Polski`
   - `English`
