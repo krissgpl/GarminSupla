@@ -32,8 +32,62 @@ class GarminSuplaDelegate extends WatchUi.BehaviorDelegate {
     }
 
     function onMenu() as Boolean {
+
+        var language =
+            Application.Storage.getValue(
+                "application_language"
+            );
+
+        var wifiRefreshLabel =
+            Application.loadResource(
+                Rez.Strings.menu_label_wifi_refresh
+            ).toString();
+
+        var aboutLabel =
+            Application.loadResource(
+                Rez.Strings.menu_label_about
+            ).toString();
+
+        if (language != null) {
+
+            var languageCode =
+                language.toString();
+
+            if (languageCode.equals("pl")) {
+
+                wifiRefreshLabel =
+                    "Odśwież Wi-Fi";
+
+                aboutLabel =
+                    "O aplikacji";
+
+            } else if (
+                languageCode.equals("en")
+            ) {
+
+                wifiRefreshLabel =
+                    "Wi-Fi refresh";
+
+                aboutLabel =
+                    "About";
+            }
+        }
+
+        var menu =
+            new WatchUi.Menu();
+
+        menu.addItem(
+            wifiRefreshLabel,
+            :wifi_refresh
+        );
+
+        menu.addItem(
+            aboutLabel,
+            :about
+        );
+
         WatchUi.pushView(
-            new Rez.Menus.MainMenu(),
+            menu,
             new GarminSuplaMenuDelegate(
                 _api
             ),
