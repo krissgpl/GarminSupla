@@ -37,6 +37,126 @@ class GarminSuplaWifiSyncDelegate
 			|| action.equals("expand");
 	}
 
+    function getSyncErrorText(
+        errorCode as Lang.String
+    ) as Lang.String {
+
+        var language =
+            Application.Storage.getValue(
+                "application_language"
+            );
+
+        if (language != null) {
+
+            var languageCode =
+                language.toString();
+
+            if (languageCode.equals("pl")) {
+
+                if (
+                    errorCode.equals(
+                        "watch_token_missing"
+                    )
+                ) {
+                    return "Brak tokenu zegarka";
+                }
+
+                if (
+                    errorCode.equals(
+                        "state_missing"
+                    )
+                ) {
+                    return "Brak danych synchronizacji";
+                }
+
+                if (
+                    errorCode.equals(
+                        "action_failed"
+                    )
+                ) {
+                    return "Błąd akcji";
+                }
+
+                if (
+                    errorCode.equals(
+                        "invalid_config"
+                    )
+                ) {
+                    return "Błędna konfiguracja";
+                }
+            }
+
+            if (languageCode.equals("en")) {
+
+                if (
+                    errorCode.equals(
+                        "watch_token_missing"
+                    )
+                ) {
+                    return "Watch token missing";
+                }
+
+                if (
+                    errorCode.equals(
+                        "state_missing"
+                    )
+                ) {
+                    return "Sync state missing";
+                }
+
+                if (
+                    errorCode.equals(
+                        "action_failed"
+                    )
+                ) {
+                    return "Action failed";
+                }
+
+                if (
+                    errorCode.equals(
+                        "invalid_config"
+                    )
+                ) {
+                    return "Invalid config";
+                }
+            }
+        }
+
+        if (
+            errorCode.equals(
+                "watch_token_missing"
+            )
+        ) {
+            return Application.loadResource(
+                Rez.Strings.WifiSyncErrorWatchTokenMissing
+            ).toString();
+        }
+
+        if (
+            errorCode.equals(
+                "state_missing"
+            )
+        ) {
+            return Application.loadResource(
+                Rez.Strings.WifiSyncErrorStateMissing
+            ).toString();
+        }
+
+        if (
+            errorCode.equals(
+                "action_failed"
+            )
+        ) {
+            return Application.loadResource(
+                Rez.Strings.WifiSyncErrorActionFailed
+            ).toString();
+        }
+
+        return Application.loadResource(
+            Rez.Strings.WifiSyncErrorInvalidConfig
+        ).toString();
+    }
+
     function onStartSync() as Void {
 
         System.println(
@@ -60,9 +180,9 @@ class GarminSuplaWifiSyncDelegate
             );
 
             Communications.notifySyncComplete(
-				Application.loadResource(
-					Rez.Strings.WifiSyncErrorWatchTokenMissing
-				).toString()
+                getSyncErrorText(
+                    "watch_token_missing"
+                )
 			);
 
             return;
@@ -162,9 +282,9 @@ class GarminSuplaWifiSyncDelegate
             );
 
             Communications.notifySyncComplete(
-				Application.loadResource(
-					Rez.Strings.WifiSyncErrorStateMissing
-				).toString()
+                getSyncErrorText(
+                    "state_missing"
+                )
 			);
 
             return;
@@ -254,9 +374,9 @@ class GarminSuplaWifiSyncDelegate
         );
 
        Communications.notifySyncComplete(
-			Application.loadResource(
-				Rez.Strings.WifiSyncErrorActionFailed
-			).toString()
+            getSyncErrorText(
+                "action_failed"
+            )
 		);
     }
 
@@ -272,9 +392,9 @@ class GarminSuplaWifiSyncDelegate
             );
 
             Communications.notifySyncComplete(
-				Application.loadResource(
-					Rez.Strings.WifiSyncErrorStateMissing
-				).toString()
+                getSyncErrorText(
+                    "state_missing"
+                )
 			);
 
             return;
@@ -357,9 +477,9 @@ class GarminSuplaWifiSyncDelegate
             );
 
             Communications.notifySyncComplete(
-				Application.loadResource(
-					Rez.Strings.WifiSyncErrorInvalidConfig
-				).toString()
+                getSyncErrorText(
+                    "invalid_config"
+                )
 			);
 
             return;
