@@ -50,6 +50,38 @@ class GarminSuplaAboutView
             Application.loadResource(
                 Rez.Strings.AboutEmail
             );
+
+        applyApplicationLanguage();
+
+    }
+
+    function applyApplicationLanguage() as Void {
+
+        var storedLanguage =
+            Application.Storage.getValue(
+                "application_language"
+            );
+
+        if (storedLanguage == null) {
+            return;
+        }
+
+        var language =
+            storedLanguage.toString();
+
+        if (language.equals("pl")) {
+
+            _versionLabel = "Wersja";
+            _authorLabel = "Autor";
+
+            return;
+        }
+
+        if (language.equals("en")) {
+
+            _versionLabel = "Version";
+            _authorLabel = "Author";
+        }
     }
 
     function onLayout(dc as Graphics.Dc) as Void {
