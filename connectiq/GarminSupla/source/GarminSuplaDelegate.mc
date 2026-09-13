@@ -235,18 +235,78 @@ class GarminSuplaDelegate extends WatchUi.BehaviorDelegate {
 			&& itemType.equals("awning")
 		) {
 
+			var awningTitle =
+				Application.loadResource(
+					Rez.Strings.AwningMenuTitle
+				).toString();
+
+			var awningCollapse =
+				Application.loadResource(
+					Rez.Strings.ActionCollapse
+				).toString();
+
+			var awningExpand =
+				Application.loadResource(
+					Rez.Strings.ActionExpand
+				).toString();
+
+			var awningStop =
+				Application.loadResource(
+					Rez.Strings.ActionStop
+				).toString();
+
+			var awningLanguage =
+				Application.Storage.getValue(
+					"application_language"
+				);
+
+			if (awningLanguage != null) {
+
+				var awningLanguageCode =
+					awningLanguage.toString();
+
+				if (
+					awningLanguageCode.equals("pl")
+				) {
+
+					awningTitle =
+						"Markiza";
+
+					awningCollapse =
+						"Zwiń";
+
+					awningExpand =
+						"Rozwiń";
+
+					awningStop =
+						"Zatrzymaj";
+
+				} else if (
+					awningLanguageCode.equals("en")
+				) {
+
+					awningTitle =
+						"Awning";
+
+					awningCollapse =
+						"Collapse";
+
+					awningExpand =
+						"Expand";
+
+					awningStop =
+						"Stop";
+				}
+			}
+
 			var menu =
 				new WatchUi.Menu2({
-					:title => Application.loadResource(
-						Rez.Strings.AwningMenuTitle
-					).toString()
+					:title => awningTitle
 				});
 
 			menu.addItem(
 				new WatchUi.MenuItem(
-					Application.loadResource(
-						Rez.Strings.ActionCollapse
-					).toString(),
+					awningCollapse,
 					null,
 					:collapse,
 					{}
@@ -255,9 +315,7 @@ class GarminSuplaDelegate extends WatchUi.BehaviorDelegate {
 
 			menu.addItem(
 				new WatchUi.MenuItem(
-					Application.loadResource(
-						Rez.Strings.ActionExpand
-					).toString(),
+					awningExpand,
 					null,
 					:expand,
 					{}
@@ -266,9 +324,7 @@ class GarminSuplaDelegate extends WatchUi.BehaviorDelegate {
 
 			menu.addItem(
 				new WatchUi.MenuItem(
-					Application.loadResource(
-						Rez.Strings.ActionStop
-					).toString(),
+					awningStop,
 					null,
 					:stop,
 					{}
