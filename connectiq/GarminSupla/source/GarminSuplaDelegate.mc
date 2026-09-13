@@ -233,34 +233,107 @@ class GarminSuplaDelegate extends WatchUi.BehaviorDelegate {
 
         if (_view.isConfirmationRequired()) {
 
+            var confirmationOpenClose =
+                Application.loadResource(
+                    Rez.Strings.ConfirmationOpenClose
+                ).toString();
+
+            var confirmationTurnOnOff =
+                Application.loadResource(
+                    Rez.Strings.ConfirmationTurnOnOff
+                ).toString();
+
+            var confirmationExecuteScene =
+                Application.loadResource(
+                    Rez.Strings.ConfirmationExecuteScene
+                ).toString();
+
+            var confirmationConfirm =
+                Application.loadResource(
+                    Rez.Strings.ConfirmationConfirm
+                ).toString();
+
+            var confirmationCancel =
+                Application.loadResource(
+                    Rez.Strings.ConfirmationCancel
+                ).toString();
+
+            var language =
+                Application.Storage.getValue(
+                    "application_language"
+                );
+
+            if (language != null) {
+
+                var languageCode =
+                    language.toString();
+
+                if (languageCode.equals("pl")) {
+
+                    confirmationOpenClose =
+                        "Otwórz / zamknij?";
+
+                    confirmationTurnOnOff =
+                        "Włącz / wyłącz?";
+
+                    confirmationExecuteScene =
+                        "Uruchomić scenę?";
+
+                    confirmationConfirm =
+                        "Potwierdź";
+
+                    confirmationCancel =
+                        "Anuluj";
+
+                } else if (
+                    languageCode.equals("en")
+                ) {
+
+                    confirmationOpenClose =
+                        "Open / close?";
+
+                    confirmationTurnOnOff =
+                        "Turn on / off?";
+
+                    confirmationExecuteScene =
+                        "Execute scene?";
+
+                    confirmationConfirm =
+                        "Confirm";
+
+                    confirmationCancel =
+                        "Cancel";
+                }
+            }
+
             var confirmationText = null;
 
             if (itemType != null) {
 
                 if (itemType.equals("gate")) {
+
                     confirmationText =
-                        Application.loadResource(
-                            Rez.Strings.ConfirmationOpenClose
-                        ).toString();
+                        confirmationOpenClose;
 
                 } else if (
                     itemType.equals("light")
                     || itemType.equals("switch")
                 ) {
-                    confirmationText =
-                        Application.loadResource(
-                            Rez.Strings.ConfirmationTurnOnOff
-                        ).toString();
 
-                } else if (itemType.equals("scene")) {
                     confirmationText =
-                        Application.loadResource(
-                            Rez.Strings.ConfirmationExecuteScene
-                        ).toString();
+                        confirmationTurnOnOff;
+
+                } else if (
+                    itemType.equals("scene")
+                ) {
+
+                    confirmationText =
+                        confirmationExecuteScene;
                 }
             }
 
             if (confirmationText == null) {
+
                 System.println(
                     "Confirmation ignored: unsupported item type"
                 );
@@ -275,9 +348,7 @@ class GarminSuplaDelegate extends WatchUi.BehaviorDelegate {
 
             confirmation.addItem(
                 new WatchUi.MenuItem(
-                    Application.loadResource(
-                        Rez.Strings.ConfirmationConfirm
-                    ).toString(),
+                    confirmationConfirm,
                     null,
                     :confirm,
                     {}
@@ -286,9 +357,7 @@ class GarminSuplaDelegate extends WatchUi.BehaviorDelegate {
 
             confirmation.addItem(
                 new WatchUi.MenuItem(
-                    Application.loadResource(
-                        Rez.Strings.ConfirmationCancel
-                    ).toString(),
+                    confirmationCancel,
                     null,
                     :cancel,
                     {}
