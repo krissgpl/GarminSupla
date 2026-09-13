@@ -55,6 +55,20 @@ async function apiRequest(
         // ignore non-JSON responses
     }
 
+    if (
+        response.status === 401
+        && body?.detail
+            === "Administrator authentication required."
+    ) {
+        window.location.replace(
+            "/login"
+        );
+
+        return new Promise(
+            () => {}
+        );
+    }
+
     if (!response.ok) {
         throw new ApiError(
             response.status,
