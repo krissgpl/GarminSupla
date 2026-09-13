@@ -380,8 +380,103 @@ class GarminSuplaView extends WatchUi.View {
                 Rez.Strings.ItemStateUnknown
             );
 
+		applyApplicationLanguage();
+
         _status = _statusConnecting;
 
+	}
+
+	function applyApplicationLanguage() as Void {
+
+		var storedLanguage =
+			Application.Storage.getValue(
+				"application_language"
+			);
+
+		if (storedLanguage == null) {
+			return;
+		}
+
+		var language =
+			storedLanguage.toString();
+
+		if (language.equals("pl")) {
+
+			_connectionStatusOnline = "Połączono";
+			_connectionStatusOffline = "Rozłączono";
+			_connectionStatusCached = "Z pamięci";
+
+			_pairingConfigureServer = "Skonfiguruj serwer";
+			_pairingTitle = "Sparuj zegarek";
+			_pairingEnterCode = "Wprowadź ten kod";
+			_pairingInGarminSupla = "w GarminSupla";
+
+			_statusConnecting = "Łączenie...";
+			_statusWaitingForPairing = "Parowanie...";
+			_statusPairingApproved = "Zatwierdzono";
+			_statusWatchConnected = "Zegarek połączony";
+			_statusConnectionError = "Błąd połączenia";
+
+			_statusConnected = "Połączono";
+			_statusConfigureGarminSupla = "Skonfiguruj";
+			_statusSending = "Wysyłanie...";
+			_statusActionSent = "Wysłano";
+
+			_itemStateOpenedText = "OTWARTA";
+			_itemStateClosedText = "ZAMKNIĘTA";
+			_itemStateLightOnText = "WŁĄCZONE";
+			_itemStateLightOffText = "WYŁĄCZONE";
+			_itemStateSwitchOnText = "WŁĄCZONY";
+			_itemStateSwitchOffText = "WYŁĄCZONY";
+			_itemStateCollapsedText = "ZWINIĘTA";
+			_itemStateExpandedText = "ROZWINIĘTA";
+			_itemStateUnknownText = "NIEZNANY";
+
+			System.println(
+				"View application language: pl"
+			);
+
+			return;
+		}
+
+		if (!language.equals("en")) {
+			return;
+		}
+
+		_connectionStatusOnline = "Online";
+		_connectionStatusOffline = "Offline";
+		_connectionStatusCached = "Cached";
+
+		_pairingConfigureServer = "Configure server";
+		_pairingTitle = "Pair your watch";
+		_pairingEnterCode = "Enter this code";
+		_pairingInGarminSupla = "in GarminSupla";
+
+		_statusConnecting = "Connecting...";
+		_statusWaitingForPairing = "Waiting for pairing";
+		_statusPairingApproved = "Pairing approved";
+		_statusWatchConnected = "Watch connected";
+		_statusConnectionError = "Connection error";
+
+		_statusConnected = "Connected";
+		_statusConfigureGarminSupla =
+			"Configure GarminSupla";
+		_statusSending = "Sending...";
+		_statusActionSent = "Action sent";
+
+		_itemStateOpenedText = "OPENED";
+		_itemStateClosedText = "CLOSED";
+		_itemStateLightOnText = "ON";
+		_itemStateLightOffText = "OFF";
+		_itemStateSwitchOnText = "ON";
+		_itemStateSwitchOffText = "OFF";
+		_itemStateCollapsedText = "COLLAPSED";
+		_itemStateExpandedText = "EXPANDED";
+		_itemStateUnknownText = "UNKNOWN";
+
+		System.println(
+			"View application language: en"
+		);
 	}
 
 	function prepareForPairing() as Void {
@@ -1237,6 +1332,8 @@ class GarminSuplaView extends WatchUi.View {
 		items
 	) as Void {
 
+		applyApplicationLanguage();
+
 		_usingStoredWifiConfig = true;
 
 		_pairingCode = null;
@@ -1263,6 +1360,8 @@ class GarminSuplaView extends WatchUi.View {
 	function setConfiguredItems(
 		items
 	) as Void {
+
+		applyApplicationLanguage();
 
 		_usingStoredWifiConfig = false;
 
@@ -1390,6 +1489,8 @@ class GarminSuplaView extends WatchUi.View {
 	}
 
 	function setNotConfigured() as Void {
+
+		applyApplicationLanguage();
 
 		_pairingCode = null;
 		_items = [];
