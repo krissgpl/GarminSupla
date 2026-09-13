@@ -25,6 +25,13 @@ class WatchItemConfig(BaseModel):
 
 class WatchConfig(BaseModel):
     configured: bool
+
+    application_language: Literal[
+        "auto",
+        "pl",
+        "en",
+    ] = "auto"
+
     items: list[WatchItemConfig] = Field(
         default_factory=list
     )

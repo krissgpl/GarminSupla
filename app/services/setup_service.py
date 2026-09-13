@@ -163,6 +163,9 @@ class SetupService:
             firmware_version=watch.firmware_version,
             connect_iq_version=watch.connect_iq_version,
             system_language=watch.system_language,
+            application_language=(
+                watch.application_language
+            ),
             app_version=watch.app_version,
             created_at=watch.created_at,
             last_seen_at=watch.last_seen_at,
@@ -220,6 +223,41 @@ class SetupService:
             return None
 
         watch.name = name
+
+        if (
+            settings.watch is not None
+            and settings.watch.id == watch.id
+        ):
+            settings.watch = watch
+
+        self._store.save(settings)
+
+        return self._build_watch_status(
+            watch
+        )
+
+    def save_watch_application_language(
+        self,
+        language: Literal[
+            "auto",
+            "pl",
+            "en",
+        ],
+        watch_id: str,
+    ) -> WatchStatus | None:
+        """Persist one Garmin watch application language preference."""
+
+        settings = self._store.load()
+
+        watch = self._find_watch(
+            settings,
+            watch_id,
+        )
+
+        if watch is None:
+            return None
+
+        watch.application_language = language
 
         if (
             settings.watch is not None

@@ -54,6 +54,13 @@ class WatchStatus(BaseModel):
     firmware_version: str | None = None
     connect_iq_version: str | None = None
     system_language: str | None = None
+
+    application_language: Literal[
+        "auto",
+        "pl",
+        "en",
+    ] | None = None
+
     app_version: str | None = None
 
     created_at: str | None = None
@@ -83,6 +90,14 @@ class WatchNameUpdate(BaseModel):
             )
 
         return name
+
+
+class WatchApplicationLanguageUpdate(BaseModel):
+    language: Literal[
+        "auto",
+        "pl",
+        "en",
+    ]
 
 
 class WatchItemUpdate(BaseModel):

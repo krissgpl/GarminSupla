@@ -19,6 +19,7 @@ from app.models.api.setup import (
     SuplaAvailableItem,
     UILanguageSettings,
     UIThemeSettings,
+    WatchApplicationLanguageUpdate,
     WatchItemsUpdateRequest,
     WatchNameUpdate,
 )
@@ -208,6 +209,34 @@ def update_watch_name_by_id(
     watch = setup_service.save_watch_name(
         request.name,
         watch_id=watch_id,
+    )
+
+    if watch is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Garmin watch not found.",
+        )
+
+    return watch
+
+@router.put(
+    "/watches/{watch_id}/language",
+    response_model=WatchStatus,
+)
+def update_watch_application_language_by_id(
+    watch_id: str,
+    request: WatchApplicationLanguageUpdate,
+    admin: AdminAccount = Depends(
+        require_admin_csrf
+    ),
+) -> WatchStatus:
+    """Update one Garmin watch application language preference."""
+
+    watch = (
+        setup_service.save_watch_application_language(
+            request.language,
+            watch_id=watch_id,
+        )
     )
 
     if watch is None:

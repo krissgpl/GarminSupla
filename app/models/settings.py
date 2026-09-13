@@ -84,6 +84,13 @@ class WatchDevice(BaseModel):
     firmware_version: str | None = None
     connect_iq_version: str | None = None
     system_language: str | None = None
+
+    application_language: Literal[
+        "auto",
+        "pl",
+        "en",
+    ] = "auto"
+
     app_version: str | None = None
 
     token_hash: str

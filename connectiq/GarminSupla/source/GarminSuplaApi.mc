@@ -152,6 +152,122 @@ class GarminSuplaApi {
 		return "unknown";
 	}
 
+	function resolveApplicationLanguage(
+		preference
+	) as Lang.String {
+
+		if (
+			preference instanceof Lang.String
+			&& preference.equals("pl")
+		) {
+			return "pl";
+		}
+
+		if (
+			preference instanceof Lang.String
+			&& preference.equals("en")
+		) {
+			return "en";
+		}
+
+		var systemLanguage =
+			System.getDeviceSettings().systemLanguage;
+
+		if (
+			systemLanguage
+			== System.LANGUAGE_POL
+		) {
+			return "pl";
+		}
+
+		return "en";
+	}
+
+	function storeApplicationLanguageFromConfig(
+		config
+	) as Void {
+
+		if (!(config instanceof Lang.Dictionary)) {
+			return;
+		}
+
+		var preference =
+			config["application_language"];
+
+		var effectiveLanguage =
+			resolveApplicationLanguage(
+				preference
+			);
+
+		Application.Storage.setValue(
+			"application_language",
+			effectiveLanguage
+		);
+
+		System.println(
+			"Application language: "
+			+ effectiveLanguage
+		);
+	}
+
+	function resolveApplicationLanguage(
+		preference
+	) as Lang.String {
+
+		if (
+			preference instanceof Lang.String
+			&& preference.equals("pl")
+		) {
+			return "pl";
+		}
+
+		if (
+			preference instanceof Lang.String
+			&& preference.equals("en")
+		) {
+			return "en";
+		}
+
+		var systemLanguage =
+			System.getDeviceSettings().systemLanguage;
+
+		if (
+			systemLanguage
+			== System.LANGUAGE_POL
+		) {
+			return "pl";
+		}
+
+		return "en";
+	}
+
+	function storeApplicationLanguageFromConfig(
+		config
+	) as Void {
+
+		if (!(config instanceof Lang.Dictionary)) {
+			return;
+		}
+
+		var preference =
+			config["application_language"];
+
+		var effectiveLanguage =
+			resolveApplicationLanguage(
+				preference
+			);
+
+		Application.Storage.setValue(
+			"application_language",
+			effectiveLanguage
+		);
+
+		System.println(
+			"Application language: "
+			+ effectiveLanguage
+		);
+	}
+
 	function getWatchMetadata()
 		as Lang.Dictionary {
 
@@ -526,6 +642,10 @@ class GarminSuplaApi {
 			&& data instanceof Lang.Dictionary
 		) {
 
+			storeApplicationLanguageFromConfig(
+				data
+			);
+
 			_wifiRefreshStartedAt = null;
 
 			var configured =
@@ -648,6 +768,10 @@ class GarminSuplaApi {
 
 			return false;
 		}
+
+		storeApplicationLanguageFromConfig(
+			storedConfig
+		);
 
 		var configured =
 			storedConfig["configured"];

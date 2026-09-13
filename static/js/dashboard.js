@@ -10,6 +10,7 @@ import {
     startWatchRePair,
     updateUILanguage,
     updateUITheme,
+    updateWatchApplicationLanguageById,
     updateWatchItemsById,
     updateWatchNameById,
 } from "./api.js";
@@ -33,6 +34,10 @@ const uiText = {
         connectIqVersion: "Connect IQ",
         garminSuplaVersion: "GarminSupla",
         systemLanguage: "System language",
+        applicationLanguage: "Application language",
+        automaticLanguage: "Auto",
+        unableToSaveWatchLanguage:
+            "Unable to save watch application language.",
         notAvailable: "Not available",
         polish: "Polish",
         english: "English",
@@ -135,6 +140,10 @@ const uiText = {
         connectIqVersion: "Connect IQ",
         garminSuplaVersion: "GarminSupla",
         systemLanguage: "Język systemowy",
+        applicationLanguage: "Język aplikacji",
+        automaticLanguage: "Automatyczny",
+        unableToSaveWatchLanguage:
+            "Nie można zapisać języka aplikacji zegarka.",
         notAvailable: "Brak danych",
         polish: "Polski",
         english: "Angielski",
@@ -1889,6 +1898,99 @@ function bindWatchNameEditor(watch) {
     );
 }
 
+function bindWatchApplicationLanguage(watch) {
+
+    const select =
+        document.getElementById(
+            "watch-application-language-select"
+        );
+
+    const status =
+        document.getElementById(
+            "watch-application-language-status"
+        );
+
+    if (!select || !status || !watch.id) {
+        return;
+    }
+
+    let currentLanguage =
+        watch.application_language
+        ?? "auto";
+
+    select.value =
+        currentLanguage;
+
+    select.addEventListener(
+        "change",
+        async () => {
+
+            const nextLanguage =
+                select.value;
+
+            if (
+                nextLanguage
+                === currentLanguage
+            ) {
+                return;
+            }
+
+            select.disabled = true;
+
+            status.textContent =
+                t("saving");
+
+            status.className =
+                "small text-muted mt-1";
+
+            try {
+
+                const updatedWatch =
+                    await updateWatchApplicationLanguageById(
+                        watch.id,
+                        nextLanguage,
+                    );
+
+                currentLanguage =
+                    updatedWatch.application_language
+                    ?? "auto";
+
+                watch.application_language =
+                    currentLanguage;
+
+                select.value =
+                    currentLanguage;
+
+                status.textContent =
+                    t("saved");
+
+                status.className =
+                    "small text-success mt-1";
+
+            } catch (error) {
+
+                console.error(
+                    "Unable to save watch application language:",
+                    error,
+                );
+
+                select.value =
+                    currentLanguage;
+
+                status.textContent =
+                    t("unableToSaveWatchLanguage");
+
+                status.className =
+                    "small text-danger mt-1";
+
+            } finally {
+
+                select.disabled = false;
+            }
+        },
+    );
+}
+
 function renderWatch(
     watch,
     items = [],
@@ -2110,6 +2212,44 @@ function renderWatch(
             </div>
 
             <div class="col-12 col-md-6 col-xl-4">
+                <label
+                    for="watch-application-language-select"
+                    class="small text-muted d-block mb-1"
+                >
+                    ${t("applicationLanguage")}
+                </label>
+
+                <select
+                    class="form-select form-select-sm"
+                    id="watch-application-language-select"
+                    style="max-width: 220px;"
+                >
+                    <option
+                        value="auto"
+                    >
+                        ${t("automaticLanguage")}
+                    </option>
+
+                    <option
+                        value="pl"
+                    >
+                        ${t("polish")}
+                    </option>
+
+                    <option
+                        value="en"
+                    >
+                        ${t("english")}
+                    </option>
+                </select>
+
+                <div
+                    id="watch-application-language-status"
+                    class="small mt-1"
+                ></div>
+            </div>
+
+            <div class="col-12 col-md-6 col-xl-4">
                 <small class="text-muted d-block">
                     ${t("created")}
                 </small>
@@ -2209,6 +2349,7 @@ function renderWatch(
         );
 
     bindWatchNameEditor(watch);
+    bindWatchApplicationLanguage(watch);
     bindWatchItemEditors();
     bindWatchItemActions(
         items,

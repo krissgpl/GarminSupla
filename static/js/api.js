@@ -174,6 +174,23 @@ export async function updateWatchNameById(
 
 }
 
+export async function updateWatchApplicationLanguageById(
+    watchId,
+    language,
+) {
+
+    return apiRequest(
+        `/api/v1/setup/watches/${encodeURIComponent(watchId)}/language`,
+        {
+            method: "PUT",
+            body: JSON.stringify({
+                language: language,
+            }),
+        },
+    );
+
+}
+
 export async function getWatchItems() {
 
     return apiRequest(

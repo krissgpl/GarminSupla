@@ -155,6 +155,9 @@ def get_watch_config(
 
     return WatchConfig(
         configured=bool(items),
+        application_language=(
+            configured_watch.application_language
+        ),
         items=items,
     )
 
