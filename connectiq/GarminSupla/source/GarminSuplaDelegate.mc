@@ -122,18 +122,78 @@ class GarminSuplaDelegate extends WatchUi.BehaviorDelegate {
 			&& itemType.equals("roller_shutter")
 		) {
 
+			var rollerTitle =
+				Application.loadResource(
+					Rez.Strings.RollerShutterMenuTitle
+				).toString();
+
+			var rollerOpen =
+				Application.loadResource(
+					Rez.Strings.ActionOpen
+				).toString();
+
+			var rollerClose =
+				Application.loadResource(
+					Rez.Strings.ActionClose
+				).toString();
+
+			var rollerStop =
+				Application.loadResource(
+					Rez.Strings.ActionStop
+				).toString();
+
+			var rollerLanguage =
+				Application.Storage.getValue(
+					"application_language"
+				);
+
+			if (rollerLanguage != null) {
+
+				var rollerLanguageCode =
+					rollerLanguage.toString();
+
+				if (
+					rollerLanguageCode.equals("pl")
+				) {
+
+					rollerTitle =
+						"Roleta";
+
+					rollerOpen =
+						"Otwórz";
+
+					rollerClose =
+						"Zamknij";
+
+					rollerStop =
+						"Zatrzymaj";
+
+				} else if (
+					rollerLanguageCode.equals("en")
+				) {
+
+					rollerTitle =
+						"Roller shutter";
+
+					rollerOpen =
+						"Open";
+
+					rollerClose =
+						"Close";
+
+					rollerStop =
+						"Stop";
+				}
+			}
+
 			var menu =
 				new WatchUi.Menu2({
-					:title => Application.loadResource(
-						Rez.Strings.RollerShutterMenuTitle
-					).toString()
+					:title => rollerTitle
 				});
 
 			menu.addItem(
 				new WatchUi.MenuItem(
-					Application.loadResource(
-						Rez.Strings.ActionOpen
-					).toString(),
+					rollerOpen,
 					null,
 					:open,
 					{}
@@ -142,9 +202,7 @@ class GarminSuplaDelegate extends WatchUi.BehaviorDelegate {
 
 			menu.addItem(
 				new WatchUi.MenuItem(
-					Application.loadResource(
-						Rez.Strings.ActionClose
-					).toString(),
+					rollerClose,
 					null,
 					:close,
 					{}
@@ -153,9 +211,7 @@ class GarminSuplaDelegate extends WatchUi.BehaviorDelegate {
 
 			menu.addItem(
 				new WatchUi.MenuItem(
-					Application.loadResource(
-						Rez.Strings.ActionStop
-					).toString(),
+					rollerStop,
 					null,
 					:stop,
 					{}
