@@ -100,6 +100,10 @@ class WatchApplicationLanguageUpdate(BaseModel):
     ]
 
 
+class WatchItemsCopyRequest(BaseModel):
+    source_watch_id: str
+
+
 class WatchItemUpdate(BaseModel):
     id: str
     type: Literal[

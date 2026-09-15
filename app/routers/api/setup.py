@@ -20,6 +20,7 @@ from app.models.api.setup import (
     UILanguageSettings,
     UIThemeSettings,
     WatchApplicationLanguageUpdate,
+    WatchItemsCopyRequest,
     WatchItemsUpdateRequest,
     WatchNameUpdate,
 )
@@ -301,6 +302,32 @@ def update_watch_items_by_id(
         )
 
     return saved_items
+
+@router.post(
+    "/watches/{watch_id}/items/copy",
+    response_model=list[WatchItem],
+)
+def copy_watch_items_by_id(
+    watch_id: str,
+    request: WatchItemsCopyRequest,
+    admin: AdminAccount = Depends(
+        require_admin_csrf
+    ),
+) -> list[WatchItem]:
+    """Copy watch items from another configured Garmin watch."""
+
+    items = setup_service.copy_watch_items(
+        source_watch_id=request.source_watch_id,
+        target_watch_id=watch_id,
+    )
+
+    if items is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Garmin watch not found.",
+        )
+
+    return items
 
 @router.post(
     "/watches/{watch_id}/re-pair",

@@ -410,6 +410,58 @@ class SetupService:
 
         return sorted_items
 
+    def copy_watch_items(
+        self,
+        source_watch_id: str,
+        target_watch_id: str,
+    ) -> list[WatchItem] | None:
+        """Copy watch items between existing Garmin watches."""
+
+        settings = self._store.load()
+
+        source_watch = self._find_watch(
+            settings,
+            source_watch_id,
+        )
+
+        target_watch = self._find_watch(
+            settings,
+            target_watch_id,
+        )
+
+        if (
+            source_watch is None
+            or target_watch is None
+        ):
+            return None
+
+        copied_items = [
+            item.model_copy(
+                deep=True
+            )
+            for item in source_watch.items
+        ]
+
+        target_watch.items = copied_items
+
+        if (
+            settings.watch is not None
+            and settings.watch.id
+                == target_watch.id
+        ):
+            settings.watch = target_watch
+
+            settings.watch_settings.items = [
+                item.model_copy(
+                    deep=True
+                )
+                for item in copied_items
+            ]
+
+        self._store.save(settings)
+
+        return copied_items
+
     def get_available_supla_items(
         self,
     ) -> list[SuplaAvailableItem]:

@@ -102,7 +102,7 @@
   - Allow deep-copying `Watch items` from an existing watch.
   - Do not copy global UI or SUPLA settings.
 
-- [ ] Optionally allow copying `Watch items` between already paired watches.
+- [X] Optionally allow copying `Watch items` between already paired watches.
 
 
 # Multi-watch Dashboard

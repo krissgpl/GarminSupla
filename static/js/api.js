@@ -254,6 +254,23 @@ export async function updateWatchItemsById(
 
 }
 
+export async function copyWatchItemsById(
+    targetWatchId,
+    sourceWatchId,
+) {
+
+    return apiRequest(
+        `/api/v1/setup/watches/${encodeURIComponent(targetWatchId)}/items/copy`,
+        {
+            method: "POST",
+            body: JSON.stringify({
+                source_watch_id: sourceWatchId,
+            }),
+        },
+    );
+
+}
+
 export async function deleteWatchById(
     watchId,
 ) {

@@ -1,6 +1,7 @@
 import {
     ApiError,
     approveWatchPairing,
+    copyWatchItemsById,
     deleteWatchById,
     getAvailableSuplaItems,
     getUILanguage,
@@ -121,6 +122,12 @@ const uiText = {
             "Unable to load Garmin watch configuration.",
         selectWatch: "Select watch",
         addWatch: "Add watch",
+        copyWatchItems: "Copy Watch items",
+        copyWatchItemsFrom: "Copy Watch items from",
+        copyWatchItemsConfirmation:
+            "Replace the current Watch items with items from the selected watch?",
+        unableToCopyWatchItems:
+            "Unable to copy Watch items.",
         copyWatchConfiguration:
             "Copy configuration from",
         emptyWatchConfiguration:
@@ -227,6 +234,12 @@ const uiText = {
             "Nie można załadować konfiguracji zegarka Garmin.",
         selectWatch: "Wybierz zegarek",
         addWatch: "Dodaj zegarek",
+        copyWatchItems: "Kopiuj elementy zegarka",
+        copyWatchItemsFrom: "Kopiuj elementy zegarka z",
+        copyWatchItemsConfirmation:
+            "Zastąpić elementy bieżącego zegarka elementami z wybranego zegarka?",
+        unableToCopyWatchItems:
+            "Nie można skopiować elementów zegarka.",
         copyWatchConfiguration:
             "Skopiuj konfigurację z",
         emptyWatchConfiguration:
@@ -306,6 +319,36 @@ function setWatchItemsDirty(dirty) {
 
     if (addWatchButton) {
         addWatchButton.disabled = dirty;
+    }
+
+    const copyWatchItemsButton =
+        document.getElementById(
+            "copy-watch-items-btn"
+        );
+
+    if (copyWatchItemsButton) {
+        copyWatchItemsButton.disabled =
+            dirty;
+    }
+
+    const copyWatchItemsSource =
+        document.getElementById(
+            "copy-watch-items-source"
+        );
+
+    if (copyWatchItemsSource) {
+        copyWatchItemsSource.disabled =
+            dirty;
+    }
+
+    const confirmCopyWatchItemsButton =
+        document.getElementById(
+            "confirm-copy-watch-items-btn"
+        );
+
+    if (confirmCopyWatchItemsButton) {
+        confirmCopyWatchItemsButton.disabled =
+            dirty;
     }
 
     const deleteWatchButton =
@@ -3105,6 +3148,301 @@ function updateWatchSelectorOption(watch) {
 }
 
 
+function showCopyWatchItemsForm(watches) {
+
+    const container =
+        document.getElementById(
+            "watch-selector-container"
+        );
+
+    if (!container || watchItemsDirty) {
+        return;
+    }
+
+    const targetWatch =
+        watches.find(
+            (watch) =>
+                watch.id === selectedWatchId
+        );
+
+    if (!targetWatch) {
+        return;
+    }
+
+    const sourceWatches =
+        watches.filter(
+            (watch) =>
+                watch.configured
+                && watch.id
+                && watch.id !== targetWatch.id
+        );
+
+    if (!sourceWatches.length) {
+        return;
+    }
+
+    const existingForm =
+        document.getElementById(
+            "copy-watch-items-form"
+        );
+
+    if (existingForm) {
+        return;
+    }
+
+    const watchSelector =
+        document.getElementById(
+            "watch-selector"
+        );
+
+    const addWatchButton =
+        document.getElementById(
+            "add-watch-btn"
+        );
+
+    const copyWatchItemsButton =
+        document.getElementById(
+            "copy-watch-items-btn"
+        );
+
+    if (watchSelector) {
+        watchSelector.disabled = true;
+    }
+
+    if (addWatchButton) {
+        addWatchButton.disabled = true;
+    }
+
+    if (copyWatchItemsButton) {
+        copyWatchItemsButton.disabled = true;
+    }
+
+    const form =
+        document.createElement("div");
+
+    form.id =
+        "copy-watch-items-form";
+
+    form.className =
+        "border rounded-3 p-3 mt-2";
+
+    const label =
+        document.createElement("label");
+
+    label.className =
+        "form-label fw-semibold";
+
+    label.htmlFor =
+        "copy-watch-items-source";
+
+    label.textContent =
+        t("copyWatchItemsFrom");
+
+    const controls =
+        document.createElement("div");
+
+    controls.className =
+        "d-flex flex-column flex-sm-row gap-2";
+
+    const sourceSelect =
+        document.createElement("select");
+
+    sourceSelect.id =
+        "copy-watch-items-source";
+
+    sourceSelect.className =
+        "form-select";
+
+    for (const watch of sourceWatches) {
+
+        const option =
+            document.createElement(
+                "option"
+            );
+
+        option.value =
+            watch.id;
+
+        option.textContent =
+            getWatchSelectorLabel(
+                watch
+            );
+
+        sourceSelect.append(
+            option
+        );
+    }
+
+    const confirmButton =
+        document.createElement(
+            "button"
+        );
+
+    confirmButton.type =
+        "button";
+
+    confirmButton.id =
+        "confirm-copy-watch-items-btn";
+
+    confirmButton.className =
+        "btn btn-primary flex-shrink-0";
+
+    confirmButton.textContent =
+        t("copyWatchItems");
+
+    const cancelButton =
+        document.createElement(
+            "button"
+        );
+
+    cancelButton.type =
+        "button";
+
+    cancelButton.className =
+        "btn btn-outline-secondary flex-shrink-0";
+
+    cancelButton.textContent =
+        t("cancel");
+
+    const errorBox =
+        document.createElement("div");
+
+    errorBox.className =
+        "small text-danger mt-2 d-none";
+
+    controls.append(
+        sourceSelect,
+        confirmButton,
+        cancelButton,
+    );
+
+    form.append(
+        label,
+        controls,
+        errorBox,
+    );
+
+    container.append(
+        form
+    );
+
+    const restoreSelectorControls = () => {
+
+        if (watchSelector) {
+            watchSelector.disabled =
+                watchItemsDirty;
+        }
+
+        if (addWatchButton) {
+            addWatchButton.disabled =
+                watchItemsDirty;
+        }
+
+        if (copyWatchItemsButton) {
+            copyWatchItemsButton.disabled =
+                watchItemsDirty;
+        }
+    };
+
+    cancelButton.addEventListener(
+        "click",
+        () => {
+
+            form.remove();
+
+            restoreSelectorControls();
+        },
+    );
+
+    confirmButton.addEventListener(
+        "click",
+        async () => {
+
+            const sourceWatch =
+                sourceWatches.find(
+                    (watch) =>
+                        watch.id
+                        === sourceSelect.value
+                );
+
+            if (!sourceWatch) {
+                return;
+            }
+
+            const confirmed =
+                window.confirm(
+                    `${t(
+                        "copyWatchItemsConfirmation"
+                    )}\n\n`
+                    + `${getWatchSelectorLabel(
+                        sourceWatch
+                    )} → `
+                    + `${getWatchSelectorLabel(
+                        targetWatch
+                    )}`
+                );
+
+            if (!confirmed) {
+                return;
+            }
+
+            sourceSelect.disabled = true;
+            confirmButton.disabled = true;
+            cancelButton.disabled = true;
+
+            errorBox.classList.add(
+                "d-none"
+            );
+
+            try {
+
+                const copiedItems =
+                    await copyWatchItemsById(
+                        targetWatch.id,
+                        sourceWatch.id,
+                    );
+
+                form.remove();
+
+                setWatchItemsDirty(false);
+
+                renderWatch(
+                    targetWatch,
+                    copiedItems,
+                );
+
+                restoreSelectorControls();
+
+            } catch (error) {
+
+                console.error(
+                    "Unable to copy Watch items:",
+                    error,
+                );
+
+                errorBox.textContent =
+                    t(
+                        "unableToCopyWatchItems"
+                    );
+
+                errorBox.classList.remove(
+                    "d-none"
+                );
+
+                sourceSelect.disabled =
+                    watchItemsDirty;
+
+                confirmButton.disabled =
+                    watchItemsDirty;
+
+                cancelButton.disabled =
+                    false;
+            }
+        },
+    );
+}
+
+
 function renderWatchSelector(watches) {
 
     const container =
@@ -3278,6 +3616,42 @@ function renderWatchSelector(watches) {
         selector,
         addButton,
     );
+
+    if (selectableWatches.length > 1) {
+
+        const copyButton =
+            document.createElement(
+                "button"
+            );
+
+        copyButton.type =
+            "button";
+
+        copyButton.id =
+            "copy-watch-items-btn";
+
+        copyButton.className =
+            "btn btn-outline-secondary flex-shrink-0";
+
+        copyButton.innerHTML = `
+            <i class="bi bi-copy me-1"></i>
+            ${t("copyWatchItems")}
+        `;
+
+        copyButton.disabled =
+            watchItemsDirty;
+
+        copyButton.addEventListener(
+            "click",
+            () => showCopyWatchItemsForm(
+                selectableWatches
+            ),
+        );
+
+        controls.append(
+            copyButton
+        );
+    }
 
     container.append(
         label,

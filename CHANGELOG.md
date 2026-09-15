@@ -10,6 +10,28 @@ Projekt stosuje zasady zbliżone do Keep a Changelog.
 
 ---
 
+## [0.3.0] - 2026-09-15
+
+### Added
+- Per-watch application language modes: `Auto`, `Polski`, and `English`.
+- Copy `Watch items` between already paired watches from the dashboard.
+
+### Improved
+- Connect IQ runtime UI now follows the per-watch application language in the main view, menus, confirmation dialogs, roller shutter and awning menus, About view, and Wi-Fi Sync errors.
+- `Auto` application language follows the watch system language.
+- Copying `Watch items` preserves the target watch identity, token, metadata, and application language.
+- Copying `Watch items` does not modify the source watch or global UI / SUPLA settings.
+- Watch item copying is disabled while the target watch has unsaved configuration changes.
+
+### Fixed
+- Expired dashboard administrator sessions now redirect directly to the login screen instead of showing a generic operation error.
+
+### Versioning
+- Backend/dashboard version: `0.3.0`.
+- Connect IQ application version: `0.6.0`.
+
+---
+
 ## [0.2.0] - 2026-09-12
 
 ### Added
