@@ -138,7 +138,7 @@
   - Do not treat an old physical watch updating `last_seen_at` as completed replacement.
   - Return automatically to the selected watch after replacement completes.
 
-- [ ] Optionally rebuild the watch selector as responsive watch cards.
+- [X] Optionally rebuild the watch selector as responsive watch cards.
   - Display watch cards side by side on wide screens.
   - Clearly highlight the selected watch.
   - Keep responsive behavior on smaller screens.

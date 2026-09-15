@@ -8,6 +8,11 @@ Projekt stosuje zasady zbliżone do Keep a Changelog.
 
 ## [Unreleased]
 
+### Improved
+- Replaced the multi-watch selector dropdown with responsive watch cards.
+- The selected watch is clearly highlighted, with responsive layouts for mobile, tablet, and desktop.
+- Watch switching remains disabled while `Watch items` contain unsaved changes.
+
 ---
 
 ## [0.3.0] - 2026-09-15

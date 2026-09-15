@@ -291,6 +291,19 @@ function getDefaultWatchItemIcon(type) {
 let watchItemsDirty = false;
 let selectedWatchId = null;
 
+function setWatchSelectorCardsDisabled(
+    disabled
+) {
+
+    document
+        .querySelectorAll(
+            "[data-watch-selector-card]"
+        )
+        .forEach((button) => {
+            button.disabled = disabled;
+        });
+}
+
 function setWatchItemsDirty(dirty) {
     watchItemsDirty = dirty;
 
@@ -303,14 +316,9 @@ function setWatchItemsDirty(dirty) {
         button.disabled = !dirty;
     }
 
-    const watchSelector =
-        document.getElementById(
-            "watch-selector"
-        );
-
-    if (watchSelector) {
-        watchSelector.disabled = dirty;
-    }
+    setWatchSelectorCardsDisabled(
+        dirty
+    );
 
     const addWatchButton =
         document.getElementById(
@@ -1896,7 +1904,7 @@ function bindWatchNameEditor(watch) {
                 watch.name =
                     updatedWatch.name;
 
-                updateWatchSelectorOption(
+                updateWatchSelectorCard(
                     watch
                 );
 
@@ -3123,26 +3131,33 @@ function getWatchSelectorLabel(watch) {
 }
 
 
-function updateWatchSelectorOption(watch) {
+function updateWatchSelectorCard(watch) {
 
-    const selector =
-        document.getElementById(
-            "watch-selector"
-        );
-
-    if (!selector || !watch.id) {
+    if (!watch.id) {
         return;
     }
 
-    const option = [
-        ...selector.options,
+    const card = [
+        ...document.querySelectorAll(
+            "[data-watch-selector-card]"
+        ),
     ].find(
         (candidate) =>
-            candidate.value === watch.id
+            candidate.dataset.watchId
+            === watch.id
     );
 
-    if (option) {
-        option.textContent =
+    if (!card) {
+        return;
+    }
+
+    const label =
+        card.querySelector(
+            "[data-watch-selector-label]"
+        );
+
+    if (label) {
+        label.textContent =
             getWatchSelectorLabel(watch);
     }
 }
@@ -3190,11 +3205,6 @@ function showCopyWatchItemsForm(watches) {
         return;
     }
 
-    const watchSelector =
-        document.getElementById(
-            "watch-selector"
-        );
-
     const addWatchButton =
         document.getElementById(
             "add-watch-btn"
@@ -3205,9 +3215,9 @@ function showCopyWatchItemsForm(watches) {
             "copy-watch-items-btn"
         );
 
-    if (watchSelector) {
-        watchSelector.disabled = true;
-    }
+    setWatchSelectorCardsDisabled(
+        true
+    );
 
     if (addWatchButton) {
         addWatchButton.disabled = true;
@@ -3328,10 +3338,9 @@ function showCopyWatchItemsForm(watches) {
 
     const restoreSelectorControls = () => {
 
-        if (watchSelector) {
-            watchSelector.disabled =
-                watchItemsDirty;
-        }
+        setWatchSelectorCardsDisabled(
+            watchItemsDirty
+        );
 
         if (addWatchButton) {
             addWatchButton.disabled =
@@ -3472,117 +3481,211 @@ function renderWatchSelector(watches) {
     }
 
     const label =
-        document.createElement("label");
+        document.createElement("div");
 
     label.className =
         "form-label fw-semibold";
 
-    label.htmlFor =
-        "watch-selector";
-
     label.textContent =
         t("selectWatch");
 
-    const selector =
-        document.createElement("select");
+    const cards =
+        document.createElement("div");
 
-    selector.id =
-        "watch-selector";
+    cards.id =
+        "watch-selector-cards";
 
-    selector.className =
-        "form-select";
-
-    selector.style.maxWidth =
-        "520px";
+    cards.className =
+        "row g-2";
 
     for (const watch of selectableWatches) {
 
-        const option =
+        const isSelected =
+            watch.id === selectedWatchId;
+
+        const column =
             document.createElement(
-                "option"
+                "div"
             );
 
-        option.value =
+        column.className =
+            "col-12 col-md-6 col-xl-4";
+
+        const card =
+            document.createElement(
+                "button"
+            );
+
+        card.type =
+            "button";
+
+        card.dataset.watchSelectorCard =
+            "";
+
+        card.dataset.watchId =
             watch.id;
 
-        option.textContent =
+        card.className = [
+            "btn",
+            "w-100",
+            "h-100",
+            "text-start",
+            "p-3",
+            isSelected
+                ? "btn-primary"
+                : "btn-outline-secondary",
+        ].join(" ");
+
+        card.disabled =
+            watchItemsDirty;
+
+        card.setAttribute(
+            "aria-pressed",
+            isSelected
+                ? "true"
+                : "false",
+        );
+
+        const layout =
+            document.createElement(
+                "div"
+            );
+
+        layout.className =
+            "d-flex align-items-center gap-3";
+
+        const icon =
+            document.createElement("i");
+
+        icon.className =
+            "bi bi-smartwatch fs-4 flex-shrink-0";
+
+        const text =
+            document.createElement(
+                "div"
+            );
+
+        text.className =
+            "min-w-0";
+
+        const watchLabel =
+            document.createElement(
+                "div"
+            );
+
+        watchLabel.dataset.watchSelectorLabel =
+            "";
+
+        watchLabel.className =
+            "fw-semibold text-break";
+
+        watchLabel.textContent =
             getWatchSelectorLabel(
                 watch
             );
 
-        selector.appendChild(
-            option
+        const status =
+            document.createElement(
+                "div"
+            );
+
+        status.className =
+            "small opacity-75 mt-1";
+
+        status.textContent =
+            watch.enabled
+                ? t("enabled")
+                : t("disabled");
+
+        text.append(
+            watchLabel,
+            status,
+        );
+
+        layout.append(
+            icon,
+            text,
+        );
+
+        card.append(
+            layout
+        );
+
+        card.addEventListener(
+            "click",
+            async () => {
+
+                if (
+                    watchItemsDirty
+                    || watch.id
+                        === selectedWatchId
+                ) {
+                    return;
+                }
+
+                setWatchSelectorCardsDisabled(
+                    true
+                );
+
+                try {
+
+                    await selectWatch(
+                        watch
+                    );
+
+                    renderWatchSelector(
+                        watches
+                    );
+
+                } catch (error) {
+
+                    console.error(
+                        "Unable to select Garmin watch:",
+                        error,
+                    );
+
+                    showError(
+                        t(
+                            "unableToLoadWatchConfiguration"
+                        )
+                    );
+
+                } finally {
+
+                    setWatchSelectorCardsDisabled(
+                        watchItemsDirty
+                    );
+                }
+            },
+        );
+
+        column.append(
+            card
+        );
+
+        cards.append(
+            column
         );
     }
 
-    if (selectedWatchId !== null) {
-        selector.value =
-            selectedWatchId;
-    }
+    const controls =
+        document.createElement(
+            "div"
+        );
 
-    selector.disabled =
-        watchItemsDirty;
-
-    selector.addEventListener(
-        "change",
-        async () => {
-
-            const previousWatchId =
-                selectedWatchId;
-
-            const watch =
-                selectableWatches.find(
-                    (candidate) =>
-                        candidate.id
-                        === selector.value
-                );
-
-            if (!watch) {
-                selector.value =
-                    previousWatchId ?? "";
-
-                return;
-            }
-
-            selector.disabled = true;
-
-            try {
-
-                await selectWatch(
-                    watch
-                );
-
-            } catch (error) {
-
-                console.error(
-                    "Unable to select Garmin watch:",
-                    error,
-                );
-
-                selector.value =
-                    previousWatchId ?? "";
-
-                showError(
-                    t(
-                        "unableToLoadWatchConfiguration"
-                    )
-                );
-
-            } finally {
-
-                selector.disabled =
-                    watchItemsDirty;
-            }
-        },
-    );
+    controls.className =
+        "d-flex flex-column flex-sm-row gap-2 mt-3";
 
     const addButton =
         document.createElement(
             "button"
         );
 
-    addButton.type = "button";
-    addButton.id = "add-watch-btn";
+    addButton.type =
+        "button";
+
+    addButton.id =
+        "add-watch-btn";
 
     addButton.className =
         "btn btn-outline-primary flex-shrink-0";
@@ -3604,17 +3707,8 @@ function renderWatchSelector(watches) {
         ),
     );
 
-    const controls =
-        document.createElement(
-            "div"
-        );
-
-    controls.className =
-        "d-flex flex-column flex-sm-row gap-2 align-items-stretch";
-
     controls.append(
-        selector,
-        addButton,
+        addButton
     );
 
     if (selectableWatches.length > 1) {
@@ -3655,6 +3749,7 @@ function renderWatchSelector(watches) {
 
     container.append(
         label,
+        cards,
         controls,
     );
 
@@ -3662,6 +3757,7 @@ function renderWatchSelector(watches) {
         "d-none"
     );
 }
+
 
 async function selectWatch(watch) {
 
