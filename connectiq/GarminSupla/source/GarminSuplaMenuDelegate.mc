@@ -1,27 +1,29 @@
-import Toybox.Lang;
 import Toybox.System;
 import Toybox.WatchUi;
 
 class GarminSuplaMenuDelegate
-    extends WatchUi.MenuInputDelegate {
+    extends WatchUi.Menu2InputDelegate {
 
     private var _api;
 
     function initialize(api) {
-        MenuInputDelegate.initialize();
+        Menu2InputDelegate.initialize();
 
         _api = api;
     }
 
-    function onMenuItem(
-        item as Symbol
+    function onSelect(
+        item as WatchUi.MenuItem
     ) as Void {
 
-        if (item == :wifi_refresh) {
+        var id =
+            item.getId();
+
+        if (id == :wifi_refresh) {
 
             _api.startWifiRefresh();
 
-        } else if (item == :about) {
+        } else if (id == :about) {
 
             System.println(
                 "Opening About"

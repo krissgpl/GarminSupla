@@ -74,16 +74,26 @@ class GarminSuplaDelegate extends WatchUi.BehaviorDelegate {
         }
 
         var menu =
-            new WatchUi.Menu();
+            new WatchUi.Menu2({
+                :title => "GarminSupla"
+            });
 
         menu.addItem(
-            wifiRefreshLabel,
-            :wifi_refresh
+            new WatchUi.MenuItem(
+                wifiRefreshLabel,
+                null,
+                :wifi_refresh,
+                {}
+            )
         );
 
         menu.addItem(
-            aboutLabel,
-            :about
+            new WatchUi.MenuItem(
+                aboutLabel,
+                null,
+                :about,
+                {}
+            )
         );
 
         WatchUi.pushView(
