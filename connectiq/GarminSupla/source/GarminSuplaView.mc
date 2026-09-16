@@ -646,43 +646,46 @@ class GarminSuplaView extends WatchUi.View {
 			);
 		}
 
-        dc.drawText(
-			width / 2,
-			height * 0.12,
-			Graphics.FONT_MEDIUM,
-			"GarminSupla",
-			Graphics.TEXT_JUSTIFY_CENTER
-		);
-
 		if (_itemName != null) {
 
-			var arrowX = width / 2;
+            // Dyskretny nagłówek aplikacji.
+            dc.drawText(
+                width / 2,
+                height * 0.07,
+                Graphics.FONT_XTINY,
+                "GarminSupla",
+                Graphics.TEXT_JUSTIFY_CENTER
+            );
 
-			// Górny chevron
-			var arrowTopY = (height * 0.27).toNumber();
+            var arrowX = width / 2;
+            var chevronHalfWidth = 6;
+            var chevronHeight = 5;
 
-			dc.drawLine(
-				arrowX - 8,
-				arrowTopY + 6,
-				arrowX,
-				arrowTopY
-			);
+            // Górny chevron
+            var arrowTopY = (height * 0.19).toNumber();
 
-			dc.drawLine(
-				arrowX,
-				arrowTopY,
-				arrowX + 8,
-				arrowTopY + 6
-			);
+            dc.drawLine(
+                arrowX - chevronHalfWidth,
+                arrowTopY + chevronHeight,
+                arrowX,
+                arrowTopY
+            );
+
+            dc.drawLine(
+                arrowX,
+                arrowTopY,
+                arrowX + chevronHalfWidth,
+                arrowTopY + chevronHeight
+            );
 
 			// Nazwa itemu
-			dc.drawText(
-				width / 2,
-				height * 0.32,
-				Graphics.FONT_SMALL,
-				_itemName,
-				Graphics.TEXT_JUSTIFY_CENTER
-			);
+            dc.drawText(
+                width / 2,
+                height * 0.22,
+                Graphics.FONT_SMALL,
+                _itemName,
+                Graphics.TEXT_JUSTIFY_CENTER
+            );
 
 			// Online / Offline + status dot
 			var connectionText = null;
@@ -711,10 +714,10 @@ class GarminSuplaView extends WatchUi.View {
             }
 
 			var connectionY =
-				(height * 0.44).toNumber();
+				(height * 0.34).toNumber();
 
 			var connectionFont =
-				Graphics.FONT_SMALL;
+				Graphics.FONT_XTINY;
 
 			var connectionWidth =
 				dc.getTextWidthInPixels(
@@ -722,8 +725,8 @@ class GarminSuplaView extends WatchUi.View {
 					connectionFont
 				);
 
-			var dotRadius = 9;
-			var dotGap = 8;
+			var dotRadius = 5;
+			var dotGap = 6;
 
 			var groupWidth =
 				(dotRadius * 2)
@@ -791,7 +794,7 @@ class GarminSuplaView extends WatchUi.View {
 
 			dc.drawText(
 				width / 2,
-				height * 0.54,
+				height * 0.46,
 				Graphics.FONT_MEDIUM,
 				getItemStateText(),
 				Graphics.TEXT_JUSTIFY_CENTER
@@ -1228,31 +1231,39 @@ class GarminSuplaView extends WatchUi.View {
 			// 1/2, 2/2...
 			dc.drawText(
 				width / 2,
-				height * 0.85,
+				height * 0.91,
 				Graphics.FONT_XTINY,
 				getItemPositionText(),
 				Graphics.TEXT_JUSTIFY_CENTER
 			);
 
-			// Dolny chevron
-			var arrowBottomY = (height * 0.94).toNumber();
+            // Dolny chevron
+            var arrowBottomY = (height * 0.87).toNumber();
 
-			dc.drawLine(
-				arrowX - 8,
-				arrowBottomY,
-				arrowX,
-				arrowBottomY + 6
-			);
+            dc.drawLine(
+                arrowX - chevronHalfWidth,
+                arrowBottomY,
+                arrowX,
+                arrowBottomY + chevronHeight
+            );
 
-			dc.drawLine(
-				arrowX,
-				arrowBottomY + 6,
-				arrowX + 8,
-				arrowBottomY
-			);
+            dc.drawLine(
+                arrowX,
+                arrowBottomY + chevronHeight,
+                arrowX + chevronHalfWidth,
+                arrowBottomY
+            );
 
 			return;
 		}
+
+        dc.drawText(
+            width / 2,
+            height * 0.12,
+            Graphics.FONT_MEDIUM,
+            "GarminSupla",
+            Graphics.TEXT_JUSTIFY_CENTER
+        );
 
 		var pairingTitleY =
 			(height * 0.26).toNumber();
