@@ -132,6 +132,8 @@ const uiText = {
             "Copy configuration from",
         emptyWatchConfiguration:
             "Start with empty configuration",
+        details: "Details",
+        hideDetails: "Hide details",
     },
 
     pl: {
@@ -244,6 +246,8 @@ const uiText = {
             "Skopiuj konfigurację z",
         emptyWatchConfiguration:
             "Zacznij z pustą konfiguracją",
+        details: "Szczegóły",
+        hideDetails: "Ukryj szczegóły",
     },
 };
 
@@ -2042,6 +2046,58 @@ function bindWatchApplicationLanguage(watch) {
     );
 }
 
+function bindWatchDetailsToggle() {
+
+    const button =
+        document.getElementById(
+            "watch-details-toggle"
+        );
+
+    const details =
+        document.getElementById(
+            "watch-details"
+        );
+
+    if (!button || !details) {
+        return;
+    }
+
+    button.addEventListener(
+        "click",
+        () => {
+
+            const isHidden =
+                details.classList.contains(
+                    "d-none"
+                );
+
+            details.classList.toggle(
+                "d-none",
+                !isHidden,
+            );
+
+            button.setAttribute(
+                "aria-expanded",
+                isHidden
+                    ? "true"
+                    : "false",
+            );
+
+            const label =
+                button.querySelector(
+                    "[data-watch-details-label]"
+                );
+
+            if (label) {
+                label.textContent =
+                    isHidden
+                        ? t("hideDetails")
+                        : t("details");
+            }
+        },
+    );
+}
+
 function renderWatch(
     watch,
     items = [],
@@ -2176,91 +2232,7 @@ function renderWatch(
 
         </div>
 
-                <div class="row g-3 mt-3">
-
-            <div class="col-12 col-md-6 col-xl-4">
-                <small class="text-muted d-block">
-                    ${t("deviceModel")}
-                </small>
-
-                <strong>
-                    ${formatMetadataValue(
-                        watch.device_model
-                    )}
-                </strong>
-            </div>
-
-            <div class="col-12 col-md-6 col-xl-4">
-                <small class="text-muted d-block">
-                    ${t("partNumber")}
-                </small>
-
-                <strong>
-                    ${formatMetadataValue(
-                        watch.part_number
-                    )}
-                </strong>
-            </div>
-
-            <div class="col-12 col-md-6 col-xl-4">
-                <small class="text-muted d-block">
-                    ${t("deviceId")}
-                </small>
-
-                <strong class="text-break">
-                    ${formatMetadataValue(
-                        watch.device_id
-                    )}
-                </strong>
-            </div>
-
-            <div class="col-12 col-md-6 col-xl-4">
-                <small class="text-muted d-block">
-                    ${t("firmwareVersion")}
-                </small>
-
-                <strong>
-                    ${formatMetadataValue(
-                        watch.firmware_version
-                    )}
-                </strong>
-            </div>
-
-            <div class="col-12 col-md-6 col-xl-4">
-                <small class="text-muted d-block">
-                    ${t("connectIqVersion")}
-                </small>
-
-                <strong>
-                    ${formatMetadataValue(
-                        watch.connect_iq_version
-                    )}
-                </strong>
-            </div>
-
-            <div class="col-12 col-md-6 col-xl-4">
-                <small class="text-muted d-block">
-                    ${t("garminSuplaVersion")}
-                </small>
-
-                <strong>
-                    ${formatMetadataValue(
-                        watch.app_version
-                    )}
-                </strong>
-            </div>
-
-            <div class="col-12 col-md-6 col-xl-4">
-                <small class="text-muted d-block">
-                    ${t("systemLanguage")}
-                </small>
-
-                <strong>
-                    ${formatSystemLanguage(
-                        watch.system_language
-                    )}
-                </strong>
-            </div>
+        <div class="row g-3 mt-3 align-items-end">
 
             <div class="col-12 col-md-6 col-xl-4">
                 <label
@@ -2275,21 +2247,15 @@ function renderWatch(
                     id="watch-application-language-select"
                     style="max-width: 220px;"
                 >
-                    <option
-                        value="auto"
-                    >
+                    <option value="auto">
                         ${t("automaticLanguage")}
                     </option>
 
-                    <option
-                        value="pl"
-                    >
+                    <option value="pl">
                         ${t("polish")}
                     </option>
 
-                    <option
-                        value="en"
-                    >
+                    <option value="en">
                         ${t("english")}
                     </option>
                 </select>
@@ -2300,30 +2266,138 @@ function renderWatch(
                 ></div>
             </div>
 
-            <div class="col-12 col-md-6 col-xl-4">
-                <small class="text-muted d-block">
-                    ${t("created")}
-                </small>
-
-                <strong>
-                    ${formatDate(
-                        watch.created_at
-                    )}
-                </strong>
+            <div class="col-12 col-md-auto">
+                <button
+                    type="button"
+                    class="btn btn-outline-secondary"
+                    id="watch-details-toggle"
+                    aria-expanded="false"
+                    aria-controls="watch-details"
+                >
+                    <i class="bi bi-info-circle me-1"></i>
+                    <span data-watch-details-label>
+                        ${t("details")}
+                    </span>
+                </button>
             </div>
 
-            <div class="col-12 col-md-6 col-xl-4">
-                <small class="text-muted d-block">
-                    ${t("lastSeen")}
-                </small>
+        </div>
 
-                <strong>
-                    ${formatDate(
-                        watch.last_seen_at
-                    )}
-                </strong>
+        <div
+            id="watch-details"
+            class="d-none border rounded-4 p-3 mt-3"
+        >
+            <div class="row g-3">
+
+                <div class="col-12 col-md-6 col-xl-4">
+                    <small class="text-muted d-block">
+                        ${t("deviceModel")}
+                    </small>
+
+                    <strong>
+                        ${formatMetadataValue(
+                            watch.device_model
+                        )}
+                    </strong>
+                </div>
+
+                <div class="col-12 col-md-6 col-xl-4">
+                    <small class="text-muted d-block">
+                        ${t("partNumber")}
+                    </small>
+
+                    <strong>
+                        ${formatMetadataValue(
+                            watch.part_number
+                        )}
+                    </strong>
+                </div>
+
+                <div class="col-12 col-md-6 col-xl-4">
+                    <small class="text-muted d-block">
+                        ${t("deviceId")}
+                    </small>
+
+                    <strong class="text-break">
+                        ${formatMetadataValue(
+                            watch.device_id
+                        )}
+                    </strong>
+                </div>
+
+                <div class="col-12 col-md-6 col-xl-4">
+                    <small class="text-muted d-block">
+                        ${t("firmwareVersion")}
+                    </small>
+
+                    <strong>
+                        ${formatMetadataValue(
+                            watch.firmware_version
+                        )}
+                    </strong>
+                </div>
+
+                <div class="col-12 col-md-6 col-xl-4">
+                    <small class="text-muted d-block">
+                        ${t("connectIqVersion")}
+                    </small>
+
+                    <strong>
+                        ${formatMetadataValue(
+                            watch.connect_iq_version
+                        )}
+                    </strong>
+                </div>
+
+                <div class="col-12 col-md-6 col-xl-4">
+                    <small class="text-muted d-block">
+                        ${t("garminSuplaVersion")}
+                    </small>
+
+                    <strong>
+                        ${formatMetadataValue(
+                            watch.app_version
+                        )}
+                    </strong>
+                </div>
+
+                <div class="col-12 col-md-6 col-xl-4">
+                    <small class="text-muted d-block">
+                        ${t("systemLanguage")}
+                    </small>
+
+                    <strong>
+                        ${formatSystemLanguage(
+                            watch.system_language
+                        )}
+                    </strong>
+                </div>
+
+                <div class="col-12 col-md-6 col-xl-4">
+                    <small class="text-muted d-block">
+                        ${t("created")}
+                    </small>
+
+                    <strong>
+                        ${formatDate(
+                            watch.created_at
+                        )}
+                    </strong>
+                </div>
+
+                <div class="col-12 col-md-6 col-xl-4">
+                    <small class="text-muted d-block">
+                        ${t("lastSeen")}
+                    </small>
+
+                    <strong>
+                        ${formatDate(
+                            watch.last_seen_at
+                        )}
+                    </strong>
+                </div>
+
             </div>
-
         </div>
 
         ${renderWatchItems(items)}
@@ -2401,6 +2475,7 @@ function renderWatch(
 
     bindWatchNameEditor(watch);
     bindWatchApplicationLanguage(watch);
+    bindWatchDetailsToggle();
     bindWatchItemEditors();
     bindWatchItemActions(
         items,

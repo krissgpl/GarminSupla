@@ -12,6 +12,9 @@ Projekt stosuje zasady zbliżone do Keep a Changelog.
 - Replaced the multi-watch selector dropdown with responsive watch cards.
 - The selected watch is clearly highlighted, with responsive layouts for mobile, tablet, and desktop.
 - Watch switching remains disabled while `Watch items` contain unsaved changes.
+- Added a dedicated `Details` view for extended watch metadata.
+- Extended watch metadata is hidden by default and can be expanded on demand.
+- Per-watch application language remains available directly in the main watch view.
 
 ---
 

@@ -143,7 +143,7 @@
   - Clearly highlight the selected watch.
   - Keep responsive behavior on smaller screens.
 
-- [ ] Optionally add a dedicated `Details` view for extended watch metadata.
+- [X] Optionally add a dedicated `Details` view for extended watch metadata.
 
 # Localization
 
