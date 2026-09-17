@@ -210,6 +210,143 @@ class GarminSuplaApi {
 		);
 	}
 
+    function configValueEquals(
+        left,
+        right
+    ) as Lang.Boolean {
+
+        if (
+            left == null
+            || right == null
+        ) {
+            return left == null
+                && right == null;
+        }
+
+        return left.toString()
+            .equals(right.toString());
+    }
+
+    function updateStoredWifiConfig(
+        config
+    ) as Void {
+
+        if (!(config instanceof Lang.Dictionary)) {
+            return;
+        }
+
+        var storedConfig =
+            Application.Storage.getValue(
+                "wifi_sync_config"
+            );
+
+        var shouldStore = false;
+
+        if (!(storedConfig instanceof Lang.Dictionary)) {
+
+            shouldStore = true;
+
+        } else if (
+            !configValueEquals(
+                storedConfig["configured"],
+                config["configured"]
+            )
+            || !configValueEquals(
+                storedConfig["application_language"],
+                config["application_language"]
+            )
+        ) {
+
+            shouldStore = true;
+
+        } else {
+
+            var storedItems =
+                storedConfig["items"];
+
+            var liveItems =
+                config["items"];
+
+            if (
+                !(storedItems instanceof Lang.Array)
+                || !(liveItems instanceof Lang.Array)
+                || storedItems.size()
+                    != liveItems.size()
+            ) {
+
+                shouldStore = true;
+
+            } else {
+
+                for (
+                    var index = 0;
+                    index < liveItems.size();
+                    index += 1
+                ) {
+
+                    var storedItem =
+                        storedItems[index];
+
+                    var liveItem =
+                        liveItems[index];
+
+                    if (
+                        !(storedItem instanceof Lang.Dictionary)
+                        || !(liveItem instanceof Lang.Dictionary)
+                    ) {
+
+                        shouldStore = true;
+                        break;
+                    }
+
+                    if (
+                        !configValueEquals(
+                            storedItem["id"],
+                            liveItem["id"]
+                        )
+                        || !configValueEquals(
+                            storedItem["type"],
+                            liveItem["type"]
+                        )
+                        || !configValueEquals(
+                            storedItem["name"],
+                            liveItem["name"]
+                        )
+                        || !configValueEquals(
+                            storedItem["icon"],
+                            liveItem["icon"]
+                        )
+                        || !configValueEquals(
+                            storedItem["status_enabled"],
+                            liveItem["status_enabled"]
+                        )
+                        || !configValueEquals(
+                            storedItem["confirmation_required"],
+                            liveItem["confirmation_required"]
+                        )
+                    ) {
+
+                        shouldStore = true;
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (!shouldStore) {
+            return;
+        }
+
+        Application.Storage.setValue(
+            "wifi_sync_config",
+            config
+        );
+
+        System.println(
+            "Updated WIFI config snapshot"
+        );
+    }
+
 	function getWatchMetadata()
 		as Lang.Dictionary {
 
@@ -585,6 +722,10 @@ class GarminSuplaApi {
 		) {
 
 			storeApplicationLanguageFromConfig(
+				data
+			);
+
+			updateStoredWifiConfig(
 				data
 			);
 
