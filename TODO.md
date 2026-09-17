@@ -233,7 +233,7 @@
   - Reject the expired code.
   - Handle expiration both during status polling and immediately before consume.
 
-- [ ] Rebuild the main Connect IQ UI toward a more native Garmin / Menu2 style.
+- [X] Rebuild the main Connect IQ UI toward a more native Garmin / Menu2 style.
 
 - [ ] Prepare a consistent icon set for supported item types.
   - Add dedicated icons for supported types, including:

@@ -15,6 +15,9 @@ Projekt stosuje zasady zbliżone do Keep a Changelog.
 - Added a dedicated `Details` view for extended watch metadata.
 - Extended watch metadata is hidden by default and can be expanded on demand.
 - Per-watch application language remains available directly in the main watch view.
+- Migrated the Connect IQ application menu to native `Menu2`.
+- Refined the main watch item layout while preserving the existing background and device graphics.
+- Navigation chevrons and the item position indicator are now shown only when multiple watch items are configured.
 
 ---
 
