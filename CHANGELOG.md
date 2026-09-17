@@ -8,6 +8,10 @@ Projekt stosuje zasady zbliżone do Keep a Changelog.
 
 ## [Unreleased]
 
+---
+
+## [0.4.0] - 2026-09-17
+
 ### Improved
 - Replaced the multi-watch selector dropdown with responsive watch cards.
 - The selected watch is clearly highlighted, with responsive layouts for mobile, tablet, and desktop.
@@ -18,6 +22,12 @@ Projekt stosuje zasady zbliżone do Keep a Changelog.
 - Migrated the Connect IQ application menu to native `Menu2`.
 - Refined the main watch item layout while preserving the existing background and device graphics.
 - Navigation chevrons and the item position indicator are now shown only when multiple watch items are configured.
+- Dashboard watch item previews now use the same icon bitmap resources as the Connect IQ application.
+- Supported watch item types now share a consistent icon set between the dashboard and the watch.
+
+### Versioning
+- Backend/dashboard version: `0.4.0`.
+- Connect IQ application version: `0.7.0`.
 
 ---
 

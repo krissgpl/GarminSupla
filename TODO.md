@@ -235,7 +235,7 @@
 
 - [X] Rebuild the main Connect IQ UI toward a more native Garmin / Menu2 style.
 
-- [ ] Prepare a consistent icon set for supported item types.
+- [X] Prepare a consistent icon set for supported item types.
   - Add dedicated icons for supported types, including:
     - gate,
     - light,
