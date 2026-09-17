@@ -657,26 +657,33 @@ class GarminSuplaView extends WatchUi.View {
                 Graphics.TEXT_JUSTIFY_CENTER
             );
 
+            var hasMultipleItems =
+                _items.size() > 1;
+
             var arrowX = width / 2;
             var chevronHalfWidth = 6;
             var chevronHeight = 5;
 
-            // Górny chevron
-            var arrowTopY = (height * 0.19).toNumber();
+            if (hasMultipleItems) {
 
-            dc.drawLine(
-                arrowX - chevronHalfWidth,
-                arrowTopY + chevronHeight,
-                arrowX,
-                arrowTopY
-            );
+                // Górny chevron
+                var arrowTopY =
+                    (height * 0.19).toNumber();
 
-            dc.drawLine(
-                arrowX,
-                arrowTopY,
-                arrowX + chevronHalfWidth,
-                arrowTopY + chevronHeight
-            );
+                dc.drawLine(
+                    arrowX - chevronHalfWidth,
+                    arrowTopY + chevronHeight,
+                    arrowX,
+                    arrowTopY
+                );
+
+                dc.drawLine(
+                    arrowX,
+                    arrowTopY,
+                    arrowX + chevronHalfWidth,
+                    arrowTopY + chevronHeight
+                );
+            }
 
 			// Nazwa itemu
             dc.drawText(
@@ -1228,31 +1235,35 @@ class GarminSuplaView extends WatchUi.View {
 				}
 			}
 
-			// 1/2, 2/2...
-			dc.drawText(
-				width / 2,
-				height * 0.91,
-				Graphics.FONT_XTINY,
-				getItemPositionText(),
-				Graphics.TEXT_JUSTIFY_CENTER
-			);
+            if (hasMultipleItems) {
 
-            // Dolny chevron
-            var arrowBottomY = (height * 0.87).toNumber();
+                // 1/2, 2/2...
+                dc.drawText(
+                    width / 2,
+                    height * 0.91,
+                    Graphics.FONT_XTINY,
+                    getItemPositionText(),
+                    Graphics.TEXT_JUSTIFY_CENTER
+                );
 
-            dc.drawLine(
-                arrowX - chevronHalfWidth,
-                arrowBottomY,
-                arrowX,
-                arrowBottomY + chevronHeight
-            );
+                // Dolny chevron
+                var arrowBottomY =
+                    (height * 0.87).toNumber();
 
-            dc.drawLine(
-                arrowX,
-                arrowBottomY + chevronHeight,
-                arrowX + chevronHalfWidth,
-                arrowBottomY
-            );
+                dc.drawLine(
+                    arrowX - chevronHalfWidth,
+                    arrowBottomY,
+                    arrowX,
+                    arrowBottomY + chevronHeight
+                );
+
+                dc.drawLine(
+                    arrowX,
+                    arrowBottomY + chevronHeight,
+                    arrowX + chevronHalfWidth,
+                    arrowBottomY
+                );
+            }
 
 			return;
 		}
