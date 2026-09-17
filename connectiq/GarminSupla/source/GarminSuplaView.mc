@@ -703,6 +703,9 @@ class GarminSuplaView extends WatchUi.View {
                 connectionText =
                     _connectionStatusCached;
 
+				connectionColor =
+					Graphics.COLOR_YELLOW;
+
             } else if (_itemConnected) {
 
                 connectionText =
