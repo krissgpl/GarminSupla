@@ -785,10 +785,18 @@ class GarminSuplaView extends WatchUi.View {
 			var stateColor = Graphics.COLOR_WHITE;
 
 			if (
-				_itemState.equals("closed")
-				|| _itemState.equals("opened")
+				_itemState.equals("opened")
+				|| _itemState.equals("on")
+				|| _itemState.equals("expanded")
 			) {
 				stateColor = Graphics.COLOR_GREEN;
+			}
+			else if (
+				_itemState.equals("closed")
+				|| _itemState.equals("off")
+				|| _itemState.equals("collapsed")
+			) {
+				stateColor = Graphics.COLOR_LT_GRAY;
 			}
 			else if (_itemState.equals("unknown")) {
 				stateColor = Graphics.COLOR_RED;
