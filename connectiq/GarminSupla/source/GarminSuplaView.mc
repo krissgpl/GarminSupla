@@ -767,7 +767,7 @@ class GarminSuplaView extends WatchUi.View {
 			);
 
 			dc.setColor(
-				Graphics.COLOR_WHITE,
+				connectionColor,
 				Graphics.COLOR_TRANSPARENT
 			);
 
