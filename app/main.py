@@ -30,7 +30,19 @@ app = FastAPI(
 
 register_exception_handlers(app)
 
-app.mount("/static", StaticFiles(directory="static"), name="static")
+app.mount(
+    "/static",
+    StaticFiles(directory="static"),
+    name="static",
+)
+
+app.mount(
+    "/watch-icons",
+    StaticFiles(
+        directory="connectiq/GarminSupla/resources/drawables"
+    ),
+    name="watch-icons",
+)
 
 API_PREFIX = "/api/v1"
 
