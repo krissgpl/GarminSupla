@@ -439,426 +439,66 @@ function formatSystemLanguage(value) {
 
 function renderWatchItemIcon(icon) {
 
-    if (icon === "sliding_gate") {
+    const watchIcons = {
+        garage_gate: [
+            "garage_gate_closed.png",
+            t("garageGate"),
+        ],
+        sliding_gate: [
+            "sliding_gate_closed.png",
+            t("slidingGate"),
+        ],
+        double_swing_gate: [
+            "double_swing_gate_closed.png",
+            t("doubleSwingGate"),
+        ],
+        light: [
+            "light_off.png",
+            t("light"),
+        ],
+        switch: [
+            "switch_off.png",
+            t("switch"),
+        ],
+        roller_shutter: [
+            "roller_shutter_closed.png",
+            t("rollerShutter"),
+        ],
+        awning: [
+            "awning_closed.png",
+            t("awning"),
+        ],
+        scene: [
+            "scene.png",
+            t("scene"),
+        ],
+    };
+
+    const iconConfig =
+        watchIcons[icon];
+
+    if (!iconConfig) {
         return `
-            <svg
-                width="64"
-                height="40"
-                viewBox="0 0 64 40"
-                role="img"
-                aria-label="${t("slidingGate")}"
-                class="text-body"
-            >
-                <g
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                >
-                    <!-- posts -->
-                    <line x1="6" y1="5" x2="6" y2="35" />
-                    <line x1="58" y1="5" x2="58" y2="35" />
-
-                    <!-- rail -->
-                    <line x1="2" y1="34" x2="62" y2="34" />
-
-                    <!-- closed sliding leaf -->
-                    <rect
-                        x="10"
-                        y="9"
-                        width="44"
-                        height="20"
-                    />
-
-                    <line x1="21" y1="9" x2="21" y2="29" />
-                    <line x1="32" y1="9" x2="32" y2="29" />
-                    <line x1="43" y1="9" x2="43" y2="29" />
-                </g>
-            </svg>
+            <i
+                class="bi bi-square fs-2 text-muted"
+                aria-label="${t("defaultIcon")}"
+            ></i>
         `;
     }
 
-    if (icon === "double_swing_gate") {
-        return `
-            <svg
-                width="64"
-                height="40"
-                viewBox="0 0 64 40"
-                role="img"
-                aria-label="${t("doubleSwingGate")}"
-                class="text-body"
-            >
-                <g
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                >
-                    <!-- posts -->
-                    <line x1="6" y1="5" x2="6" y2="35" />
-                    <line x1="58" y1="5" x2="58" y2="35" />
-
-                    <!-- left leaf -->
-                    <rect
-                        x="10"
-                        y="9"
-                        width="22"
-                        height="20"
-                    />
-
-                    <!-- right leaf -->
-                    <rect
-                        x="32"
-                        y="9"
-                        width="22"
-                        height="20"
-                    />
-                </g>
-            </svg>
-        `;
-    }
-
-    if (icon === "garage_gate") {
-        return `
-            <svg
-                width="64"
-                height="40"
-                viewBox="0 0 64 40"
-                role="img"
-                aria-label="${t("garageGate")}"
-                class="text-body"
-            >
-                <g
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                >
-                    <!-- garage outline -->
-                    <path
-                        d="
-                            M14 34
-                            L14 15
-                            L32 5
-                            L50 15
-                            L50 34
-                            Z
-                        "
-                    />
-
-                    <!-- garage door -->
-                    <rect
-                        x="19"
-                        y="16"
-                        width="26"
-                        height="18"
-                        rx="1"
-                    />
-
-                    <!-- sectional panels -->
-                    <line x1="19" y1="21" x2="45" y2="21" />
-                    <line x1="19" y1="26" x2="45" y2="26" />
-                    <line x1="19" y1="31" x2="45" y2="31" />
-
-                    <!-- handle -->
-                    <line x1="29" y1="33" x2="35" y2="33" />
-                </g>
-            </svg>
-        `;
-    }
-
-    if (icon === "scene") {
-        return `
-            <svg
-                width="64"
-                height="40"
-                viewBox="0 0 64 40"
-                role="img"
-                aria-label="${t("scene")}"
-                class="text-body"
-            >
-                <g
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                >
-                    <!-- clapper top -->
-                    <path
-                        d="
-                            M19 8
-                            L45 5
-                            L47 11
-                            L21 14
-                            Z
-                        "
-                    />
-
-                    <!-- clapper stripes -->
-                    <line x1="25" y1="7" x2="29" y2="13" />
-                    <line x1="34" y1="6" x2="38" y2="12" />
-                    <line x1="43" y1="5" x2="46" y2="10" />
-
-                    <!-- board -->
-                    <rect
-                        x="19"
-                        y="15"
-                        width="28"
-                        height="19"
-                        rx="2"
-                    />
-
-                    <!-- play symbol -->
-                    <path
-                        d="
-                            M29 21
-                            L38 25
-                            L29 29
-                            Z
-                        "
-                    />
-                </g>
-            </svg>
-        `;
-    }
-
-    if (icon === "light") {
-        return `
-            <svg
-                width="64"
-                height="40"
-                viewBox="0 0 64 40"
-                role="img"
-                aria-label="${t("light")}"
-                class="text-body"
-            >
-                <g
-                    transform="translate(0 3)"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                >
-                    <!-- bulb -->
-                    <path
-                        d="
-                            M24 19
-                            C20 16 19 13 19 10
-                            C19 3 24 -1 32 -1
-                            C40 -1 45 3 45 10
-                            C45 13 44 16 40 19
-                            C38 21 37 23 37 26
-                            L27 26
-                            C27 23 26 21 24 19
-                        "
-                    />
-
-                    <!-- filament -->
-                    <path d="M28 13 L32 19 L36 13" />
-
-                    <!-- base -->
-                    <line x1="27" y1="29" x2="37" y2="29" />
-                    <line x1="28" y1="32" x2="36" y2="32" />
-                    <line x1="30" y1="35" x2="34" y2="35" />
-                </g>
-            </svg>
-        `;
-    }
-
-    if (icon === "switch") {
-        return `
-            <svg
-                width="64"
-                height="40"
-                viewBox="0 0 64 40"
-                role="img"
-                aria-label="${t("switch")}"
-                class="text-body"
-            >
-                <g
-                    transform="translate(0 1)"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                >
-                    <!-- square outer plate -->
-                    <rect
-                        x="21"
-                        y="3"
-                        width="22"
-                        height="32"
-                        rx="3"
-                    />
-
-                    <!-- rocker -->
-                    <rect
-                        x="26"
-                        y="8"
-                        width="12"
-                        height="21"
-                        rx="1.5"
-                    />
-
-                    <!-- ON mark -->
-                    <line
-                        x1="32"
-                        y1="11"
-                        x2="32"
-                        y2="16"
-                    />
-
-                    <!-- OFF mark -->
-                    <circle
-                        cx="32"
-                        cy="24"
-                        r="2"
-                    />
-
-                    <!-- screws -->
-                    <circle
-                        cx="24"
-                        cy="6"
-                        r="1"
-                    />
-
-                    <circle
-                        cx="40"
-                        cy="32"
-                        r="1"
-                    />
-                </g>
-            </svg>
-        `;
-    }
-
-    if (icon === "roller_shutter") {
-        return `
-            <svg
-                width="64"
-                height="40"
-                viewBox="0 0 64 40"
-                role="img"
-                aria-label="${t("rollerShutter")}"
-                class="text-body"
-            >
-                <g
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                >
-                    <!-- frame -->
-                    <rect
-                        x="18"
-                        y="4"
-                        width="28"
-                        height="31"
-                        rx="2"
-                    />
-
-                    <!-- top housing -->
-                    <rect
-                        x="20"
-                        y="6"
-                        width="24"
-                        height="5"
-                        rx="1"
-                    />
-
-                    <!-- shutter slats -->
-                    <line x1="21" y1="14" x2="43" y2="14" />
-                    <line x1="21" y1="18" x2="43" y2="18" />
-                    <line x1="21" y1="22" x2="43" y2="22" />
-                    <line x1="21" y1="26" x2="43" y2="26" />
-                    <line x1="21" y1="30" x2="43" y2="30" />
-
-                    <!-- bottom handle -->
-                    <line x1="29" y1="32" x2="35" y2="32" />
-                </g>
-            </svg>
-        `;
-    }
-
-    if (icon === "awning") {
-        return `
-            <svg
-                width="64"
-                height="40"
-                viewBox="0 0 64 40"
-                role="img"
-                aria-label="${t("awning")}"
-                class="text-body"
-            >
-                <g
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                >
-                    <!-- cassette -->
-                    <rect
-                        x="18"
-                        y="5"
-                        width="28"
-                        height="6"
-                        rx="3"
-                    />
-
-                    <!-- canopy -->
-                    <path
-                        d="
-                            M21 11
-                            L43 11
-                            L48 24
-                            L26 24
-                            Z
-                        "
-                    />
-
-                    <!-- front valance -->
-                    <path
-                        d="
-                            M26 24
-                            C27 28 30 28 32 25
-                            C34 28 37 28 39 25
-                            C41 28 44 28 46 25
-                            L48 24
-                        "
-                    />
-
-                    <!-- support arms -->
-                    <line
-                        x1="22"
-                        y1="12"
-                        x2="27"
-                        y2="24"
-                    />
-
-                    <line
-                        x1="42"
-                        y1="12"
-                        x2="47"
-                        y2="24"
-                    />
-                </g>
-            </svg>
-        `;
-    }
+    const [filename, label] =
+        iconConfig;
 
     return `
-        <i
-            class="bi bi-square fs-2 text-muted"
-            aria-label="${t("defaultIcon")}"
-        ></i>
+        <img
+            src="/watch-icons/${filename}"
+            alt="${label}"
+            style="
+                max-width: 64px;
+                max-height: 40px;
+                object-fit: contain;
+            "
+        >
     `;
 }
 
