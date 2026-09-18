@@ -45,6 +45,22 @@ Simulator and physical-device testing are tracked separately.
 | `fenix7xpro` | fēnix 7X Pro | `006-B4376-00` | 5.2 | MIP, 280×280, 64 colors | Yes | Not tested | Not tested | Not tested |
 | `fenix7xpronowifi` | fēnix 7X Pro (No Wi-Fi) | `006-B4596-00` | 5.2 | MIP, 280×280, 64 colors | Yes | N/A (no Wi-Fi) | Not tested | Not tested |
 
+## fēnix 8 family
+
+| Connect IQ product ID | Garmin model | Known part numbers | Connect IQ API | Display | Touch | Wi-Fi Sync | Simulator | Physical device |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `fenix843mm` | fēnix 8 43mm | `006-B4534-00` | 6.0 | AMOLED, 416×416 | Yes | Not tested | Not tested | Not tested |
+| `fenix847mm` | fēnix 8 47mm / 51mm | `006-B4536-00` | 6.0 | AMOLED, 454×454 | Yes | Not tested | Not tested | Not tested |
+| `fenix8pro47mm` | fēnix 8 Pro | `006-B4631-00` | 6.0 | AMOLED, 454×454 | Yes | Not tested | Not tested | Not tested |
+| `fenix8solar47mm` | fēnix 8 Solar 47mm | `006-B4532-00` | 6.0 | MIP, 260×260, 64 colors | Yes | Not tested | Not tested | Not tested |
+| `fenix8solar51mm` | fēnix 8 Solar 51mm | `006-B4533-00` | 6.0 | MIP, 280×280, 64 colors | Yes | Not tested | Not tested | Not tested |
+
+## fēnix E
+
+| Connect IQ product ID | Garmin model | Known part numbers | Connect IQ API | Display | Touch | Wi-Fi Sync | Simulator | Physical device |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `fenixe` | fēnix E | `006-B4666-00` | 6.0 | AMOLED, 416×416 | Yes | Not tested | Not tested | Not tested |
+
 ## Notes
 
 - Product IDs must match the GarminSupla Connect IQ manifest.
