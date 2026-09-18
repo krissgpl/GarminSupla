@@ -68,6 +68,12 @@ Simulator and physical-device testing are tracked separately.
 | `fr965` | Forerunner 965 | `006-B4315-00` | 5.2 | AMOLED, 454×454 | Yes | Not tested | Not tested | Not tested |
 | `fr970` | Forerunner 970 | `006-B4565-00` | 6.0 | AMOLED, 454×454 | Yes | Not tested | Not tested | Not tested |
 
+## Venu
+
+| Connect IQ product ID | Garmin model | Known part numbers | Connect IQ API | Display | Touch | Wi-Fi Sync | Simulator | Physical device |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `venusq2` | Venu Sq 2 | `006-B4115-00` | 5.0 | AMOLED, 320×360 | Yes | N/A (no Wi-Fi) | Not tested | Not tested |
+
 ## Notes
 
 - Product IDs must match the GarminSupla Connect IQ manifest.
