@@ -61,6 +61,13 @@ Simulator and physical-device testing are tracked separately.
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | `fenixe` | fēnix E | `006-B4666-00` | 6.0 | AMOLED, 416×416 | Yes | Not tested | Not tested | Not tested |
 
+## Forerunner
+
+| Connect IQ product ID | Garmin model | Known part numbers | Connect IQ API | Display | Touch | Wi-Fi Sync | Simulator | Physical device |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `fr965` | Forerunner 965 | `006-B4315-00` | 5.2 | AMOLED, 454×454 | Yes | Not tested | Not tested | Not tested |
+| `fr970` | Forerunner 970 | `006-B4565-00` | 6.0 | AMOLED, 454×454 | Yes | Not tested | Not tested | Not tested |
+
 ## Notes
 
 - Product IDs must match the GarminSupla Connect IQ manifest.
