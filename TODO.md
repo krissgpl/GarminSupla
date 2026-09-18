@@ -280,7 +280,7 @@
 
 # Garmin Device Compatibility
 
-- [ ] Expand Garmin watch model resolution by part number.
+- [X] Expand Garmin watch model resolution by part number.
   - Extend `WATCH_MODELS_BY_PART_NUMBER` beyond the currently known fēnix 8 Pro entry.
   - Cover supported Garmin models from the Connect IQ manifest where reliable part-number information is available.
   - Keep unknown part numbers safe and display them without guessing the device model.
