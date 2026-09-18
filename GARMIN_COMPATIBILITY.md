@@ -72,7 +72,24 @@ Simulator and physical-device testing are tracked separately.
 
 | Connect IQ product ID | Garmin model | Known part numbers | Connect IQ API | Display | Touch | Wi-Fi Sync | Simulator | Physical device |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `venu` | Venu | `006-B3226-00`, `006-B3389-00` | 3.3 | AMOLED, 390×390 | Yes | Not tested | Not tested | Not tested |
+| `venu2` | Venu 2 | `006-B3703-00`, `006-B3950-00` | 5.0 | AMOLED, 416×416 | Yes | Not tested | Not tested | Not tested |
+| `venu2plus` | Venu 2 Plus | `006-B3851-00`, `006-B4017-00` | 5.0 | AMOLED, 416×416 | Yes | Not tested | Not tested | Not tested |
+| `venu2s` | Venu 2S | `006-B3704-00`, `006-B3949-00` | 5.0 | AMOLED, 360×360 | Yes | Not tested | Not tested | Not tested |
+| `venu3` | Venu 3 | `006-B4260-00` | 5.2 | AMOLED, 454×454 | Yes | Not tested | Not tested | Not tested |
+| `venu3s` | Venu 3S | `006-B4261-00` | 5.2 | AMOLED, 390×390 | Yes | Not tested | Not tested | Not tested |
+| `venu441mm` | Venu 4 41mm | `006-B4644-00` | 6.0 | AMOLED, 390×390 | Yes | Not tested | Not tested | Not tested |
+| `venu445mm` | Venu 4 45mm | `006-B4643-00` | 6.0 | AMOLED, 454×454 | Yes | Not tested | Not tested | Not tested |
+| `venud` | Venu Mercedes-Benz Collection | `006-B3737-00`, `006-B3740-00` | 3.3 | AMOLED, 390×390 | Yes | Not tested | Not tested | Not tested |
+| `venusq` | Venu Sq | `006-B3600-00`, `006-B3603-00`, `006-B3837-00`, `006-B4118-00` | 3.3 | Transflective LCD, 240×240, 65K colors | Yes | N/A (no Wi-Fi) | Not tested | Not tested |
 | `venusq2` | Venu Sq 2 | `006-B4115-00` | 5.0 | AMOLED, 320×360 | Yes | N/A (no Wi-Fi) | Not tested | Not tested |
+| `venusq2m` | Venu Sq 2 Music | `006-B4116-00` | 5.0 | AMOLED, 320×360 | Yes | Not tested | Not tested | Not tested |
+| `venusqm` | Venu Sq Music Edition | `006-B3596-00`, `006-B3599-00`, `006-B3838-00`, `006-B4119-00` | 3.3 | Transflective LCD, 240×240, 65K colors | Yes | Not tested | Not tested | Not tested |
+| `venux1` | Venu X1 | `006-B4603-00` | 6.0 | AMOLED, 448×486 | Yes | Not tested | Not tested | Not tested |
+
+Mercedes-Benz Venu 2 and Venu 2S part numbers are recognized by the
+backend resolver, but their Connect IQ product-ID mapping has not yet been
+verified, so they are not assigned to a matrix row here.
 
 ## Notes
 
