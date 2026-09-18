@@ -196,9 +196,64 @@ class WatchDeviceResolverTests(unittest.TestCase):
                     expected_model,
                 )
 
-    def test_resolves_venu_sq_2_and_fenix_chronos(self):
+    def test_resolves_venu_family(self):
         cases = {
+            "006-B3226-00": "Venu",
+            "006-B3389-00": "Venu",
+
+            "006-B3596-00": "Venu Sq Music",
+            "006-B3599-00": "Venu Sq Music",
+            "006-B3838-00": "Venu Sq Music",
+            "006-B4119-00": "Venu Sq Music",
+
+            "006-B3600-00": "Venu Sq",
+            "006-B3603-00": "Venu Sq",
+            "006-B3837-00": "Venu Sq",
+            "006-B4118-00": "Venu Sq",
+
+            "006-B3703-00": "Venu 2",
+            "006-B3950-00": "Venu 2",
+
+            "006-B3704-00": "Venu 2S",
+            "006-B3949-00": "Venu 2S",
+
+            "006-B3851-00": "Venu 2 Plus",
+            "006-B4017-00": "Venu 2 Plus",
+
             "006-B4115-00": "Venu Sq 2",
+            "006-B4116-00": "Venu Sq 2 Music",
+
+            "006-B4260-00": "Venu 3",
+            "006-B4261-00": "Venu 3S",
+
+            "006-B4603-00": "Venu X1",
+
+            "006-B4643-00": "Venu 4 45mm",
+            "006-B4644-00": "Venu 4 41mm",
+
+            "006-B3737-00": "Mercedes-Benz Venu",
+            "006-B3740-00": "Mercedes-Benz Venu",
+
+            "006-B4171-00": "Mercedes-Benz Venu 2",
+            "006-B4180-00": "Mercedes-Benz Venu 2",
+
+            "006-B4175-00": "Mercedes-Benz Venu 2S",
+            "006-B4181-00": "Mercedes-Benz Venu 2S",
+        }
+
+        for part_number, expected_model in cases.items():
+            with self.subTest(
+                part_number=part_number
+            ):
+                self.assertEqual(
+                    resolve_watch_model(
+                        part_number
+                    ),
+                    expected_model,
+                )
+
+    def test_resolves_fenix_chronos(self):
+        cases = {
             "006-B2432-00": "fēnix Chronos",
             "006-B2675-00": "fēnix Chronos",
         }
