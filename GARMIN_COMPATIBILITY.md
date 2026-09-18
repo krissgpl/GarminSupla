@@ -32,6 +32,19 @@ Simulator and physical-device testing are tracked separately.
 | `fenix6spro` | fēnix 6S Pro / 6S Sapphire / 6S Pro Solar / 6S Pro Dual Power | `006-B3288-00`, `006-B3513-00`, `006-B3765-00`, `006-B3769-00` | 3.4 | MIP, 240×240, 64 colors | No | Not tested | Not tested | Not tested |
 | `fenix6xpro` | fēnix 6X Pro / 6X Sapphire / 6X Pro Solar | `006-B3291-00`, `006-B3516-00` | 3.4 | MIP, 280×280, 64 colors | No | Not tested | Not tested | Not tested |
 
+## fēnix 7 family
+
+| Connect IQ product ID | Garmin model | Known part numbers | Connect IQ API | Display | Touch | Wi-Fi Sync | Simulator | Physical device |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `fenix7` | fēnix 7 | `006-B3906-00`, `006-B3909-00` | 5.2 | MIP, 260×260, 64 colors | Yes | Not tested | Not tested | Not tested |
+| `fenix7pro` | fēnix 7 Pro | `006-B4375-00` | 5.2 | MIP, 260×260, 64 colors | Yes | Not tested | Not tested | Not tested |
+| `fenix7pronowifi` | fēnix 7 Pro Solar (No Wi-Fi) | `006-B4595-00` | 5.2 | MIP, 260×260, 64 colors | Yes | N/A (no Wi-Fi) | Not tested | Not tested |
+| `fenix7s` | fēnix 7S | `006-B3905-00`, `006-B3908-00` | 5.2 | MIP, 240×240, 64 colors | Yes | Not tested | Not tested | Not tested |
+| `fenix7spro` | fēnix 7S Pro | `006-B4374-00` | 5.2 | MIP, 240×240, 64 colors | Yes | Not tested | Not tested | Not tested |
+| `fenix7x` | fēnix 7X | `006-B3907-00`, `006-B3910-00` | 5.2 | MIP, 280×280, 64 colors | Yes | Not tested | Not tested | Not tested |
+| `fenix7xpro` | fēnix 7X Pro | `006-B4376-00` | 5.2 | MIP, 280×280, 64 colors | Yes | Not tested | Not tested | Not tested |
+| `fenix7xpronowifi` | fēnix 7X Pro (No Wi-Fi) | `006-B4596-00` | 5.2 | MIP, 280×280, 64 colors | Yes | N/A (no Wi-Fi) | Not tested | Not tested |
+
 ## Notes
 
 - Product IDs must match the GarminSupla Connect IQ manifest.
