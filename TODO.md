@@ -277,3 +277,240 @@
   - Load scenes from `scenes_r`.
   - Execute scenes through `scenes_ea`.
   - Show only active and non-hidden scenes in `Add from SUPLA`.
+
+# Garmin Device Compatibility
+
+- [ ] Expand Garmin watch model resolution by part number.
+  - Extend `WATCH_MODELS_BY_PART_NUMBER` beyond the currently known fēnix 8 Pro entry.
+  - Cover supported Garmin models from the Connect IQ manifest where reliable part-number information is available.
+  - Keep unknown part numbers safe and display them without guessing the device model.
+  - Add tests for known, unknown, empty and normalized part numbers.
+
+- [ ] Prepare a Garmin compatibility matrix.
+  - Track:
+    - Connect IQ product ID,
+    - Garmin model,
+    - known part numbers,
+    - Connect IQ API level,
+    - display type and resolution,
+    - touch support,
+    - Wi-Fi Sync behavior,
+    - simulator test status,
+    - physical-device test status.
+  - Do not treat successful compilation as proof of full device compatibility.
+
+
+# Dashboard Authentication
+
+- [ ] Add two-factor authentication for dashboard administrators.
+  - Use TOTP compatible with standard authenticator applications.
+  - Add QR-code enrollment.
+  - Require password confirmation before enabling or disabling 2FA.
+  - Generate one-time recovery codes.
+  - Store recovery codes securely.
+  - Protect the TOTP secret from accidental exposure and logging.
+  - Define a secure recovery procedure if the authenticator is lost.
+  - Invalidate or rotate existing sessions when security-sensitive authentication settings change.
+
+
+# Security
+
+- [ ] Perform a complete GarminSupla security audit.
+  - Review the dashboard authentication and authorization flow.
+  - Review administrator sessions and expiration.
+  - Review CSRF protection for all state-changing operations.
+  - Review XSS and HTML escaping for user-controlled, SUPLA and watch-provided data.
+  - Review SUPLA OAuth authorization, callback validation and stored tokens.
+  - Review Garmin watch Bearer-token authentication.
+  - Review pairing session creation, approval, consumption and expiration.
+  - Review API-key authentication.
+  - Review token generation, entropy, rotation and invalidation.
+  - Verify that secrets and credentials are never written to application logs.
+  - Review permissions of persistent configuration and token files.
+  - Review static resources and all unauthenticated endpoints.
+  - Review dependency and container vulnerabilities.
+
+- [ ] Harden the Internet-exposed port `8008`.
+  - Document the actual network path:
+    - Internet,
+    - router / NAT,
+    - firewall,
+    - reverse proxy,
+    - TLS termination,
+    - Docker host,
+    - GarminSupla container.
+  - Determine whether port `8008` needs to be directly reachable from the Internet.
+  - Verify whether direct access to port `8008` can bypass protections provided by the reverse proxy or other network layers.
+  - Prefer exposing only the reverse proxy publicly when direct port `8008` access is not required.
+  - If direct Internet access to port `8008` is required, secure it explicitly.
+  - Enumerate every route reachable through the public port.
+  - Review exposure of:
+    - `/docs`,
+    - `/redoc`,
+    - `/openapi.json`.
+  - Disable or restrict development / API documentation endpoints in production when they are not required.
+  - Enforce HTTPS for all public communication.
+  - Review TLS configuration and certificate handling.
+  - Add appropriate production security headers.
+  - Review Host-header handling and allowed public hostnames.
+  - Review HTTP methods accepted by public endpoints.
+  - Introduce rate limiting where appropriate, especially for:
+    - administrator login,
+    - pairing creation,
+    - pairing status polling,
+    - pairing consumption,
+    - invalid watch-token attempts,
+    - public API endpoints.
+  - Add protection against brute-force authentication attempts.
+  - Review request-body size limits.
+  - Review connection, request and upstream timeouts.
+  - Review concurrent connection limits and resource exhaustion.
+  - Review protection against simple denial-of-service and slow-request attacks.
+  - Define firewall rules for the public service.
+  - Consider automated blocking such as Fail2ban or an equivalent mechanism where useful.
+  - Log suspicious authentication and network activity without logging credentials or tokens.
+  - Test the deployed service from outside the local network.
+  - Perform an external port and HTTP attack-surface scan after hardening.
+
+- [ ] Harden the production Docker deployment.
+  - Do not use the development-style full repository bind mount in the final production deployment unless required.
+  - Persist only required configuration and data directories.
+  - Run the application with the minimum required privileges.
+  - Evaluate running the container as a non-root user.
+  - Restrict filesystem access where practical.
+  - Protect `.env` and persistent secrets with appropriate filesystem permissions.
+  - Add container health checks.
+  - Define CPU and memory limits where appropriate.
+  - Pin and periodically review Python dependencies.
+  - Separate development and production Docker configuration where useful.
+
+- [ ] Add administrator security audit logging.
+  - Record security-relevant administrative actions such as:
+    - login success and failure,
+    - logout,
+    - 2FA changes,
+    - SUPLA re-authorization,
+    - watch pairing,
+    - re-pair,
+    - replacement,
+    - deletion,
+    - configuration changes.
+  - Do not log passwords, session tokens, Bearer tokens, OAuth tokens or TOTP secrets.
+
+
+# Reliability / Operations
+
+- [ ] Define backup and recovery procedures.
+  - Identify all persistent GarminSupla data that must be backed up.
+  - Document backup of configuration, administrator data and SUPLA-related state.
+  - Define a restore procedure on a clean server.
+  - Verify restore with a real recovery test.
+  - Document what data must not be committed to Git.
+
+- [ ] Define application upgrade and rollback procedures.
+  - Document how to upgrade the backend/dashboard.
+  - Document how to update the Connect IQ application.
+  - Preserve persistent configuration during upgrades.
+  - Define a rollback procedure for failed backend releases.
+  - Document version compatibility expectations between backend and Connect IQ releases.
+
+- [ ] Improve production observability.
+  - Define useful application and security logs.
+  - Add log rotation / retention guidance.
+  - Keep sensitive values out of logs.
+  - Verify the health endpoint is useful for production monitoring.
+  - Document basic service-health checks.
+
+
+# Automated Testing / CI
+
+- [ ] Add automated backend regression tests.
+  - Cover administrator authentication.
+  - Cover session and CSRF validation.
+  - Cover pairing lifecycle.
+  - Cover multi-watch lifecycle.
+  - Cover watch-token authentication.
+  - Cover configuration isolation between watches.
+  - Cover configuration copying.
+  - Cover SUPLA-related error handling.
+  - Cover watch model resolution.
+
+- [ ] Add continuous integration.
+  - Run backend tests automatically.
+  - Validate Python syntax.
+  - Validate repository formatting / whitespace checks.
+  - Add dependency vulnerability scanning.
+  - Add security-focused static analysis where useful.
+  - Build representative Connect IQ targets automatically if Garmin SDK automation is practical.
+  - Keep CI secrets separate from production secrets.
+
+- [ ] Prepare a release checklist.
+  - Backend tests pass.
+  - Connect IQ build passes.
+  - Representative simulator tests pass.
+  - Required physical-device tests pass.
+  - Security checks pass.
+  - Version numbers are consistent.
+  - `CHANGELOG.md` is updated.
+  - Documentation is updated.
+  - Backup / rollback considerations are reviewed.
+
+
+# Documentation
+
+- [ ] Create a complete GarminSupla installation and deployment guide.
+  - Start from a clean Linux server.
+  - Install Docker and Docker Compose.
+  - Clone and configure GarminSupla.
+  - Document every required environment variable.
+  - Expand `.env.example` so it reflects the real required configuration.
+  - Create the dashboard administrator account.
+  - Configure persistent storage.
+  - Configure SUPLA OAuth.
+  - Describe SUPLA application registration.
+  - Describe required OAuth redirect URLs and scopes.
+  - Configure DNS.
+  - Configure HTTPS certificates.
+  - Configure the reverse proxy.
+  - Configure router / NAT rules where required.
+  - Explain the recommended secure exposure of GarminSupla to the Internet.
+  - Explain the security implications of exposing port `8008` directly.
+  - Configure firewall rules.
+  - Configure the Garmin Connect IQ `serverUrl`.
+  - Pair the first Garmin watch.
+  - Add SUPLA items.
+  - Verify watch actions and status updates.
+  - Verify Wi-Fi Sync fallback.
+  - Document backup and restore.
+  - Document upgrades and rollback.
+  - Add troubleshooting for common deployment, OAuth, pairing and networking problems.
+
+- [ ] Rebuild the project README for end users and administrators.
+  - Add a short project overview.
+  - Describe supported functionality.
+  - Add architecture overview.
+  - Link the installation guide.
+  - Link supported Garmin devices / compatibility matrix.
+  - Document backend and Connect IQ versioning.
+  - Add security considerations.
+  - Add support / contact information.
+
+
+# Connect IQ Store
+
+- [ ] Prepare GarminSupla for Connect IQ Store publication.
+  - Verify the final supported-device list.
+  - Verify builds for all declared product targets.
+  - Perform representative simulator testing.
+  - Perform physical-device testing on available devices.
+  - Prepare English and Polish application descriptions.
+  - Prepare store screenshots and promotional graphics.
+  - Verify launcher icon and application branding.
+  - Prepare setup instructions for the public `serverUrl`.
+  - Prepare support/contact information.
+  - Prepare privacy and data-handling information where required.
+  - Review the current Garmin Connect IQ Store submission requirements before submission.
+  - Protect the Connect IQ developer/signing key.
+  - Produce a final signed release build.
+  - Submit the application for Garmin review.
+  - Document the procedure for publishing later updates.
