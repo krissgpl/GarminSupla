@@ -10,6 +10,28 @@ Projekt stosuje zasady zbliżone do Keep a Changelog.
 
 ---
 
+## [Connect IQ 0.8.0] - 2026-09-18
+
+### Improved
+- Added high-contrast color coding for watch item states.
+- Active states such as `ON`, `OPENED`, and `EXPANDED` use green.
+- Inactive states such as `OFF`, `CLOSED`, and `COLLAPSED` use light gray.
+- Offline and unknown states use red.
+- Cached configuration state uses yellow.
+- Connection status text and indicator now use the same semantic colors.
+- Completed the AMOLED / OLED visual treatment while preserving the existing GarminSupla mountain background.
+
+### Fixed
+- Keep the local Wi-Fi configuration snapshot synchronized with the latest live watch configuration.
+- Prevent stale cached item lists from reappearing when the watch falls back to offline configuration.
+- Avoid rewriting the cached snapshot on every polling cycle when only dynamic device state changes.
+
+### Versioning
+- Backend/dashboard version remains `0.4.0`.
+- Connect IQ application version: `0.8.0`.
+
+---
+
 ## [0.4.0] - 2026-09-17
 
 ### Improved
