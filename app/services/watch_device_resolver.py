@@ -1,4 +1,18 @@
 WATCH_MODELS_BY_PART_NUMBER: dict[str, str] = {
+    "006-B3905-00": "fēnix 7S",
+    "006-B3908-00": "fēnix 7S",
+    "006-B4374-00": "fēnix 7S Pro",
+
+    "006-B3906-00": "fēnix 7",
+    "006-B3909-00": "fēnix 7",
+    "006-B4375-00": "fēnix 7 Pro",
+    "006-B4595-00": "fēnix 7 Pro Solar (No Wi-Fi)",
+
+    "006-B3907-00": "fēnix 7X",
+    "006-B3910-00": "fēnix 7X",
+    "006-B4376-00": "fēnix 7X Pro",
+    "006-B4596-00": "fēnix 7X Pro (No Wi-Fi)",
+
     "006-B3287-00": "fēnix 6S",
     "006-B3512-00": "fēnix 6S",
     "006-B3764-00": "fēnix 6S Solar",
