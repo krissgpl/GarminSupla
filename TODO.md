@@ -248,7 +248,7 @@
   - Consider readability on small screens and Connect IQ device limitations.
   - Keep a `default` icon as a fallback for unsupported or future item types.
 
-- [ ] Use AMOLED / OLED display capabilities.
+- [X] Use AMOLED / OLED display capabilities.
   - Prepare colored item graphics.
   - Prefer black backgrounds and high contrast.
   - Use color to represent device type and state.
