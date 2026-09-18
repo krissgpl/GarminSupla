@@ -76,5 +76,28 @@ class WatchDeviceResolverTests(unittest.TestCase):
                     expected_model,
                 )
 
+    def test_resolves_fenix_5_family(self):
+        cases = {
+            "006-B2544-00": "fēnix 5S",
+            "006-B2797-00": "fēnix 5S",
+            "006-B2900-00": "fēnix 5S Plus",
+            "006-B3134-00": "fēnix 5S Plus",
+            "006-B2604-00": "fēnix 5X",
+            "006-B2798-00": "fēnix 5X",
+            "006-B3111-00": "fēnix 5X Plus",
+            "006-B3135-00": "fēnix 5X Plus",
+        }
+
+        for part_number, expected_model in cases.items():
+            with self.subTest(
+                part_number=part_number
+            ):
+                self.assertEqual(
+                    resolve_watch_model(
+                        part_number
+                    ),
+                    expected_model,
+                )
+
 if __name__ == "__main__":
     unittest.main()

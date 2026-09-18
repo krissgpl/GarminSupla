@@ -9,6 +9,14 @@ WATCH_MODELS_BY_PART_NUMBER: dict[str, str] = {
     "006-B4625-00": "vívoactive 6",
     "006-B4631-00": "fēnix 8 Pro",
     "006-B4666-00": "fēnix E",
+    "006-B2544-00": "fēnix 5S",
+    "006-B2797-00": "fēnix 5S",
+    "006-B2900-00": "fēnix 5S Plus",
+    "006-B3134-00": "fēnix 5S Plus",
+    "006-B2604-00": "fēnix 5X",
+    "006-B2798-00": "fēnix 5X",
+    "006-B3111-00": "fēnix 5X Plus",
+    "006-B3135-00": "fēnix 5X Plus",
 }
 
 
