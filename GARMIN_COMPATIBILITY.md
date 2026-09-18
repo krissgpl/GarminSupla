@@ -65,6 +65,29 @@ Simulator and physical-device testing are tracked separately.
 
 | Connect IQ product ID | Garmin model | Known part numbers | Connect IQ API | Display | Touch | Wi-Fi Sync | Simulator | Physical device |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `fr55` | Forerunner 55 | `006-B3869-00`, `006-B4033-00`, `006-B4838-00` | 3.4 | MIP, 208×208, 8 colors | No | Not tested | Not tested | Not tested |
+| `fr70` | Forerunner 70 | `006-B4916-00`, `006-B5214-00` | 6.0 | AMOLED, 390×390 | Yes | Not tested | Not tested | Not tested |
+| `fr165` | Forerunner 165 | `006-B4432-00` | 5.2 | AMOLED, 390×390 | Yes | Not tested | Not tested | Not tested |
+| `fr165m` | Forerunner 165 Music | `006-B4433-00` | 5.2 | AMOLED, 390×390 | Yes | Not tested | Not tested | Not tested |
+| `fr170` | Forerunner 170 | `006-B4815-00` | 6.0 | AMOLED, 390×390 | Yes | Not tested | Not tested | Not tested |
+| `fr170m` | Forerunner 170 Music | `006-B4814-00` | 6.0 | AMOLED, 390×390 | Yes | Not tested | Not tested | Not tested |
+| `fr245` | Forerunner 245 | `006-B3076-00`, `006-B3145-00`, `006-B3914-00` | 3.3 | MIP, 240×240, 64 colors | No | Not tested | Not tested | Not tested |
+| `fr245m` | Forerunner 245 Music | `006-B3077-00`, `006-B3321-00`, `006-B3913-00` | 3.3 | MIP, 240×240, 64 colors | No | Not tested | Not tested | Not tested |
+| `fr255` | Forerunner 255 | `006-B3992-00` | 5.2 | MIP, 260×260, 64 colors | No | Not tested | Not tested | Not tested |
+| `fr255m` | Forerunner 255 Music | `006-B3990-00` | 5.2 | MIP, 260×260, 64 colors | No | Not tested | Not tested | Not tested |
+| `fr255s` | Forerunner 255S | `006-B3993-00` | 5.2 | MIP, 218×218, 64 colors | No | Not tested | Not tested | Not tested |
+| `fr255sm` | Forerunner 255S Music | `006-B3991-00` | 5.2 | MIP, 218×218, 64 colors | No | Not tested | Not tested | Not tested |
+| `fr265` | Forerunner 265 | `006-B4257-00` | 5.2 | AMOLED, 416×416 | Yes | Not tested | Not tested | Not tested |
+| `fr265s` | Forerunner 265S | `006-B4258-00` | 5.2 | AMOLED, 360×360 | Yes | Not tested | Not tested | Not tested |
+| `fr57042mm` | Forerunner 570 42mm | `006-B4574-00` | 6.0 | AMOLED, 390×390 | Yes | Not tested | Not tested | Not tested |
+| `fr57047mm` | Forerunner 570 47mm | `006-B4570-00` | 6.0 | AMOLED, 454×454 | Yes | Not tested | Not tested | Not tested |
+| `fr645` | Forerunner 645 | `006-B2886-00`, `006-B3003-00` | 3.1 | MIP, 240×240, 64 colors | No | Not tested | Not tested | Not tested |
+| `fr645m` | Forerunner 645 Music | `006-B2888-00`, `006-B3004-00` | 3.2 | MIP, 240×240, 64 colors | No | Not tested | Not tested | Not tested |
+| `fr745` | Forerunner 745 | `006-B3589-00`, `006-B3794-00` | 3.3 | MIP, 240×240, 64 colors | No | Not tested | Not tested | Not tested |
+| `fr935` | Forerunner 935 | `006-B2691-00`, `006-B2833-00` | 3.1 | MIP, 240×240, 64 colors | No | Not tested | Not tested | Not tested |
+| `fr945` | Forerunner 945 | `006-B3113-00`, `006-B3441-00` | 3.3 | MIP, 240×240, 64 colors | No | Not tested | Not tested | Not tested |
+| `fr945lte` | Forerunner 945 LTE | `006-B3652-00`, `006-B3978-00` | 3.4 | MIP, 240×240, 64 colors | No | Not tested | Not tested | Not tested |
+| `fr955` | Forerunner 955 / Solar | `006-B4024-00` | 5.2 | MIP, 260×260, 64 colors | Yes | Not tested | Not tested | Not tested |
 | `fr965` | Forerunner 965 | `006-B4315-00` | 5.2 | AMOLED, 454×454 | Yes | Not tested | Not tested | Not tested |
 | `fr970` | Forerunner 970 | `006-B4565-00` | 6.0 | AMOLED, 454×454 | Yes | Not tested | Not tested | Not tested |
 
