@@ -36,6 +36,21 @@ WATCH_MODELS_BY_PART_NUMBER: dict[str, str] = {
     "006-B3291-00": "fēnix 6X Pro",
     "006-B3516-00": "fēnix 6X Pro",
 
+    "006-B2700-00": "vívoactive 3",
+    "006-B2976-00": "vívoactive 3",
+    "006-B3446-00": "vívoactive 3",
+
+    "006-B2988-00": "vívoactive 3 Music",
+    "006-B3163-00": "vívoactive 3 Music",
+
+    "006-B3066-00": "vívoactive 3 Music LTE",
+
+    "006-B3225-00": "vívoactive 4",
+    "006-B3388-00": "vívoactive 4",
+
+    "006-B3224-00": "vívoactive 4S",
+    "006-B3387-00": "vívoactive 4S",
+
     "006-B4315-00": "Forerunner 965",
     "006-B4426-00": "vívoactive 5",
     "006-B4532-00": "fēnix 8 Solar (47mm)",

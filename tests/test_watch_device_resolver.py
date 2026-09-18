@@ -164,5 +164,37 @@ class WatchDeviceResolverTests(unittest.TestCase):
                     expected_model,
                 )
 
+    def test_resolves_vivoactive_family(self):
+        cases = {
+            "006-B2700-00": "vívoactive 3",
+            "006-B2976-00": "vívoactive 3",
+            "006-B3446-00": "vívoactive 3",
+
+            "006-B2988-00": "vívoactive 3 Music",
+            "006-B3163-00": "vívoactive 3 Music",
+
+            "006-B3066-00": "vívoactive 3 Music LTE",
+
+            "006-B3225-00": "vívoactive 4",
+            "006-B3388-00": "vívoactive 4",
+
+            "006-B3224-00": "vívoactive 4S",
+            "006-B3387-00": "vívoactive 4S",
+
+            "006-B4426-00": "vívoactive 5",
+            "006-B4625-00": "vívoactive 6",
+        }
+
+        for part_number, expected_model in cases.items():
+            with self.subTest(
+                part_number=part_number
+            ):
+                self.assertEqual(
+                    resolve_watch_model(
+                        part_number
+                    ),
+                    expected_model,
+                )
+
 if __name__ == "__main__":
     unittest.main()
