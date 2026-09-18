@@ -196,5 +196,23 @@ class WatchDeviceResolverTests(unittest.TestCase):
                     expected_model,
                 )
 
+    def test_resolves_venu_sq_2_and_fenix_chronos(self):
+        cases = {
+            "006-B4115-00": "Venu Sq 2",
+            "006-B2432-00": "fēnix Chronos",
+            "006-B2675-00": "fēnix Chronos",
+        }
+
+        for part_number, expected_model in cases.items():
+            with self.subTest(
+                part_number=part_number
+            ):
+                self.assertEqual(
+                    resolve_watch_model(
+                        part_number
+                    ),
+                    expected_model,
+                )
+
 if __name__ == "__main__":
     unittest.main()

@@ -51,6 +51,11 @@ WATCH_MODELS_BY_PART_NUMBER: dict[str, str] = {
     "006-B3224-00": "vívoactive 4S",
     "006-B3387-00": "vívoactive 4S",
 
+    "006-B4115-00": "Venu Sq 2",
+
+    "006-B2432-00": "fēnix Chronos",
+    "006-B2675-00": "fēnix Chronos",
+
     "006-B4315-00": "Forerunner 965",
     "006-B4426-00": "vívoactive 5",
     "006-B4532-00": "fēnix 8 Solar (47mm)",
