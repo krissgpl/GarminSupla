@@ -614,6 +614,297 @@ class GarminSuplaView extends WatchUi.View {
         return _itemState.toUpper();
     }
 
+    function getCompactDigitCount(value) as Lang.Number {
+
+        var count = 1;
+        var remaining = value;
+
+        while (remaining >= 10) {
+            remaining =
+                (remaining / 10).toNumber();
+
+            count += 1;
+        }
+
+        return count;
+    }
+
+    function getCompactNumberWidth(value) as Lang.Number {
+
+        var digitCount =
+            getCompactDigitCount(value);
+
+        return
+            digitCount * 8
+            + (digitCount - 1) * 2;
+    }
+
+    function drawCompactDigit(
+        dc,
+        digit,
+        x,
+        y
+    ) as Void {
+
+        var top =
+            digit == 0
+            || digit == 2
+            || digit == 3
+            || digit == 5
+            || digit == 6
+            || digit == 7
+            || digit == 8
+            || digit == 9;
+
+        var upperLeft =
+            digit == 0
+            || digit == 4
+            || digit == 5
+            || digit == 6
+            || digit == 8
+            || digit == 9;
+
+        var upperRight =
+            digit == 0
+            || digit == 1
+            || digit == 2
+            || digit == 3
+            || digit == 4
+            || digit == 7
+            || digit == 8
+            || digit == 9;
+
+        var middle =
+            digit == 2
+            || digit == 3
+            || digit == 4
+            || digit == 5
+            || digit == 6
+            || digit == 8
+            || digit == 9;
+
+        var lowerLeft =
+            digit == 0
+            || digit == 2
+            || digit == 6
+            || digit == 8;
+
+        var lowerRight =
+            digit == 0
+            || digit == 1
+            || digit == 3
+            || digit == 4
+            || digit == 5
+            || digit == 6
+            || digit == 7
+            || digit == 8
+            || digit == 9;
+
+        var bottom =
+            digit == 0
+            || digit == 2
+            || digit == 3
+            || digit == 5
+            || digit == 6
+            || digit == 8
+            || digit == 9;
+
+        if (top) {
+            dc.fillRectangle(
+                x + 2,
+                y,
+                4,
+                2
+            );
+        }
+
+        if (upperLeft) {
+            dc.fillRectangle(
+                x,
+                y + 2,
+                2,
+                4
+            );
+        }
+
+        if (upperRight) {
+            dc.fillRectangle(
+                x + 6,
+                y + 2,
+                2,
+                4
+            );
+        }
+
+        if (middle) {
+            dc.fillRectangle(
+                x + 2,
+                y + 5,
+                4,
+                2
+            );
+        }
+
+        if (lowerLeft) {
+            dc.fillRectangle(
+                x,
+                y + 6,
+                2,
+                4
+            );
+        }
+
+        if (lowerRight) {
+            dc.fillRectangle(
+                x + 6,
+                y + 6,
+                2,
+                4
+            );
+        }
+
+        if (bottom) {
+            dc.fillRectangle(
+                x + 2,
+                y + 10,
+                4,
+                2
+            );
+        }
+    }
+
+    function drawCompactNumber(
+        dc,
+        value,
+        x,
+        y
+    ) as Void {
+
+        var digitCount =
+            getCompactDigitCount(value);
+
+        var divisor = 1;
+        var i = 1;
+
+        while (i < digitCount) {
+            divisor *= 10;
+            i += 1;
+        }
+
+        var remaining = value;
+        i = 0;
+
+        while (i < digitCount) {
+
+            var digit =
+                (remaining / divisor).toNumber();
+
+            drawCompactDigit(
+                dc,
+                digit,
+                x + i * 10,
+                y
+            );
+
+            remaining -=
+                digit * divisor;
+
+            divisor =
+                (divisor / 10).toNumber();
+
+            i += 1;
+        }
+    }
+
+    function drawCompactItemPosition(
+        dc,
+        centerX,
+        y
+    ) as Void {
+
+        var current =
+            _selectedIndex + 1;
+
+        var total =
+            _items.size();
+
+        var currentWidth =
+            getCompactNumberWidth(current);
+
+        var totalWidth =
+            getCompactNumberWidth(total);
+
+        var slashWidth = 6;
+        var gap = 3;
+
+        var completeWidth =
+            currentWidth
+            + gap
+            + slashWidth
+            + gap
+            + totalWidth;
+
+        var x =
+            (centerX - completeWidth / 2).toNumber();
+
+        dc.setColor(
+            Graphics.COLOR_WHITE,
+            Graphics.COLOR_TRANSPARENT
+        );
+
+        drawCompactNumber(
+            dc,
+            current,
+            x,
+            y
+        );
+
+        var slashX =
+            x + currentWidth + gap;
+
+        dc.fillRectangle(
+            slashX + 4,
+            y + 1,
+            2,
+            2
+        );
+
+        dc.fillRectangle(
+            slashX + 3,
+            y + 3,
+            2,
+            2
+        );
+
+        dc.fillRectangle(
+            slashX + 2,
+            y + 5,
+            2,
+            2
+        );
+
+        dc.fillRectangle(
+            slashX + 1,
+            y + 7,
+            2,
+            2
+        );
+
+        dc.fillRectangle(
+            slashX,
+            y + 9,
+            2,
+            2
+        );
+
+        drawCompactNumber(
+            dc,
+            total,
+            slashX + slashWidth + gap,
+            y
+        );
+    }
+
     function onUpdate(dc as Dc) as Void {
 
         dc.setColor(
@@ -1264,19 +1555,46 @@ class GarminSuplaView extends WatchUi.View {
 
             if (hasMultipleItems) {
 
-                // 1/2, 2/2...
-                dc.drawText(
-                    width / 2,
-                    height * 0.91,
-                    Graphics.FONT_XTINY,
-                    getItemPositionText(),
-                    Graphics.TEXT_JUSTIFY_CENTER
-                );
+                var compactLayout =
+                    width == 240
+                    && height == 240;
 
-                // Dolny chevron
+                var itemPositionY =
+                    height * 0.91;
+
                 var arrowBottomY =
                     (height * 0.87).toNumber();
 
+                if (compactLayout) {
+
+                    itemPositionY =
+                        height * 0.87;
+
+                    // Na 240x240 rysujemy dolny chevron
+                    // pod kompaktowym licznikiem,
+                    // żeby nie nachodził na ikonę.
+                    arrowBottomY =
+                        (height * 0.93).toNumber();
+
+                    drawCompactItemPosition(
+                        dc,
+                        width / 2,
+                        itemPositionY.toNumber()
+                    );
+
+                } else {
+
+                    // Standard counter for larger displays.
+                    dc.drawText(
+                        width / 2,
+                        itemPositionY,
+                        Graphics.FONT_XTINY,
+                        getItemPositionText(),
+                        Graphics.TEXT_JUSTIFY_CENTER
+                    );
+                }
+
+                // Dolny chevron
                 dc.drawLine(
                     arrowX - chevronHalfWidth,
                     arrowBottomY,

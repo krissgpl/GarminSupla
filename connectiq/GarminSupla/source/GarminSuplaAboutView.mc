@@ -102,6 +102,10 @@ class GarminSuplaAboutView
 		var width = dc.getWidth();
 		var height = dc.getHeight();
 
+        var compactLayout =
+            width == 240
+            && height == 240;
+
 		// Application name
 		dc.drawText(
 			width / 2,
@@ -128,33 +132,79 @@ class GarminSuplaAboutView
 			Graphics.TEXT_JUSTIFY_CENTER
 		);
 
-		// E-mail
-		dc.drawText(
-			width / 2,
-			height * 0.53,
-			Graphics.FONT_XTINY,
-			_emailLabel,
-			Graphics.TEXT_JUSTIFY_CENTER
-		);
+        // E-mail
+        var emailLabelY =
+            (height * 0.53).toNumber();
 
-		dc.drawText(
-			width / 2,
-			height * 0.61,
-			Graphics.FONT_XTINY,
-			_email,
-			Graphics.TEXT_JUSTIFY_CENTER
-		);
+        dc.drawText(
+            width / 2,
+            emailLabelY,
+            Graphics.FONT_XTINY,
+            _emailLabel,
+            Graphics.TEXT_JUSTIFY_CENTER
+        );
 
-		// Version
-		dc.drawText(
-			width / 2,
-			height * 0.78,
-			Graphics.FONT_XTINY,
-			_versionLabel
-				+ " "
-				+ _version,
-			Graphics.TEXT_JUSTIFY_CENTER
-		);
+        var versionY =
+            (height * 0.78).toNumber();
+
+        if (compactLayout) {
+
+            var compactLineHeight =
+                dc.getFontHeight(
+                    Graphics.FONT_XTINY
+                );
+
+            var emailFirstLineY =
+                emailLabelY
+                + compactLineHeight;
+
+            var emailSecondLineY =
+                emailFirstLineY
+                + compactLineHeight;
+
+            dc.drawText(
+                width / 2,
+                emailFirstLineY,
+                Graphics.FONT_XTINY,
+                "garminsupla@",
+                Graphics.TEXT_JUSTIFY_CENTER
+            );
+
+            dc.drawText(
+                width / 2,
+                emailSecondLineY,
+                Graphics.FONT_XTINY,
+                "home-dev.eu",
+                Graphics.TEXT_JUSTIFY_CENTER
+            );
+
+            versionY =
+                emailSecondLineY
+                + compactLineHeight
+                + 2;
+
+        } else {
+
+            dc.drawText(
+                width / 2,
+                height * 0.61,
+                Graphics.FONT_XTINY,
+                _email,
+                Graphics.TEXT_JUSTIFY_CENTER
+            );
+        }
+
+        // Version
+        dc.drawText(
+            width / 2,
+            versionY,
+            Graphics.FONT_XTINY,
+            _versionLabel
+                + " "
+                + _version,
+            Graphics.TEXT_JUSTIFY_CENTER
+        );
+
 	}
 
     function onHide() as Void {
