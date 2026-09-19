@@ -144,22 +144,41 @@ verified, so they are not assigned to a matrix row here.
 | `vivoactive5` | vívoactive 5 | `006-B4426-00` | 5.2 | AMOLED, 390×390 | Yes | Not tested | Not tested | Not tested |
 | `vivoactive6` | vívoactive 6 | `006-B4625-00` | 6.0 | AMOLED, 390×390 | Yes | Not tested | Not tested | Not tested |
 
-## Representative build verification
+## Connect IQ build verification
 
-Build verification confirms that GarminSupla compiles successfully for the
-selected Connect IQ target. It does not count as simulator or physical-device
-runtime testing.
+Build verification confirms that GarminSupla compiles successfully for a
+Connect IQ target. It does not count as simulator or physical-device runtime
+testing.
 
-Verified with Connect IQ SDK 9.2.0 on 2026-09-19.
+Full manifest build verification was completed with Connect IQ SDK 9.2.0 on
+2026-09-19:
 
-| Connect IQ product ID | Representative case | Build result |
-| --- | --- | --- |
-| `fenix5s` | API 3.1, MIP 218×218, no touch | Passed |
-| `fr55` | API 3.4, MIP 208×208, 8 colors | Passed |
-| `vivoactive3` | API 3.1, MIP 240×240, touch | Passed |
-| `venusq2` | API 5.0, AMOLED 320×360, rectangular touch display, no Wi-Fi | Passed |
-| `fenix7pronowifi` | API 5.2, MIP 260×260, touch, no Wi-Fi | Passed |
-| `fenix8pro47mm` | API 6.0, AMOLED 454×454, touch, target-specific resources | Passed |
+- Manifest targets: 77
+- Installed manifest targets: 77
+- Successful builds: 77
+- Failed builds: 0
+- Skipped / not installed targets: 0
+
+The full manifest verification can be repeated with:
+
+```powershell
+.\scripts\verify_connectiq_builds.ps1 `
+    -DeveloperKey $Key `
+    -InstalledManifestTargets
+
+```
+
+The script also keeps a smaller default smoke-build set for faster development
+verification:
+
+| Connect IQ product ID | Representative case |
+| --- | --- |
+| `fenix5s` | API 3.1, MIP 218×218, no touch |
+| `fr55` | API 3.4, MIP 208×208, 8 colors |
+| `vivoactive3` | API 3.1, MIP 240×240, touch |
+| `venusq2` | API 5.0, AMOLED 320×360, rectangular touch display, no Wi-Fi |
+| `fenix7pronowifi` | API 5.2, MIP 260×260, touch, no Wi-Fi |
+| `fenix8pro47mm` | API 6.0, AMOLED 454×454, touch, target-specific resources |
 
 ## Notes
 
