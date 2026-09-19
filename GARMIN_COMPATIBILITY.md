@@ -13,6 +13,12 @@ Simulator and physical-device testing are tracked separately.
 - `Failed` - a known compatibility problem exists.
 - `N/A` - the test does not apply to the device.
 
+## fēnix Chronos
+
+| Connect IQ product ID | Garmin model | Known part numbers | Connect IQ API | Display | Touch | Wi-Fi Sync | Simulator | Physical device |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `fenixchronos` | fēnix Chronos | `006-B2432-00`, `006-B2675-00` | 3.1 | MIP, 218×218, 64 colors | No | Not tested | Not tested | Not tested |
+
 ## fēnix 5 family
 
 | Connect IQ product ID | Garmin model | Known part numbers | Connect IQ API | Display | Touch | Wi-Fi Sync | Simulator | Physical device |
