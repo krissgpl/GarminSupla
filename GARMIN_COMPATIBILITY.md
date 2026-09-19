@@ -126,6 +126,18 @@ Mercedes-Benz Venu 2 and Venu 2S part numbers are recognized by the
 backend resolver, but their Connect IQ product-ID mapping has not yet been
 verified, so they are not assigned to a matrix row here.
 
+## vívoactive
+
+| Connect IQ product ID | Garmin model | Known part numbers | Connect IQ API | Display | Touch | Wi-Fi Sync | Simulator | Physical device |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `vivoactive3` | vívoactive 3 | `006-B2700-00`, `006-B2976-00`, `006-B3446-00` | 3.1 | MIP, 240×240, 64 colors | Yes | Not tested | Not tested | Not tested |
+| `vivoactive3m` | vívoactive 3 Music | `006-B2988-00`, `006-B3163-00` | 3.2 | MIP, 240×240, 64 colors | Yes | Not tested | Not tested | Not tested |
+| `vivoactive3mlte` | vívoactive 3 Music LTE | `006-B3066-00` | 3.1 | MIP, 240×240, 64 colors | Yes | Not tested | Not tested | Not tested |
+| `vivoactive4` | vívoactive 4 | `006-B3225-00`, `006-B3388-00` | 3.3 | MIP, 260×260, 64 colors | Yes | Not tested | Not tested | Not tested |
+| `vivoactive4s` | vívoactive 4S | `006-B3224-00`, `006-B3387-00` | 3.3 | MIP, 218×218, 64 colors | Yes | Not tested | Not tested | Not tested |
+| `vivoactive5` | vívoactive 5 | `006-B4426-00` | 5.2 | AMOLED, 390×390 | Yes | Not tested | Not tested | Not tested |
+| `vivoactive6` | vívoactive 6 | `006-B4625-00` | 6.0 | AMOLED, 390×390 | Yes | Not tested | Not tested | Not tested |
+
 ## Notes
 
 - Product IDs must match the GarminSupla Connect IQ manifest.
