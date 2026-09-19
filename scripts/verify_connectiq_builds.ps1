@@ -10,7 +10,9 @@ param(
         "venusq2",
         "fenix7pronowifi",
         "fenix8pro47mm"
-    )
+    ),
+
+    [switch]$InstalledManifestTargets
 )
 
 $ErrorActionPreference = "Stop"
@@ -18,6 +20,7 @@ $ErrorActionPreference = "Stop"
 $RepoRoot = Split-Path -Parent $PSScriptRoot
 $ProjectDir = Join-Path $RepoRoot "connectiq\GarminSupla"
 $JungleFile = Join-Path $ProjectDir "monkey.jungle"
+$ManifestFile = Join-Path $ProjectDir "manifest.xml"
 
 $SdkConfig = Join-Path $env:APPDATA "Garmin\ConnectIQ\current-sdk.cfg"
 $DevicesRoot = Join-Path $env:APPDATA "Garmin\ConnectIQ\Devices"
@@ -35,11 +38,70 @@ if (-not (Test-Path $JungleFile -PathType Leaf)) {
     throw "Monkey C project not found: $JungleFile"
 }
 
+if (-not (Test-Path $ManifestFile -PathType Leaf)) {
+    throw "Connect IQ manifest not found: $ManifestFile"
+}
+
 $Sdk = (Get-Content $SdkConfig -Raw).Trim()
 $MonkeyC = Join-Path $Sdk "bin\monkeyc.bat"
 
 if (-not (Test-Path $MonkeyC -PathType Leaf)) {
     throw "Monkey C compiler not found: $MonkeyC"
+}
+
+if ($InstalledManifestTargets) {
+    [xml]$Manifest = Get-Content $ManifestFile -Raw
+
+    $NamespaceManager = New-Object System.Xml.XmlNamespaceManager(
+        $Manifest.NameTable
+    )
+    $NamespaceManager.AddNamespace(
+        "iq",
+        "http://www.garmin.com/xml/connectiq"
+    )
+
+    $ManifestTargets = @(
+        $Manifest.SelectNodes(
+            "//iq:products/iq:product",
+            $NamespaceManager
+        ) |
+            ForEach-Object {
+                $_.GetAttribute("id")
+            }
+    )
+
+    if ($ManifestTargets.Count -eq 0) {
+        throw "No Connect IQ product targets found in manifest."
+    }
+
+    $InstalledTargets = @(
+        $ManifestTargets |
+            Where-Object {
+                Test-Path (
+                    Join-Path $DevicesRoot $_
+                ) -PathType Container
+            }
+    )
+
+    $NotInstalledTargets = @(
+        $ManifestTargets |
+            Where-Object {
+                -not (
+                    Test-Path (
+                        Join-Path $DevicesRoot $_
+                    ) -PathType Container
+                )
+            }
+    )
+
+    if ($InstalledTargets.Count -eq 0) {
+        throw "None of the manifest targets are installed locally."
+    }
+
+    $Targets = $InstalledTargets
+}
+else {
+    $NotInstalledTargets = @()
 }
 
 New-Item -ItemType Directory -Force -Path $OutputDir | Out-Null
@@ -48,6 +110,18 @@ Write-Host ""
 Write-Host "GarminSupla Connect IQ build verification"
 Write-Host "SDK: $Sdk"
 & $MonkeyC --version
+
+if ($InstalledManifestTargets) {
+    Write-Host "Mode: installed manifest targets"
+    Write-Host "Manifest targets: $($ManifestTargets.Count)"
+    Write-Host "Installed manifest targets: $($Targets.Count)"
+    Write-Host "Not installed manifest targets: $($NotInstalledTargets.Count)"
+}
+else {
+    Write-Host "Mode: selected targets"
+    Write-Host "Selected targets: $($Targets.Count)"
+}
+
 Write-Host ""
 
 $Results = @()
@@ -111,6 +185,17 @@ Write-Host ""
 Write-Host "Build verification summary:"
 $Results | Format-Table -AutoSize
 
+if (
+    $InstalledManifestTargets -and
+    $NotInstalledTargets.Count -gt 0
+) {
+    Write-Host ""
+    Write-Host "Manifest targets not installed locally:"
+    $NotInstalledTargets | ForEach-Object {
+        Write-Host "  $_"
+    }
+}
+
 $Failures = @(
     $Results | Where-Object {
         $_.Status -ne "Passed"
@@ -118,9 +203,11 @@ $Failures = @(
 )
 
 if ($Failures.Count -gt 0) {
+    Write-Host ""
     Write-Host "Build verification FAILED."
     exit 1
 }
 
-Write-Host "All representative builds PASSED."
+Write-Host ""
+Write-Host "All selected builds PASSED."
 exit 0
