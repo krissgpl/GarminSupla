@@ -286,7 +286,7 @@
   - Keep unknown part numbers safe and display them without guessing the device model.
   - Add tests for known, unknown, empty and normalized part numbers.
 
-- [ ] Prepare a Garmin compatibility matrix.
+- [X] Prepare a Garmin compatibility matrix.
   - Track:
     - Connect IQ product ID,
     - Garmin model,
