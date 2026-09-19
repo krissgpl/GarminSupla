@@ -144,6 +144,23 @@ verified, so they are not assigned to a matrix row here.
 | `vivoactive5` | vívoactive 5 | `006-B4426-00` | 5.2 | AMOLED, 390×390 | Yes | Not tested | Not tested | Not tested |
 | `vivoactive6` | vívoactive 6 | `006-B4625-00` | 6.0 | AMOLED, 390×390 | Yes | Not tested | Not tested | Not tested |
 
+## Representative build verification
+
+Build verification confirms that GarminSupla compiles successfully for the
+selected Connect IQ target. It does not count as simulator or physical-device
+runtime testing.
+
+Verified with Connect IQ SDK 9.2.0 on 2026-09-19.
+
+| Connect IQ product ID | Representative case | Build result |
+| --- | --- | --- |
+| `fenix5s` | API 3.1, MIP 218×218, no touch | Passed |
+| `fr55` | API 3.4, MIP 208×208, 8 colors | Passed |
+| `vivoactive3` | API 3.1, MIP 240×240, touch | Passed |
+| `venusq2` | API 5.0, AMOLED 320×360, rectangular touch display, no Wi-Fi | Passed |
+| `fenix7pronowifi` | API 5.2, MIP 260×260, touch, no Wi-Fi | Passed |
+| `fenix8pro47mm` | API 6.0, AMOLED 454×454, touch, target-specific resources | Passed |
+
 ## Notes
 
 - Product IDs must match the GarminSupla Connect IQ manifest.
