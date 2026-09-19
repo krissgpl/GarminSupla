@@ -164,6 +164,30 @@ class WatchDeviceResolverTests(unittest.TestCase):
                     expected_model,
                 )
 
+    def test_resolves_fenix_9_family(self):
+        cases = {
+            "006-B5133-00": "fēnix 9 43mm",
+            "006-B5134-00": "fēnix 9 47mm/51mm",
+
+            "006-B4952-00": "fēnix 9 Pro 43mm",
+            "006-B4953-00": "fēnix 9 Pro 47mm",
+            "006-B4954-00": "fēnix 9 Pro 51mm",
+
+            "006-B4955-00": "fēnix 9 Pro Solar 47mm",
+            "006-B4956-00": "fēnix 9 Pro Solar 51mm",
+        }
+
+        for part_number, expected_model in cases.items():
+            with self.subTest(
+                part_number=part_number
+            ):
+                self.assertEqual(
+                    resolve_watch_model(
+                        part_number
+                    ),
+                    expected_model,
+                )
+
     def test_resolves_forerunner_family(self):
         cases = {
             "006-B3869-00": "Forerunner 55",

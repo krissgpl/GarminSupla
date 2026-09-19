@@ -59,6 +59,17 @@ WATCH_MODELS_BY_PART_NUMBER: dict[str, str] = {
     "006-B4533-00": "fēnix 8 Solar (51mm)",
     "006-B4631-00": "fēnix 8 Pro",
 
+    # fēnix 9
+    "006-B5133-00": "fēnix 9 43mm",
+    "006-B5134-00": "fēnix 9 47mm/51mm",
+
+    "006-B4952-00": "fēnix 9 Pro 43mm",
+    "006-B4953-00": "fēnix 9 Pro 47mm",
+    "006-B4954-00": "fēnix 9 Pro 51mm",
+
+    "006-B4955-00": "fēnix 9 Pro Solar 47mm",
+    "006-B4956-00": "fēnix 9 Pro Solar 51mm",
+
     # fēnix E
     "006-B4666-00": "fēnix E",
 
