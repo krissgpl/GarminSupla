@@ -150,11 +150,11 @@ Connect IQ target. It does not count as simulator or physical-device runtime
 testing.
 
 Full manifest build verification was completed with Connect IQ SDK 9.2.0 on
-2026-09-19:
+2026-09-20:
 
-- Manifest targets: 77
-- Installed manifest targets: 77
-- Successful builds: 77
+- Manifest targets: 76
+- Installed manifest targets: 76
+- Successful builds: 76
 - Failed builds: 0
 - Skipped / not installed targets: 0
 
