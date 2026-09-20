@@ -24,8 +24,8 @@ Simulator and physical-device testing are tracked separately.
 | Connect IQ product ID | Garmin model | Known part numbers | Connect IQ API | Display | Touch | Wi-Fi Sync | Simulator | Physical device |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | `fenix5splus` | fēnix 5S Plus | `006-B2900-00`, `006-B3134-00` | 3.3 | MIP, 240×240, 64 colors | No | Passed | Passed | Not tested |
-| `fenix5x` | fēnix 5X | `006-B2604-00`, `006-B2798-00` | 3.1 | MIP, 240×240, 64 colors | No | Not tested | Passed | Not tested |
-| `fenix5xplus` | fēnix 5X Plus | `006-B3111-00`, `006-B3135-00` | 3.3 | MIP, 240×240, 64 colors | No | Not tested | Passed | Not tested |
+| `fenix5x` | fēnix 5X | `006-B2604-00`, `006-B2798-00` | 3.1 | MIP, 240×240, 64 colors | No | N/A (no Wi-Fi) | Passed | Not tested |
+| `fenix5xplus` | fēnix 5X Plus | `006-B3111-00`, `006-B3135-00` | 3.3 | MIP, 240×240, 64 colors | No | Passed | Passed | Not tested |
 
 ## fēnix 6 family
 
@@ -172,7 +172,6 @@ verification:
 
 | Connect IQ product ID | Representative case |
 | --- | --- |
-| `fenix5s` | API 3.1, MIP 218×218, no touch |
 | `fr55` | API 3.4, MIP 208×208, 8 colors |
 | `vivoactive3` | API 3.1, MIP 240×240, touch |
 | `venusq2` | API 5.0, AMOLED 320×360, rectangular touch display, no Wi-Fi |

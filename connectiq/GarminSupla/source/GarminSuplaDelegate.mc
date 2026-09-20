@@ -31,6 +31,15 @@ class GarminSuplaDelegate extends WatchUi.BehaviorDelegate {
         _api = api;
     }
 
+	function isWifiAvailable() as Lang.Boolean {
+
+		var connectionInfo =
+			System.getDeviceSettings()
+				.connectionInfo;
+
+		return connectionInfo.hasKey(:wifi);
+	}
+
     function onMenu() as Boolean {
 
         var language =
@@ -78,14 +87,17 @@ class GarminSuplaDelegate extends WatchUi.BehaviorDelegate {
                 :title => "GarminSupla"
             });
 
-        menu.addItem(
-            new WatchUi.MenuItem(
-                wifiRefreshLabel,
-                null,
-                :wifi_refresh,
-                {}
-            )
-        );
+        if (isWifiAvailable()) {
+
+            menu.addItem(
+                new WatchUi.MenuItem(
+                    wifiRefreshLabel,
+                    null,
+                    :wifi_refresh,
+                    {}
+                )
+            );
+        }
 
         menu.addItem(
             new WatchUi.MenuItem(
@@ -119,6 +131,15 @@ class GarminSuplaDelegate extends WatchUi.BehaviorDelegate {
 
             return true;
         }
+
+		if (!_view.isItemConnected()) {
+
+			System.println(
+				"SELECT ignored: item offline"
+			);
+
+			return true;
+		}
 
         System.println(
             "SELECT itemId="

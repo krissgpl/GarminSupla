@@ -836,7 +836,25 @@ class GarminSuplaApi {
 		);
 	}
 
+    function isWifiAvailable() as Lang.Boolean {
+
+        var connectionInfo =
+            System.getDeviceSettings()
+                .connectionInfo;
+
+        return connectionInfo.hasKey(:wifi);
+    }
+
 	function loadStoredWifiConfig() as Lang.Boolean {
+
+        if (!isWifiAvailable()) {
+
+            System.println(
+                "Stored WIFI config ignored: WIFI not available"
+            );
+
+            return false;
+        }
 
 		var storedConfig =
 			Application.Storage.getValue(

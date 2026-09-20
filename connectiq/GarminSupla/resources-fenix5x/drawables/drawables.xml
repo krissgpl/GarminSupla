@@ -2,6 +2,12 @@
     xsi:noNamespaceSchemaLocation="https://developer.garmin.com/downloads/connect-iq/resources.xsd">
 
     <bitmap
+        id="LauncherIcon"
+        filename="launcher_icon.png"
+        dithering="none"
+    />
+
+    <bitmap
         id="DoubleSwingGateClosed"
         filename="../../resources/drawables/double_swing_gate_closed.png"
         dithering="none"

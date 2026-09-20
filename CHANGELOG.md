@@ -10,6 +10,25 @@ Projekt stosuje zasady zbliżone do Keep a Changelog.
 
 ---
 
+## [Connect IQ 0.9.0] - 2026-09-20
+
+### Improved
+- Added and verified fēnix 5S Plus, fēnix 5X, and fēnix 5X Plus compatibility.
+- Added compact 240×240 layout adjustments for the fēnix 5 family.
+- Added device-specific launcher icons and scaled item graphics for the fēnix 5 family.
+- Wi-Fi functionality is now exposed only on devices with Wi-Fi support.
+
+### Fixed
+- Devices without Wi-Fi no longer restore items from the Wi-Fi configuration snapshot.
+- Offline items no longer allow actions or open confirmation/action menus.
+- Improved About screen layout on compact 240×240 devices.
+
+### Versioning
+- Backend/dashboard version remains `0.4.0`.
+- Connect IQ application version: `0.9.0`.
+
+---
+
 ## [Connect IQ 0.8.0] - 2026-09-18
 
 ### Improved

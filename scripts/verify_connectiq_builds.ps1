@@ -4,7 +4,6 @@ param(
     [string]$DeveloperKey,
 
     [string[]]$Targets = @(
-        "fenix5s",
         "fr55",
         "vivoactive3",
         "venusq2",
