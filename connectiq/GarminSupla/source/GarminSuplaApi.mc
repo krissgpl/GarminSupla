@@ -28,6 +28,7 @@ class GarminSuplaApi {
 	private var _configInProgress = false;
 	private var _ignoreNextConfigResponse = false;
 	private var _wifiRefreshStartedAt = null;
+	private var _wifiAvailable = null;
 
 	function reloadServerUrl() as Void {
 
@@ -230,6 +231,15 @@ class GarminSuplaApi {
     function updateStoredWifiConfig(
         config
     ) as Void {
+
+		if (!isWifiAvailable()) {
+
+			System.println(
+				"WIFI snapshot update skipped: WIFI not available"
+			);
+
+			return;
+		}
 
         if (!(config instanceof Lang.Dictionary)) {
             return;
@@ -650,10 +660,6 @@ class GarminSuplaApi {
 				Communications.HTTP_RESPONSE_CONTENT_TYPE_JSON
 		};
 
-		System.println(
-			"GET " + url
-		);
-
 		_configInProgress = true;
 
 		Communications.makeWebRequest(
@@ -836,14 +842,26 @@ class GarminSuplaApi {
 		);
 	}
 
-    function isWifiAvailable() as Lang.Boolean {
+	function isWifiAvailable() as Lang.Boolean {
 
-        var connectionInfo =
-            System.getDeviceSettings()
-                .connectionInfo;
+		if (_wifiAvailable != null) {
+			return _wifiAvailable == true;
+		}
 
-        return connectionInfo.hasKey(:wifi);
-    }
+		var connectionInfo =
+			System.getDeviceSettings()
+				.connectionInfo;
+
+		_wifiAvailable =
+			connectionInfo.hasKey(:wifi);
+
+		System.println(
+			"WIFI available: "
+			+ _wifiAvailable
+		);
+
+		return _wifiAvailable == true;
+	}
 
 	function loadStoredWifiConfig() as Lang.Boolean {
 

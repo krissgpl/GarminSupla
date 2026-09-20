@@ -32,12 +32,7 @@ class GarminSuplaDelegate extends WatchUi.BehaviorDelegate {
     }
 
 	function isWifiAvailable() as Lang.Boolean {
-
-		var connectionInfo =
-			System.getDeviceSettings()
-				.connectionInfo;
-
-		return connectionInfo.hasKey(:wifi);
+		return _api.isWifiAvailable();
 	}
 
     function onMenu() as Boolean {

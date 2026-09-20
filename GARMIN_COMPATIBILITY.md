@@ -31,11 +31,10 @@ Simulator and physical-device testing are tracked separately.
 
 | Connect IQ product ID | Garmin model | Known part numbers | Connect IQ API | Display | Touch | Wi-Fi Sync | Simulator | Physical device |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `fenix6` | fēnix 6 / 6 Solar / 6 Dual Power | `006-B3289-00`, `006-B3514-00`, `006-B3766-00`, `006-B3770-00` | 3.4 | MIP, 260×260, 64 colors | No | N/A (no Wi-Fi) | Not tested | Not tested |
-| `fenix6pro` | fēnix 6 Pro / 6 Sapphire / 6 Pro Solar / 6 Pro Dual Power | `006-B3290-00`, `006-B3515-00`, `006-B3767-00`, `006-B3771-00` | 3.4 | MIP, 260×260, 64 colors | No | Not tested | Not tested | Not tested |
-| `fenix6s` | fēnix 6S / 6S Solar / 6S Dual Power | `006-B3287-00`, `006-B3512-00`, `006-B3764-00`, `006-B3768-00` | 3.4 | MIP, 240×240, 64 colors | No | N/A (no Wi-Fi) | Not tested | Not tested |
-| `fenix6spro` | fēnix 6S Pro / 6S Sapphire / 6S Pro Solar / 6S Pro Dual Power | `006-B3288-00`, `006-B3513-00`, `006-B3765-00`, `006-B3769-00` | 3.4 | MIP, 240×240, 64 colors | No | Not tested | Not tested | Not tested |
-| `fenix6xpro` | fēnix 6X Pro / 6X Sapphire / 6X Pro Solar | `006-B3291-00`, `006-B3516-00` | 3.4 | MIP, 280×280, 64 colors | No | Not tested | Not tested | Not tested |
+| `fenix6pro` | fēnix 6 Pro / 6 Sapphire / 6 Pro Solar / 6 Pro Dual Power | `006-B3290-00`, `006-B3515-00`, `006-B3767-00`, `006-B3771-00` | 3.4 | MIP, 260×260, 64 colors | No | Passed | Passed | Not tested |
+| `fenix6s` | fēnix 6S / 6S Solar / 6S Dual Power | `006-B3287-00`, `006-B3512-00`, `006-B3764-00`, `006-B3768-00` | 3.4 | MIP, 240×240, 64 colors | No | N/A (no Wi-Fi) | Passed | Not tested |
+| `fenix6spro` | fēnix 6S Pro / 6S Sapphire / 6S Pro Solar / 6S Pro Dual Power | `006-B3288-00`, `006-B3513-00`, `006-B3765-00`, `006-B3769-00` | 3.4 | MIP, 240×240, 64 colors | No | Passed | Passed | Not tested |
+| `fenix6xpro` | fēnix 6X Pro / 6X Sapphire / 6X Pro Solar | `006-B3291-00`, `006-B3516-00` | 3.4 | MIP, 280×280, 64 colors | No | Passed | Passed | Not tested |
 
 ## fēnix 7 family
 
@@ -152,9 +151,9 @@ testing.
 Full manifest build verification was completed with Connect IQ SDK 9.2.0 on
 2026-09-20:
 
-- Manifest targets: 76
-- Installed manifest targets: 76
-- Successful builds: 76
+- Manifest targets: 75
+- Installed manifest targets: 75
+- Successful builds: 75
 - Failed builds: 0
 - Skipped / not installed targets: 0
 

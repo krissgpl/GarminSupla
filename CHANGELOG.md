@@ -17,11 +17,19 @@ Projekt stosuje zasady zbliżone do Keep a Changelog.
 - Added compact 240×240 layout adjustments for the fēnix 5 family.
 - Added device-specific launcher icons and scaled item graphics for the fēnix 5 family.
 - Wi-Fi functionality is now exposed only on devices with Wi-Fi support.
+- Added and verified fēnix 6 Pro, fēnix 6S, fēnix 6S Pro, and fēnix 6X Pro compatibility.
+- Reduced runtime memory usage by loading only the bitmap required for the current item state.
+- Added device-specific resources for memory-constrained fēnix 6 family devices.
 
 ### Fixed
 - Devices without Wi-Fi no longer restore items from the Wi-Fi configuration snapshot.
 - Offline items no longer allow actions or open confirmation/action menus.
 - Improved About screen layout on compact 240×240 devices.
+- Cached Wi-Fi capability detection to avoid repeated device-settings allocations on memory-constrained devices.
+- Improved compact About screen e-mail layout by adapting between one and two lines based on available width.
+
+### Removed
+- Removed the fēnix 6 non-Pro target after runtime testing showed insufficient application memory for reliable operation.
 
 ### Versioning
 - Backend/dashboard version remains `0.4.0`.

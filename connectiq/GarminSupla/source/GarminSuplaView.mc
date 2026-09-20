@@ -85,171 +85,6 @@ class GarminSuplaView extends WatchUi.View {
 
 		_statusTimer = new Timer.Timer();
 
-		_doubleSwingGateClosedBitmap =
-			Application.loadResource(
-				Rez.Drawables.DoubleSwingGateClosed
-			);
-
-		_doubleSwingGateOpenedBitmap =
-			Application.loadResource(
-				Rez.Drawables.DoubleSwingGateOpened
-			);
-
-		_doubleSwingGateUnknownBitmap =
-			Application.loadResource(
-				Rez.Drawables.DoubleSwingGateUnknown
-			);
-
-		_doubleSwingGateOfflineBitmap =
-			Application.loadResource(
-				Rez.Drawables.DoubleSwingGateOffline
-			);
-
-		_slidingGateClosedBitmap =
-			Application.loadResource(
-				Rez.Drawables.SlidingGateClosed
-			);
-
-		_slidingGateOpenedBitmap =
-			Application.loadResource(
-				Rez.Drawables.SlidingGateOpened
-			);
-
-		_slidingGateUnknownBitmap =
-			Application.loadResource(
-				Rez.Drawables.SlidingGateUnknown
-			);
-
-		_slidingGateOfflineBitmap =
-			Application.loadResource(
-				Rez.Drawables.SlidingGateOffline
-			);
-
-		_lightOnBitmap =
-			Application.loadResource(
-				Rez.Drawables.LightOn
-			);
-
-		_lightOffBitmap =
-			Application.loadResource(
-				Rez.Drawables.LightOff
-			);
-
-		_lightUnknownBitmap =
-			Application.loadResource(
-				Rez.Drawables.LightUnknown
-			);
-
-		_lightOfflineBitmap =
-			Application.loadResource(
-				Rez.Drawables.LightOffline
-			);
-
-		_switchOnBitmap =
-			Application.loadResource(
-				Rez.Drawables.SwitchOn
-			);
-
-		_switchOffBitmap =
-			Application.loadResource(
-				Rez.Drawables.SwitchOff
-			);
-
-		_switchUnknownBitmap =
-			Application.loadResource(
-				Rez.Drawables.SwitchUnknown
-			);
-
-		_switchOfflineBitmap =
-			Application.loadResource(
-				Rez.Drawables.SwitchOffline
-			);
-
-		_rollerShutterOpenedBitmap =
-			Application.loadResource(
-				Rez.Drawables.RollerShutterOpened
-			);
-
-		_rollerShutterPartialBitmap =
-			Application.loadResource(
-				Rez.Drawables.RollerShutterPartial
-			);
-
-		_rollerShutterClosedBitmap =
-			Application.loadResource(
-				Rez.Drawables.RollerShutterClosed
-			);
-
-		_rollerShutterOfflineBitmap =
-			Application.loadResource(
-				Rez.Drawables.RollerShutterOffline
-			);
-
-		_rollerShutterUnknownBitmap =
-			Application.loadResource(
-				Rez.Drawables.RollerShutterUnknown
-			);
-
-		_awningClosedBitmap =
-			Application.loadResource(
-				Rez.Drawables.AwningClosed
-			);
-
-		_awningPartiallyOpenedBitmap =
-			Application.loadResource(
-				Rez.Drawables.AwningPartiallyOpened
-			);
-
-		_awningOpenedBitmap =
-			Application.loadResource(
-				Rez.Drawables.AwningOpened
-			);
-
-		_awningOfflineBitmap =
-			Application.loadResource(
-				Rez.Drawables.AwningOffline
-			);
-
-		_awningUnknownBitmap =
-			Application.loadResource(
-				Rez.Drawables.AwningUnknown
-			);
-
-		_garageGateClosedBitmap =
-			Application.loadResource(
-				Rez.Drawables.GarageGateClosed
-			);
-
-		_garageGateOpenedBitmap =
-			Application.loadResource(
-				Rez.Drawables.GarageGateOpened
-			);
-
-		_garageGateOfflineBitmap =
-			Application.loadResource(
-				Rez.Drawables.GarageGateOffline
-			);
-
-		_garageGateUnknownBitmap =
-			Application.loadResource(
-				Rez.Drawables.GarageGateUnknown
-			);
-
-		_sceneBitmap =
-			Application.loadResource(
-				Rez.Drawables.Scene
-			);
-
-		_sceneOfflineBitmap =
-			Application.loadResource(
-				Rez.Drawables.SceneOffline
-			);
-
-		_sceneUnknownBitmap =
-			Application.loadResource(
-				Rez.Drawables.SceneUnknown
-			);
-
 		_watchBackgroundBitmap =
 			Application.loadResource(
 				Rez.Drawables.WatchBackground
@@ -384,6 +219,356 @@ class GarminSuplaView extends WatchUi.View {
 
         _status = _statusConnecting;
 
+	}
+
+function clearItemBitmaps() as Void {
+
+    _doubleSwingGateClosedBitmap = null;
+    _doubleSwingGateOpenedBitmap = null;
+    _doubleSwingGateUnknownBitmap = null;
+    _doubleSwingGateOfflineBitmap = null;
+
+    _slidingGateClosedBitmap = null;
+    _slidingGateOpenedBitmap = null;
+    _slidingGateUnknownBitmap = null;
+    _slidingGateOfflineBitmap = null;
+
+    _lightOnBitmap = null;
+    _lightOffBitmap = null;
+    _lightUnknownBitmap = null;
+    _lightOfflineBitmap = null;
+
+    _switchOnBitmap = null;
+    _switchOffBitmap = null;
+    _switchUnknownBitmap = null;
+    _switchOfflineBitmap = null;
+
+    _rollerShutterOpenedBitmap = null;
+    _rollerShutterPartialBitmap = null;
+    _rollerShutterClosedBitmap = null;
+    _rollerShutterOfflineBitmap = null;
+    _rollerShutterUnknownBitmap = null;
+
+    _awningClosedBitmap = null;
+    _awningPartiallyOpenedBitmap = null;
+    _awningOpenedBitmap = null;
+    _awningOfflineBitmap = null;
+    _awningUnknownBitmap = null;
+
+    _garageGateClosedBitmap = null;
+    _garageGateOpenedBitmap = null;
+    _garageGateOfflineBitmap = null;
+    _garageGateUnknownBitmap = null;
+
+    _sceneBitmap = null;
+    _sceneOfflineBitmap = null;
+    _sceneUnknownBitmap = null;
+}
+
+	function loadCurrentItemBitmap() as Void {
+
+		clearItemBitmaps();
+
+		if (
+			_itemIcon != null
+			&& _itemIcon.equals("garage_gate")
+		) {
+
+			if (!_itemConnected) {
+
+				_garageGateOfflineBitmap =
+					Application.loadResource(
+						Rez.Drawables.GarageGateOffline
+					);
+
+			} else if (_itemState.equals("closed")) {
+
+				_garageGateClosedBitmap =
+					Application.loadResource(
+						Rez.Drawables.GarageGateClosed
+					);
+
+			} else if (_itemState.equals("opened")) {
+
+				_garageGateOpenedBitmap =
+					Application.loadResource(
+						Rez.Drawables.GarageGateOpened
+					);
+
+			} else {
+
+				_garageGateUnknownBitmap =
+					Application.loadResource(
+						Rez.Drawables.GarageGateUnknown
+					);
+			}
+
+			return;
+		}
+
+		if (
+			_itemIcon != null
+			&& _itemIcon.equals("sliding_gate")
+		) {
+
+			if (!_itemConnected) {
+
+				_slidingGateOfflineBitmap =
+					Application.loadResource(
+						Rez.Drawables.SlidingGateOffline
+					);
+
+			} else if (_itemState.equals("closed")) {
+
+				_slidingGateClosedBitmap =
+					Application.loadResource(
+						Rez.Drawables.SlidingGateClosed
+					);
+
+			} else if (_itemState.equals("opened")) {
+
+				_slidingGateOpenedBitmap =
+					Application.loadResource(
+						Rez.Drawables.SlidingGateOpened
+					);
+
+			} else {
+
+				_slidingGateUnknownBitmap =
+					Application.loadResource(
+						Rez.Drawables.SlidingGateUnknown
+					);
+			}
+
+			return;
+		}
+
+		if (
+			_itemIcon != null
+			&& _itemIcon.equals("double_swing_gate")
+		) {
+
+			if (!_itemConnected) {
+
+				_doubleSwingGateOfflineBitmap =
+					Application.loadResource(
+						Rez.Drawables.DoubleSwingGateOffline
+					);
+
+			} else if (_itemState.equals("closed")) {
+
+				_doubleSwingGateClosedBitmap =
+					Application.loadResource(
+						Rez.Drawables.DoubleSwingGateClosed
+					);
+
+			} else if (_itemState.equals("opened")) {
+
+				_doubleSwingGateOpenedBitmap =
+					Application.loadResource(
+						Rez.Drawables.DoubleSwingGateOpened
+					);
+
+			} else {
+
+				_doubleSwingGateUnknownBitmap =
+					Application.loadResource(
+						Rez.Drawables.DoubleSwingGateUnknown
+					);
+			}
+
+			return;
+		}
+
+		if (
+			_itemType != null
+			&& _itemType.equals("light")
+		) {
+
+			if (!_itemConnected) {
+
+				_lightOfflineBitmap =
+					Application.loadResource(
+						Rez.Drawables.LightOffline
+					);
+
+			} else if (_itemState.equals("on")) {
+
+				_lightOnBitmap =
+					Application.loadResource(
+						Rez.Drawables.LightOn
+					);
+
+			} else if (_itemState.equals("off")) {
+
+				_lightOffBitmap =
+					Application.loadResource(
+						Rez.Drawables.LightOff
+					);
+
+			} else {
+
+				_lightUnknownBitmap =
+					Application.loadResource(
+						Rez.Drawables.LightUnknown
+					);
+			}
+
+			return;
+		}
+
+		if (
+			_itemIcon != null
+			&& _itemIcon.equals("switch")
+		) {
+
+			if (!_itemConnected) {
+
+				_switchOfflineBitmap =
+					Application.loadResource(
+						Rez.Drawables.SwitchOffline
+					);
+
+			} else if (_itemState.equals("on")) {
+
+				_switchOnBitmap =
+					Application.loadResource(
+						Rez.Drawables.SwitchOn
+					);
+
+			} else if (_itemState.equals("off")) {
+
+				_switchOffBitmap =
+					Application.loadResource(
+						Rez.Drawables.SwitchOff
+					);
+
+			} else {
+
+				_switchUnknownBitmap =
+					Application.loadResource(
+						Rez.Drawables.SwitchUnknown
+					);
+			}
+
+			return;
+		}
+
+		if (
+			_itemIcon != null
+			&& _itemIcon.equals("roller_shutter")
+		) {
+
+			if (!_itemConnected) {
+
+				_rollerShutterOfflineBitmap =
+					Application.loadResource(
+						Rez.Drawables.RollerShutterOffline
+					);
+
+			} else if (_itemState.equals("opened")) {
+
+				_rollerShutterOpenedBitmap =
+					Application.loadResource(
+						Rez.Drawables.RollerShutterOpened
+					);
+
+			} else if (_itemState.equals("closed")) {
+
+				_rollerShutterClosedBitmap =
+					Application.loadResource(
+						Rez.Drawables.RollerShutterClosed
+					);
+
+			} else if (_itemState.equals("unknown")) {
+
+				_rollerShutterUnknownBitmap =
+					Application.loadResource(
+						Rez.Drawables.RollerShutterUnknown
+					);
+
+			} else {
+
+				_rollerShutterPartialBitmap =
+					Application.loadResource(
+						Rez.Drawables.RollerShutterPartial
+					);
+			}
+
+			return;
+		}
+
+		if (
+			_itemIcon != null
+			&& _itemIcon.equals("awning")
+		) {
+
+			if (!_itemConnected) {
+
+				_awningOfflineBitmap =
+					Application.loadResource(
+						Rez.Drawables.AwningOffline
+					);
+
+			} else if (_itemState.equals("collapsed")) {
+
+				_awningClosedBitmap =
+					Application.loadResource(
+						Rez.Drawables.AwningClosed
+					);
+
+			} else if (_itemState.equals("expanded")) {
+
+				_awningOpenedBitmap =
+					Application.loadResource(
+						Rez.Drawables.AwningOpened
+					);
+
+			} else if (_itemState.equals("unknown")) {
+
+				_awningUnknownBitmap =
+					Application.loadResource(
+						Rez.Drawables.AwningUnknown
+					);
+
+			} else {
+
+				_awningPartiallyOpenedBitmap =
+					Application.loadResource(
+						Rez.Drawables.AwningPartiallyOpened
+					);
+			}
+
+			return;
+		}
+
+		if (
+			_itemIcon != null
+			&& _itemIcon.equals("scene")
+		) {
+
+			if (!_itemConnected) {
+
+				_sceneOfflineBitmap =
+					Application.loadResource(
+						Rez.Drawables.SceneOffline
+					);
+
+			} else if (_itemState.equals("unknown")) {
+
+				_sceneUnknownBitmap =
+					Application.loadResource(
+						Rez.Drawables.SceneUnknown
+					);
+
+			} else {
+
+				_sceneBitmap =
+					Application.loadResource(
+						Rez.Drawables.Scene
+					);
+			}
+		}
 	}
 
 	function applyApplicationLanguage() as Void {
@@ -532,6 +717,9 @@ class GarminSuplaView extends WatchUi.View {
 		if (_itemName != null) {
 			_itemConnected = false;
 			_itemState = "unknown";
+
+			loadCurrentItemBitmap();
+
 		}
 
 		WatchUi.requestUpdate();
@@ -1809,6 +1997,8 @@ class GarminSuplaView extends WatchUi.View {
 			_itemIcon = "default";
 		}
 
+		loadCurrentItemBitmap();
+
 		_status = _statusConnected;
 
 		System.println(
@@ -1886,6 +2076,8 @@ class GarminSuplaView extends WatchUi.View {
 			} else if (_itemState.equals("off")) {
 				_itemState = "on";
 			}
+
+			loadCurrentItemBitmap();
 
 			WatchUi.requestUpdate();
 		}

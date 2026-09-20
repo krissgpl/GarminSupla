@@ -147,52 +147,83 @@ class GarminSuplaAboutView
         var versionY =
             (height * 0.78).toNumber();
 
-        if (compactLayout) {
+		if (compactLayout) {
 
-            var compactLineHeight =
-                dc.getFontHeight(
-                    Graphics.FONT_XTINY
-                );
+			var compactLineHeight =
+				dc.getFontHeight(
+					Graphics.FONT_XTINY
+				);
 
-            var emailFirstLineY =
-                emailLabelY
-                + compactLineHeight;
+			var emailWidth =
+				dc.getTextWidthInPixels(
+					_email,
+					Graphics.FONT_XTINY
+				);
 
-            var emailSecondLineY =
-                emailFirstLineY
-                + compactLineHeight;
+			var availableWidth =
+				width - 20;
 
-            dc.drawText(
-                width / 2,
-                emailFirstLineY,
-                Graphics.FONT_XTINY,
-                "garminsupla@",
-                Graphics.TEXT_JUSTIFY_CENTER
-            );
+			if (emailWidth <= availableWidth) {
 
-            dc.drawText(
-                width / 2,
-                emailSecondLineY,
-                Graphics.FONT_XTINY,
-                "home-dev.eu",
-                Graphics.TEXT_JUSTIFY_CENTER
-            );
+				var emailY =
+					emailLabelY
+					+ compactLineHeight;
 
-            versionY =
-                emailSecondLineY
-                + compactLineHeight
-                + 2;
+				dc.drawText(
+					width / 2,
+					emailY,
+					Graphics.FONT_XTINY,
+					_email,
+					Graphics.TEXT_JUSTIFY_CENTER
+				);
 
-        } else {
+				versionY =
+					emailY
+					+ compactLineHeight
+					+ 4;
 
-            dc.drawText(
-                width / 2,
-                height * 0.61,
-                Graphics.FONT_XTINY,
-                _email,
-                Graphics.TEXT_JUSTIFY_CENTER
-            );
-        }
+			} else {
+
+				var emailFirstLineY =
+					emailLabelY
+					+ compactLineHeight;
+
+				var emailSecondLineY =
+					emailFirstLineY
+					+ compactLineHeight;
+
+				dc.drawText(
+					width / 2,
+					emailFirstLineY,
+					Graphics.FONT_XTINY,
+					"garminsupla@",
+					Graphics.TEXT_JUSTIFY_CENTER
+				);
+
+				dc.drawText(
+					width / 2,
+					emailSecondLineY,
+					Graphics.FONT_XTINY,
+					"home-dev.eu",
+					Graphics.TEXT_JUSTIFY_CENTER
+				);
+
+				versionY =
+					emailSecondLineY
+					+ compactLineHeight
+					+ 2;
+			}
+
+		} else {
+
+			dc.drawText(
+				width / 2,
+				height * 0.61,
+				Graphics.FONT_XTINY,
+				_email,
+				Graphics.TEXT_JUSTIFY_CENTER
+			);
+		}
 
         // Version
         dc.drawText(
