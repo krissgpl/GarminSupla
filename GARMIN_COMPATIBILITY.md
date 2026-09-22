@@ -40,14 +40,14 @@ Simulator and physical-device testing are tracked separately.
 
 | Connect IQ product ID | Garmin model | Known part numbers | Connect IQ API | Display | Touch | Wi-Fi Sync | Simulator | Physical device |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `fenix7` | fēnix 7 | `006-B3906-00`, `006-B3909-00` | 5.2 | MIP, 260×260, 64 colors | Yes | Not tested | Not tested | Not tested |
-| `fenix7pro` | fēnix 7 Pro | `006-B4375-00` | 5.2 | MIP, 260×260, 64 colors | Yes | Not tested | Not tested | Not tested |
-| `fenix7pronowifi` | fēnix 7 Pro Solar (No Wi-Fi) | `006-B4595-00` | 5.2 | MIP, 260×260, 64 colors | Yes | N/A (no Wi-Fi) | Not tested | Not tested |
-| `fenix7s` | fēnix 7S | `006-B3905-00`, `006-B3908-00` | 5.2 | MIP, 240×240, 64 colors | Yes | Not tested | Not tested | Not tested |
-| `fenix7spro` | fēnix 7S Pro | `006-B4374-00` | 5.2 | MIP, 240×240, 64 colors | Yes | Not tested | Not tested | Not tested |
-| `fenix7x` | fēnix 7X | `006-B3907-00`, `006-B3910-00` | 5.2 | MIP, 280×280, 64 colors | Yes | Not tested | Not tested | Not tested |
-| `fenix7xpro` | fēnix 7X Pro | `006-B4376-00` | 5.2 | MIP, 280×280, 64 colors | Yes | Not tested | Not tested | Not tested |
-| `fenix7xpronowifi` | fēnix 7X Pro (No Wi-Fi) | `006-B4596-00` | 5.2 | MIP, 280×280, 64 colors | Yes | N/A (no Wi-Fi) | Not tested | Not tested |
+| `fenix7` | fēnix 7 | `006-B3906-00`, `006-B3909-00` | 5.2 | MIP, 260×260, 64 colors | Yes | Passed | Passed | Not tested |
+| `fenix7pro` | fēnix 7 Pro | `006-B4375-00` | 5.2 | MIP, 260×260, 64 colors | Yes | Passed | Passed | Not tested |
+| `fenix7pronowifi` | fēnix 7 Pro Solar (No Wi-Fi) | `006-B4595-00` | 5.2 | MIP, 260×260, 64 colors | Yes | N/A (no Wi-Fi) | Passed | Not tested |
+| `fenix7s` | fēnix 7S | `006-B3905-00`, `006-B3908-00` | 5.2 | MIP, 240×240, 64 colors | Yes | Passed | Passed | Not tested |
+| `fenix7spro` | fēnix 7S Pro | `006-B4374-00` | 5.2 | MIP, 240×240, 64 colors | Yes | Passed | Passed | Not tested |
+| `fenix7x` | fēnix 7X | `006-B3907-00`, `006-B3910-00` | 5.2 | MIP, 280×280, 64 colors | Yes | Passed | Passed | Not tested |
+| `fenix7xpro` | fēnix 7X Pro | `006-B4376-00` | 5.2 | MIP, 280×280, 64 colors | Yes | Passed | Passed | Not tested |
+| `fenix7xpronowifi` | fēnix 7X Pro (No Wi-Fi) | `006-B4596-00` | 5.2 | MIP, 280×280, 64 colors | Yes | N/A (no Wi-Fi) | Passed | Not tested |
 
 ## fēnix 8 family
 
