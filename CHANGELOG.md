@@ -22,6 +22,9 @@ Projekt stosuje zasady zbliżone do Keep a Changelog.
 - Added device-specific resources for memory-constrained fēnix 6 family devices.
 - Added and verified fēnix 7, fēnix 7 Pro, fēnix 7 Pro Solar (No Wi-Fi), fēnix 7S, fēnix 7S Pro, fēnix 7X, fēnix 7X Pro, and fēnix 7X Pro (No Wi-Fi) compatibility.
 - Added device-specific launcher icons and scaled item graphics for the fēnix 7 family.
+- Added and verified fēnix 8 43mm, fēnix 8 47mm/51mm, fēnix 8 Pro, fēnix 8 Solar 47mm, and fēnix 8 Solar 51mm compatibility.
+- Added device-specific launcher icons and scaled item graphics where required for the fēnix 8 family.
+- Verified fēnix 8 Pro operation on a physical device.
 
 ### Fixed
 - Devices without Wi-Fi no longer restore items from the Wi-Fi configuration snapshot.
