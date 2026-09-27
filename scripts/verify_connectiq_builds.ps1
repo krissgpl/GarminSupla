@@ -5,7 +5,7 @@ param(
 
     [string[]]$Targets = @(
         "fr245m",
-        "vivoactive3",
+        "vivoactive3m",
         "venusq2",
         "fenix7pronowifi",
         "fenix8pro47mm"

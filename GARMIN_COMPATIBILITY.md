@@ -129,15 +129,23 @@ Venu Sq 2 Music. Venu Sq 2 does not support Wi-Fi.
 
 ## vívoactive
 
+
 | Connect IQ product ID | Garmin model | Known part numbers | Connect IQ API | Display | Touch | Wi-Fi Sync | Simulator | Physical device |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `vivoactive3` | vívoactive 3 | `006-B2700-00`, `006-B2976-00`, `006-B3446-00` | 3.1 | MIP, 240×240, 64 colors | Yes | Not tested | Not tested | Not tested |
-| `vivoactive3m` | vívoactive 3 Music | `006-B2988-00`, `006-B3163-00` | 3.2 | MIP, 240×240, 64 colors | Yes | Not tested | Not tested | Not tested |
-| `vivoactive3mlte` | vívoactive 3 Music LTE | `006-B3066-00` | 3.1 | MIP, 240×240, 64 colors | Yes | Not tested | Not tested | Not tested |
-| `vivoactive4` | vívoactive 4 | `006-B3225-00`, `006-B3388-00` | 3.3 | MIP, 260×260, 64 colors | Yes | Not tested | Not tested | Not tested |
-| `vivoactive4s` | vívoactive 4S | `006-B3224-00`, `006-B3387-00` | 3.3 | MIP, 218×218, 64 colors | Yes | Not tested | Not tested | Not tested |
-| `vivoactive5` | vívoactive 5 | `006-B4426-00` | 5.2 | AMOLED, 390×390 | Yes | Not tested | Not tested | Not tested |
-| `vivoactive6` | vívoactive 6 | `006-B4625-00` | 6.0 | AMOLED, 390×390 | Yes | Not tested | Not tested | Not tested |
+| `vivoactive3m` | vívoactive 3 Music | `006-B2988-00`, `006-B3163-00` | 3.2 | MIP, 240×240, 64 colors | Yes | Passed | Passed | Not tested |
+| `vivoactive3mlte` | vívoactive 3 Music LTE | `006-B3066-00` | 3.1 | MIP, 240×240, 64 colors | Yes | N/A (no Wi-Fi) | Passed | Not tested |
+| `vivoactive4` | vívoactive 4 | `006-B3225-00`, `006-B3388-00` | 3.3 | MIP, 260×260, 64 colors | Yes | Passed | Passed | Not tested |
+| `vivoactive4s` | vívoactive 4S | `006-B3224-00`, `006-B3387-00` | 3.3 | MIP, 218×218, 64 colors | Yes | Passed | Passed | Not tested |
+| `vivoactive5` | vívoactive 5 | `006-B4426-00` | 5.2 | AMOLED, 390×390 | Yes | Passed | Passed | Not tested |
+| `vivoactive6` | vívoactive 6 | `006-B4625-00` | 6.0 | AMOLED, 390×390 | Yes | Passed | Passed | Not tested |
+
+vívoactive 3 was removed from the manifest after an Out Of Memory
+error during simulator testing.
+
+All six supported vívoactive targets passed simulator testing,
+including online/offline/cached operation, item controls,
+launcher graphics, and About. Wi-Fi Sync was verified on all
+Wi-Fi-capable models. vívoactive 3 Music LTE does not support Wi-Fi.
 
 ## Connect IQ build verification
 
@@ -148,9 +156,9 @@ testing.
 Full manifest build verification was completed with Connect IQ SDK 9.2.0 on
 2026-09-27:
 
-- Manifest targets: 69
-- Installed manifest targets: 69
-- Successful builds: 69
+- Manifest targets: 68
+- Installed manifest targets: 68
+- Successful builds: 68
 - Failed builds: 0
 - Skipped / not installed targets: 0
 
@@ -169,7 +177,7 @@ verification:
 | Connect IQ product ID | Representative case |
 | --- | --- |
 | `fr245m` | API 3.3, MIP 240×240, 64 colors, Wi-Fi, scaled item graphics |
-| `vivoactive3` | API 3.1, MIP 240×240, touch |
+| `vivoactive3m` | API 3.2, MIP 240×240, 64 colors, touch, Wi-Fi, scaled item graphics |
 | `venusq2` | API 5.0, AMOLED 320×360, rectangular touch display, no Wi-Fi |
 | `fenix7pronowifi` | API 5.2, MIP 260×260, touch, no Wi-Fi |
 | `fenix8pro47mm` | API 6.0, AMOLED 454×454, touch, target-specific resources |

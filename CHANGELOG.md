@@ -10,6 +10,30 @@ This project follows conventions based on Keep a Changelog.
 
 ---
 
+## [Connect IQ 0.11.0] - 2026-09-27
+
+### Improved
+- Completed simulator testing for six supported vívoactive targets: vívoactive 3 Music, 3 Music LTE, 4, 4S, 5, and 6.
+- Added device-specific launcher icons for all six supported vívoactive models.
+- Added scaled item graphics for vívoactive 3 Music, 3 Music LTE, 4, and 4S.
+- Verified online, offline, and cached operation across the supported vívoactive family.
+- Verified About and Wi-Fi refresh on supported devices. vívoactive 3 Music LTE does not support Wi-Fi.
+- Updated the default build verification targets to replace vívoactive 3 with vívoactive 3 Music.
+
+### Removed
+- Removed vívoactive 3 after simulator testing revealed an Out Of Memory error.
+
+### Verification
+- Full manifest build verification completed with Connect IQ SDK 9.2.0.
+- 68 manifest targets, 68 successful builds, 0 failures, 0 skipped targets.
+- Default smoke-build verification: 5 successful builds, 0 failures.
+
+### Versioning
+- Connect IQ application version: `0.11.0`.
+- Backend/dashboard version remains `0.4.0`.
+
+---
+
 ## [Connect IQ 0.10.0] - 2026-09-27
 
 ### Improved
