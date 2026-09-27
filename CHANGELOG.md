@@ -40,6 +40,7 @@ Projekt stosuje zasady zbliżone do Keep a Changelog.
 
 ### Removed
 - Removed the fēnix 6 non-Pro target after runtime testing showed insufficient application memory for reliable operation.
+- Removed the fēnix Chronos target after simulator testing revealed an Out Of Memory crash during application startup.
 
 ### Versioning
 - Backend/dashboard version remains `0.4.0`.
