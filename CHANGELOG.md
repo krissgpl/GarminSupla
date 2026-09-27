@@ -28,6 +28,8 @@ Projekt stosuje zasady zbliżone do Keep a Changelog.
 - Added and verified all seven fēnix 9 family targets in the simulator.
 - Added device-specific launcher icons for the fēnix 9 family.
 - Added scaled item graphics for fēnix 9 Pro Solar 47mm and 51mm.
+- Added and verified fēnix E compatibility in the simulator.
+- Added a device-specific 60×60 launcher icon for fēnix E.
 
 ### Fixed
 - Devices without Wi-Fi no longer restore items from the Wi-Fi configuration snapshot.

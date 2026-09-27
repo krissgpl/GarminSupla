@@ -75,7 +75,7 @@ Simulator and physical-device testing are tracked separately.
 
 | Connect IQ product ID | Garmin model | Known part numbers | Connect IQ API | Display | Touch | Wi-Fi Sync | Simulator | Physical device |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `fenixe` | fēnix E | `006-B4666-00` | 6.0 | AMOLED, 416×416 | Yes | Not tested | Not tested | Not tested |
+| `fenixe` | fēnix E | `006-B4666-00` | 6.0 | AMOLED, 416×416 | Yes | Passed | Passed | Not tested |
 
 ## Forerunner
 
