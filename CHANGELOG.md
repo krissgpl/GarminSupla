@@ -25,6 +25,9 @@ Projekt stosuje zasady zbliżone do Keep a Changelog.
 - Added and verified fēnix 8 43mm, fēnix 8 47mm/51mm, fēnix 8 Pro, fēnix 8 Solar 47mm, and fēnix 8 Solar 51mm compatibility.
 - Added device-specific launcher icons and scaled item graphics where required for the fēnix 8 family.
 - Verified fēnix 8 Pro operation on a physical device.
+- Added and verified all seven fēnix 9 family targets in the simulator.
+- Added device-specific launcher icons for the fēnix 9 family.
+- Added scaled item graphics for fēnix 9 Pro Solar 47mm and 51mm.
 
 ### Fixed
 - Devices without Wi-Fi no longer restore items from the Wi-Fi configuration snapshot.

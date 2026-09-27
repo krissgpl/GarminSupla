@@ -63,13 +63,13 @@ Simulator and physical-device testing are tracked separately.
 
 | Connect IQ product ID | Garmin model | Known part numbers | Connect IQ API | Display | Touch | Wi-Fi Sync | Simulator | Physical device |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `fenix943mm` | fēnix 9 43mm | `006-B5133-00` | 6.0 | AMOLED, 416×416 | Yes | Not tested | Not tested | Not tested |
-| `fenix947mm` | fēnix 9 47mm / 51mm | `006-B5134-00` | 6.0 | AMOLED, 454×454 | Yes | Not tested | Not tested | Not tested |
-| `fenix9pro43mm` | fēnix 9 Pro 43mm | `006-B4952-00` | 6.0 | AMOLED, 416×416 | Yes | Not tested | Not tested | Not tested |
-| `fenix9pro47mm` | fēnix 9 Pro 47mm | `006-B4953-00` | 6.0 | AMOLED, 454×454 | Yes | Not tested | Not tested | Not tested |
-| `fenix9pro51mm` | fēnix 9 Pro 51mm | `006-B4954-00` | 6.0 | AMOLED, 466×466 | Yes | Not tested | Not tested | Not tested |
-| `fenix9prosolar47mm` | fēnix 9 Pro Solar 47mm | `006-B4955-00` | 6.0 | MIP, 260×260, 64 colors | Yes | Not tested | Not tested | Not tested |
-| `fenix9prosolar51mm` | fēnix 9 Pro Solar 51mm | `006-B4956-00` | 6.0 | MIP, 280×280, 64 colors | Yes | Not tested | Not tested | Not tested |
+| `fenix943mm` | fēnix 9 43mm | `006-B5133-00` | 6.0 | AMOLED, 416×416 | Yes | Passed | Passed | Not tested |
+| `fenix947mm` | fēnix 9 47mm / 51mm | `006-B5134-00` | 6.0 | AMOLED, 454×454 | Yes | Passed | Passed | Not tested |
+| `fenix9pro43mm` | fēnix 9 Pro 43mm | `006-B4952-00` | 6.0 | AMOLED, 416×416 | Yes | Passed | Passed | Not tested |
+| `fenix9pro47mm` | fēnix 9 Pro 47mm | `006-B4953-00` | 6.0 | AMOLED, 454×454 | Yes | Passed | Passed | Not tested |
+| `fenix9pro51mm` | fēnix 9 Pro 51mm | `006-B4954-00` | 6.0 | AMOLED, 466×466 | Yes | Passed | Passed | Not tested |
+| `fenix9prosolar47mm` | fēnix 9 Pro Solar 47mm | `006-B4955-00` | 6.0 | MIP, 260×260, 64 colors | Yes | Passed | Passed | Not tested |
+| `fenix9prosolar51mm` | fēnix 9 Pro Solar 51mm | `006-B4956-00` | 6.0 | MIP, 280×280, 64 colors | Yes | Passed | Passed | Not tested |
 
 ## fēnix E
 
