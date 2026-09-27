@@ -30,6 +30,9 @@ Projekt stosuje zasady zbliżone do Keep a Changelog.
 - Added scaled item graphics for fēnix 9 Pro Solar 47mm and 51mm.
 - Added and verified fēnix E compatibility in the simulator.
 - Added a device-specific 60×60 launcher icon for fēnix E.
+- Verified 21 Forerunner targets in the simulator, including online, offline, cached data, item controls, and Wi-Fi behavior.
+- Added device-specific launcher icons for supported Forerunner models.
+- Added scaled item graphics for Forerunner models with smaller MIP displays.
 
 ### Fixed
 - Devices without Wi-Fi no longer restore items from the Wi-Fi configuration snapshot.
@@ -41,6 +44,7 @@ Projekt stosuje zasady zbliżone do Keep a Changelog.
 ### Removed
 - Removed the fēnix 6 non-Pro target after runtime testing showed insufficient application memory for reliable operation.
 - Removed the fēnix Chronos target after simulator testing revealed an Out Of Memory crash during application startup.
+- Removed Forerunner 55, 245, 645, and 935 targets after simulator testing revealed Out Of Memory errors.
 
 ### Versioning
 - Backend/dashboard version remains `0.4.0`.
