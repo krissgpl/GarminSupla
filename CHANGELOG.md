@@ -27,6 +27,7 @@ This project follows conventions based on Keep a Changelog.
 - Full manifest build verification completed with Connect IQ SDK 9.2.0.
 - 68 manifest targets, 68 successful builds, 0 failures, 0 skipped targets.
 - Default smoke-build verification: 5 successful builds, 0 failures.
+- Verified Connect IQ 0.11.0 on a physical fēnix 8 Pro.
 
 ### Versioning
 - Connect IQ application version: `0.11.0`.
