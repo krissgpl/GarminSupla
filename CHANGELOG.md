@@ -1,12 +1,38 @@
 # Changelog
 
-Wszystkie istotne zmiany w projekcie GarminSupla.
+All notable changes to the GarminSupla project are documented in this file.
 
-Projekt stosuje zasady zbliżone do Keep a Changelog.
+This project follows conventions based on Keep a Changelog.
 
 ---
 
 ## [Unreleased]
+
+---
+
+## [Connect IQ 0.10.0] - 2026-09-27
+
+### Improved
+- Added and simulator-tested 13 supported Venu family targets.
+- Added device-specific launcher icons for Venu, Venu 2, Venu 3, Venu 4, Venu Sq 2, Venu Sq Music, and Venu X1 models.
+- Added scaled item graphics for Venu Sq Music.
+- Added action-menu gesture support for Venu 4 41mm, Venu 4 45mm, and Venu X1.
+- Verified Wi-Fi refresh and About menu operation on Venu 4 and Venu X1.
+
+### Fixed
+- Improved the About screen layout for 320×360 displays used by Venu Sq 2 and Venu Sq 2 Music.
+- Corrected launcher icon sizes across the supported Venu family.
+
+### Removed
+- Removed Venu Sq after simulator testing revealed an Out Of Memory error.
+
+### Verification
+- Full manifest build verification completed with Connect IQ SDK 9.2.0.
+- 69 manifest targets, 69 successful builds, 0 failures, 0 skipped targets.
+
+### Versioning
+- Connect IQ application version: `0.10.0`.
+- Backend/dashboard version remains `0.4.0`.
 
 ---
 

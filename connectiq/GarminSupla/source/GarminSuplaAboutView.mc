@@ -102,15 +102,29 @@ class GarminSuplaAboutView
 		var width = dc.getWidth();
 		var height = dc.getHeight();
 
-        var compactLayout =
-            width == 240
-            && height == 240;
+		var sq2Layout =
+			width == 320
+			&& height == 360;
+
+		var compactLayout =
+			(width == 240 && height == 240)
+			|| sq2Layout;
+
+		var titleFont =
+			sq2Layout
+			? Graphics.FONT_SMALL
+			: Graphics.FONT_MEDIUM;
+
+		var authorFont =
+			sq2Layout
+			? Graphics.FONT_XTINY
+			: Graphics.FONT_SMALL;
 
 		// Application name
 		dc.drawText(
 			width / 2,
 			height * 0.10,
-			Graphics.FONT_MEDIUM,
+			titleFont,
 			_appName,
 			Graphics.TEXT_JUSTIFY_CENTER
 		);
@@ -127,7 +141,7 @@ class GarminSuplaAboutView
 		dc.drawText(
 			width / 2,
 			height * 0.39,
-			Graphics.FONT_SMALL,
+			authorFont,
 			_author,
 			Graphics.TEXT_JUSTIFY_CENTER
 		);

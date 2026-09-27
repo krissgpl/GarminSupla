@@ -1,0 +1,307 @@
+<drawables xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="https://developer.garmin.com/downloads/connect-iq/resources.xsd">
+
+	<bitmap
+		id="LauncherIcon"
+		filename="launcher_icon.png"
+		dithering="none"
+	/>
+
+    <bitmap
+        id="DoubleSwingGateClosed"
+        filename="../../resources/drawables/double_swing_gate_closed.png"
+        dithering="none"
+        scaleX="65%"
+        scaleY="65%"
+        scaleRelativeTo="image"
+    />
+
+    <bitmap
+        id="DoubleSwingGateOpened"
+        filename="../../resources/drawables/double_swing_gate_opened.png"
+        dithering="none"
+        scaleX="65%"
+        scaleY="65%"
+        scaleRelativeTo="image"
+    />
+
+    <bitmap
+        id="DoubleSwingGateUnknown"
+        filename="../../resources/drawables/double_swing_gate_unknown.png"
+        dithering="none"
+        scaleX="65%"
+        scaleY="65%"
+        scaleRelativeTo="image"
+    />
+
+    <bitmap
+        id="DoubleSwingGateOffline"
+        filename="../../resources/drawables/double_swing_gate_offline.png"
+        dithering="none"
+        scaleX="65%"
+        scaleY="65%"
+        scaleRelativeTo="image"
+    />
+
+    <bitmap
+        id="SlidingGateClosed"
+        filename="../../resources/drawables/sliding_gate_closed.png"
+        dithering="none"
+        scaleX="65%"
+        scaleY="65%"
+        scaleRelativeTo="image"
+    />
+
+    <bitmap
+        id="SlidingGateOpened"
+        filename="../../resources/drawables/sliding_gate_opened.png"
+        dithering="none"
+        scaleX="65%"
+        scaleY="65%"
+        scaleRelativeTo="image"
+    />
+
+    <bitmap
+        id="SlidingGateUnknown"
+        filename="../../resources/drawables/sliding_gate_unknown.png"
+        dithering="none"
+        scaleX="65%"
+        scaleY="65%"
+        scaleRelativeTo="image"
+    />
+
+    <bitmap
+        id="SlidingGateOffline"
+        filename="../../resources/drawables/sliding_gate_offline.png"
+        dithering="none"
+        scaleX="65%"
+        scaleY="65%"
+        scaleRelativeTo="image"
+    />
+
+    <bitmap
+        id="GarageGateClosed"
+        filename="../../resources/drawables/garage_gate_closed.png"
+        dithering="none"
+        scaleX="65%"
+        scaleY="65%"
+        scaleRelativeTo="image"
+    />
+
+    <bitmap
+        id="GarageGateOpened"
+        filename="../../resources/drawables/garage_gate_opened.png"
+        dithering="none"
+        scaleX="65%"
+        scaleY="65%"
+        scaleRelativeTo="image"
+    />
+
+    <bitmap
+        id="GarageGateUnknown"
+        filename="../../resources/drawables/garage_gate_unknown.png"
+        dithering="none"
+        scaleX="65%"
+        scaleY="65%"
+        scaleRelativeTo="image"
+    />
+
+    <bitmap
+        id="GarageGateOffline"
+        filename="../../resources/drawables/garage_gate_offline.png"
+        dithering="none"
+        scaleX="65%"
+        scaleY="65%"
+        scaleRelativeTo="image"
+    />
+
+    <bitmap
+        id="LightOn"
+        filename="../../resources/drawables/light_on.png"
+        dithering="none"
+        scaleX="65%"
+        scaleY="65%"
+        scaleRelativeTo="image"
+    />
+
+    <bitmap
+        id="LightOff"
+        filename="../../resources/drawables/light_off.png"
+        dithering="none"
+        scaleX="65%"
+        scaleY="65%"
+        scaleRelativeTo="image"
+    />
+
+    <bitmap
+        id="LightUnknown"
+        filename="../../resources/drawables/light_unknown.png"
+        dithering="none"
+        scaleX="65%"
+        scaleY="65%"
+        scaleRelativeTo="image"
+    />
+
+    <bitmap
+        id="LightOffline"
+        filename="../../resources/drawables/light_offline.png"
+        dithering="none"
+        scaleX="65%"
+        scaleY="65%"
+        scaleRelativeTo="image"
+    />
+
+    <bitmap
+        id="SwitchOn"
+        filename="../../resources/drawables/switch_on.png"
+        dithering="none"
+        scaleX="65%"
+        scaleY="65%"
+        scaleRelativeTo="image"
+    />
+
+    <bitmap
+        id="SwitchOff"
+        filename="../../resources/drawables/switch_off.png"
+        dithering="none"
+        scaleX="65%"
+        scaleY="65%"
+        scaleRelativeTo="image"
+    />
+
+    <bitmap
+        id="SwitchUnknown"
+        filename="../../resources/drawables/switch_unknown.png"
+        dithering="none"
+        scaleX="65%"
+        scaleY="65%"
+        scaleRelativeTo="image"
+    />
+
+    <bitmap
+        id="SwitchOffline"
+        filename="../../resources/drawables/switch_offline.png"
+        dithering="none"
+        scaleX="65%"
+        scaleY="65%"
+        scaleRelativeTo="image"
+    />
+
+    <bitmap
+        id="RollerShutterOpened"
+        filename="../../resources/drawables/roller_shutter_opened.png"
+        dithering="none"
+        scaleX="65%"
+        scaleY="65%"
+        scaleRelativeTo="image"
+    />
+
+    <bitmap
+        id="RollerShutterPartial"
+        filename="../../resources/drawables/roller_shutter_partial.png"
+        dithering="none"
+        scaleX="65%"
+        scaleY="65%"
+        scaleRelativeTo="image"
+    />
+
+    <bitmap
+        id="RollerShutterClosed"
+        filename="../../resources/drawables/roller_shutter_closed.png"
+        dithering="none"
+        scaleX="65%"
+        scaleY="65%"
+        scaleRelativeTo="image"
+    />
+
+    <bitmap
+        id="RollerShutterOffline"
+        filename="../../resources/drawables/roller_shutter_offline.png"
+        dithering="none"
+        scaleX="65%"
+        scaleY="65%"
+        scaleRelativeTo="image"
+    />
+
+    <bitmap
+        id="RollerShutterUnknown"
+        filename="../../resources/drawables/roller_shutter_unknown.png"
+        dithering="none"
+        scaleX="65%"
+        scaleY="65%"
+        scaleRelativeTo="image"
+    />
+
+    <bitmap
+        id="AwningClosed"
+        filename="../../resources/drawables/awning_closed.png"
+        dithering="none"
+        scaleX="65%"
+        scaleY="65%"
+        scaleRelativeTo="image"
+    />
+
+    <bitmap
+        id="AwningPartiallyOpened"
+        filename="../../resources/drawables/awning_partially_opened.png"
+        dithering="none"
+        scaleX="65%"
+        scaleY="65%"
+        scaleRelativeTo="image"
+    />
+
+    <bitmap
+        id="AwningOpened"
+        filename="../../resources/drawables/awning_opened.png"
+        dithering="none"
+        scaleX="65%"
+        scaleY="65%"
+        scaleRelativeTo="image"
+    />
+
+    <bitmap
+        id="AwningOffline"
+        filename="../../resources/drawables/awning_offline.png"
+        dithering="none"
+        scaleX="65%"
+        scaleY="65%"
+        scaleRelativeTo="image"
+    />
+
+    <bitmap
+        id="AwningUnknown"
+        filename="../../resources/drawables/awning_unknown.png"
+        dithering="none"
+        scaleX="65%"
+        scaleY="65%"
+        scaleRelativeTo="image"
+    />
+
+    <bitmap
+        id="Scene"
+        filename="../../resources/drawables/scene.png"
+        dithering="none"
+        scaleX="65%"
+        scaleY="65%"
+        scaleRelativeTo="image"
+    />
+
+    <bitmap
+        id="SceneOffline"
+        filename="../../resources/drawables/scene_offline.png"
+        dithering="none"
+        scaleX="65%"
+        scaleY="65%"
+        scaleRelativeTo="image"
+    />
+
+    <bitmap
+        id="SceneUnknown"
+        filename="../../resources/drawables/scene_unknown.png"
+        dithering="none"
+        scaleX="65%"
+        scaleY="65%"
+        scaleRelativeTo="image"
+    />
+
+</drawables>

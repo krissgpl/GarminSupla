@@ -736,8 +736,15 @@ function clearItemBitmaps() as Void {
     function onLayout(dc as Dc) as Void {
     }
 
-    function onShow() as Void {
-    }
+	function onShow() as Void {
+
+		if (WatchUi.View has :setActionMenuIndicator) {
+
+			setActionMenuIndicator({
+				:enabled => true
+			});
+		}
+	}
 
 	function getItemPositionText() as Lang.String {
 

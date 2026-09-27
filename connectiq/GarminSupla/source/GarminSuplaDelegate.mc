@@ -35,6 +35,15 @@ class GarminSuplaDelegate extends WatchUi.BehaviorDelegate {
 		return _api.isWifiAvailable();
 	}
 
+	function onActionMenu() as Lang.Boolean {
+
+		System.println(
+			"ACTION MENU triggered"
+		);
+
+		return onMenu();
+	}
+
     function onMenu() as Boolean {
 
         var language =
