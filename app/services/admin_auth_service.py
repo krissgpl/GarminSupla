@@ -61,6 +61,11 @@ class AdminAuthService:
             salt=TOTP_ENROLLMENT_SALT,
         )
 
+    def administrator_exists(self) -> bool:
+        """Return True if administrator storage exists."""
+
+        return self._store.exists()
+
     def verify_credentials(
         self,
         username: str,

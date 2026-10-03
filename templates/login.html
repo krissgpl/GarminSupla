@@ -6,12 +6,20 @@
     {% set username_label = "Nazwa użytkownika" %}
     {% set password_label = "Hasło" %}
     {% set sign_in_label = "Zaloguj się" %}
+    {% set setup_heading = "Konto administratora nie zostało jeszcze utworzone" %}
+    {% set setup_description = "Przy pierwszej instalacji utwórz konto administratora lokalnie na serwerze GarminSupla." %}
+    {% set setup_command_label = "Uruchom polecenie:" %}
+    {% set setup_after = "Po utworzeniu konta odśwież tę stronę i zaloguj się ustawionymi danymi." %}
 {% else %}
     {% set login_heading = "Administrator Login" %}
     {% set login_description = "Sign in to manage GarminSupla." %}
     {% set username_label = "Username" %}
     {% set password_label = "Password" %}
     {% set sign_in_label = "Sign In" %}
+    {% set setup_heading = "Administrator account has not been created yet" %}
+    {% set setup_description = "For the first installation, create the administrator account locally on the GarminSupla host." %}
+    {% set setup_command_label = "Run:" %}
+    {% set setup_after = "After creating the account, refresh this page and sign in with the configured credentials." %}
 {% endif %}
 
 {% block content %}
@@ -26,76 +34,111 @@
                     <i class="bi bi-shield-lock fs-1 app-title"></i>
 
                     <h2 class="mt-3 mb-1">
-                        {{ login_heading }}
+                        {% if admin_setup_required %}
+                            {{ setup_heading }}
+                        {% else %}
+                            {{ login_heading }}
+                        {% endif %}
                     </h2>
 
                     <p class="text-muted mb-0">
-                        {{ login_description }}
+                        {% if admin_setup_required %}
+                            {{ setup_description }}
+                        {% else %}
+                            {{ login_description }}
+                        {% endif %}
                     </p>
                 </div>
 
-                {% if error %}
+                {% if admin_setup_required %}
 
                 <div
-                    class="alert alert-danger"
-                    role="alert"
+                    class="alert alert-info"
+                    role="status"
                 >
-                    {{ error }}
+                    {{ setup_command_label }}
                 </div>
 
-                {% endif %}
+                <pre
+                    class="
+                        border
+                        rounded-3
+                        p-3
+                        bg-body-tertiary
+                        text-break
+                    "
+                ><code>docker compose exec garminsupla-api python -m scripts.create_admin</code></pre>
 
-                <form
-                    method="post"
-                    action="/login"
-                >
+                <p class="text-muted small mb-0">
+                    {{ setup_after }}
+                </p>
 
-                    <div class="mb-3">
-                        <label
-                            for="username"
-                            class="form-label"
-                        >
-                            {{ username_label }}
-                        </label>
+                {% else %}
 
-                        <input
-                            type="text"
-                            class="form-control form-control-lg"
-                            id="username"
-                            name="username"
-                            autocomplete="username"
-                            required
-                            autofocus
-                        >
-                    </div>
+                    {% if error %}
 
-                    <div class="mb-4">
-                        <label
-                            for="password"
-                            class="form-label"
-                        >
-                            {{ password_label }}
-                        </label>
-
-                        <input
-                            type="password"
-                            class="form-control form-control-lg"
-                            id="password"
-                            name="password"
-                            autocomplete="current-password"
-                            required
-                        >
-                    </div>
-
-                    <button
-                        type="submit"
-                        class="btn btn-primary btn-lg w-100"
+                    <div
+                        class="alert alert-danger"
+                        role="alert"
                     >
-                        <i class="bi bi-box-arrow-in-right me-2"></i>
-                        {{ sign_in_label }}
-                    </button>
+                        {{ error }}
+                    </div>
 
-                </form>
+                    {% endif %}
+
+                    <form
+                        method="post"
+                        action="/login"
+                    >
+
+                        <div class="mb-3">
+                            <label
+                                for="username"
+                                class="form-label"
+                            >
+                                {{ username_label }}
+                            </label>
+
+                            <input
+                                type="text"
+                                class="form-control form-control-lg"
+                                id="username"
+                                name="username"
+                                autocomplete="username"
+                                required
+                                autofocus
+                            >
+                        </div>
+
+                        <div class="mb-4">
+                            <label
+                                for="password"
+                                class="form-label"
+                            >
+                                {{ password_label }}
+                            </label>
+
+                            <input
+                                type="password"
+                                class="form-control form-control-lg"
+                                id="password"
+                                name="password"
+                                autocomplete="current-password"
+                                required
+                            >
+                        </div>
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary btn-lg w-100"
+                        >
+                            <i class="bi bi-box-arrow-in-right me-2"></i>
+                            {{ sign_in_label }}
+                        </button>
+
+                    </form>
+
+                {% endif %}
 
             </div>
         </div>

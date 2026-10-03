@@ -19,6 +19,40 @@ GarminSupla is a bridge between Garmin Connect IQ devices and the SUPLA REST API
 - Docker
 - Docker Compose
 
+## First administrator account
+
+On a fresh GarminSupla installation, the administrator account must be
+created locally on the GarminSupla host.
+
+Start the application and create the account with:
+
+```bash
+docker compose up -d
+
+docker compose exec garminsupla-api \
+    python -m scripts.create_admin
+```
+
+The command prompts for:
+
+- administrator username,
+- administrator password,
+- password confirmation.
+
+The password must contain at least 12 characters. The password is entered
+without being displayed in the terminal and only its password hash is
+stored.
+
+Only one administrator account can be created. If an administrator
+already exists, the command refuses to replace it.
+
+Until the administrator account is created, the dashboard login page
+displays the local account-creation command instead of the login form.
+
+After creating the account, refresh the login page and sign in with the
+configured credentials. Two-factor authentication is disabled initially
+and can be enabled later from the dashboard.
+
 ## Dashboard administrator security
 
 The GarminSupla dashboard is protected by an administrator account.

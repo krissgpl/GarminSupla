@@ -10,6 +10,18 @@ This project follows conventions based on Keep a Changelog.
 
 ---
 
+## [0.5.1] - 2026-10-03
+
+### Improved
+- Improved the first-install administrator login flow. When no administrator account exists, the login page now displays the local account-creation command instead of the login form.
+- Documented creation of the first dashboard administrator account with `scripts.create_admin`.
+
+### Versioning
+- Backend/dashboard version: `0.5.1`.
+- Connect IQ application version remains `0.11.0`.
+
+---
+
 ## [0.5.0] - 2026-10-03
 
 ### Added

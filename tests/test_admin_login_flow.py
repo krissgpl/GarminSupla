@@ -55,6 +55,75 @@ class AdminLoginFlowTests(unittest.TestCase):
             self.settings_patch.stop
         )
 
+    def test_login_page_shows_first_install_instructions(
+        self,
+    ):
+        with patch.object(
+            admin_auth.admin_auth_service,
+            "administrator_exists",
+            return_value=False,
+        ):
+            response = self.client.get(
+                "/login",
+                follow_redirects=False,
+            )
+
+        self.assertEqual(
+            response.status_code,
+            200,
+        )
+
+        self.assertIn(
+            "Administrator account has not been created yet",
+            response.text,
+        )
+
+        self.assertIn(
+            (
+                "docker compose exec garminsupla-api "
+                "python -m scripts.create_admin"
+            ),
+            response.text,
+        )
+
+        self.assertNotIn(
+            'action="/login"',
+            response.text,
+        )
+
+    def test_login_page_displays_form_when_admin_exists(
+        self,
+    ):
+        with patch.object(
+            admin_auth.admin_auth_service,
+            "administrator_exists",
+            return_value=True,
+        ):
+            response = self.client.get(
+                "/login",
+                follow_redirects=False,
+            )
+
+        self.assertEqual(
+            response.status_code,
+            200,
+        )
+
+        self.assertIn(
+            'action="/login"',
+            response.text,
+        )
+
+        self.assertIn(
+            'name="username"',
+            response.text,
+        )
+
+        self.assertIn(
+            'name="password"',
+            response.text,
+        )
+
     def test_login_page_uses_saved_dark_theme(self):
         with patch.object(
             admin_auth.setup_service,

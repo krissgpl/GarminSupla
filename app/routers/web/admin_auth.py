@@ -69,6 +69,7 @@ def _render_login(
     request: Request,
     language: str,
     *,
+    admin_setup_required: bool = False,
     error: str | None = None,
     status_code: int = 200,
 ):
@@ -84,6 +85,8 @@ def _render_login(
             "version": settings.app_version,
             "language": language,
             "ui_theme": _resolve_ui_theme(),
+            "admin_setup_required":
+                admin_setup_required,
             "error": error,
         },
         status_code=status_code,
@@ -280,6 +283,9 @@ async def login_page(
     response = _render_login(
         request,
         language,
+        admin_setup_required=(
+            not admin_auth_service.administrator_exists()
+        ),
     )
 
     response.delete_cookie(
