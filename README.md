@@ -19,6 +19,76 @@ GarminSupla is a bridge between Garmin Connect IQ devices and the SUPLA REST API
 - Docker
 - Docker Compose
 
+## Dashboard administrator security
+
+The GarminSupla dashboard is protected by an administrator account.
+
+Optional two-factor authentication uses TOTP and is compatible with
+standard authenticator applications. Enabling 2FA provides one-time
+recovery codes. Recovery codes should be stored securely because they
+are displayed only during enrollment.
+
+Security-sensitive authentication changes invalidate existing
+administrator sessions.
+
+### Emergency 2FA reset
+
+If access to the authenticator and recovery codes is lost, 2FA can be
+reset locally from the GarminSupla host:
+
+```bash
+docker compose exec garminsupla-api \
+    python -m scripts.reset_admin_2fa
+```
+
+The command requires the exact confirmation:
+
+```text
+RESET
+```
+
+The reset:
+
+- disables administrator 2FA,
+- removes the stored TOTP secret,
+- removes all remaining recovery codes,
+- invalidates all existing administrator sessions,
+- does not change the administrator password.
+
+After the reset, sign in with the existing administrator password and
+configure 2FA again.
+
+### Emergency administrator password reset
+
+If the administrator password is lost, reset it locally from the
+GarminSupla host:
+
+```bash
+docker compose exec garminsupla-api \
+    python -m scripts.reset_admin_password
+```
+
+The command requires the exact confirmation:
+
+```text
+RESET
+```
+
+You will then be prompted to enter and confirm a new password. The
+password must contain at least 12 characters.
+
+The reset:
+
+- replaces the administrator password,
+- invalidates all existing administrator sessions,
+- preserves the current 2FA configuration.
+
+If 2FA was enabled before the password reset, it remains required when
+signing in with the new password.
+
+Both recovery commands require shell access to the GarminSupla host or
+container and should be treated as privileged administrative operations.
+
 ## Documentation
 
 - CHANGELOG.md

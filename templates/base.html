@@ -1,5 +1,9 @@
 <!DOCTYPE html>
-<html lang="{{ language | default('en') }}" data-bs-theme="light">
+<html
+    lang="{{ language | default('en') }}"
+    data-ui-theme="{{ ui_theme | default('') }}"
+    data-bs-theme="{% if ui_theme | default('') == 'dark' %}dark{% else %}light{% endif %}"
+>
 {% if language | default('en') == "pl" %}
     {% set app_tagline = "Integracja Garmin Connect IQ z SUPLA" %}
     {% set version_label = "Wersja" %}
@@ -106,7 +110,7 @@
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
 
-    <script src="{{ url_for('static', path='js/app.js') }}"></script>
+    <script src="/static/js/app.js"></script>
 
 </body>
 </html>

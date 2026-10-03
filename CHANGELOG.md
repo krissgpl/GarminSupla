@@ -10,6 +10,56 @@ This project follows conventions based on Keep a Changelog.
 
 ---
 
+## [0.5.0] - 2026-10-03
+
+### Added
+- Added optional TOTP two-factor authentication for dashboard administrators.
+- Added QR-code enrollment compatible with standard authenticator applications.
+- Added password confirmation before enabling or disabling administrator 2FA.
+- Added one-time recovery codes displayed after successful 2FA enrollment.
+- Added secure recovery-code storage using hashes instead of plaintext codes.
+- Added encrypted storage of the administrator TOTP secret.
+- Added one-time recovery-code authentication when the authenticator is unavailable.
+- Added local emergency administrator 2FA reset:
+  ```bash
+  docker compose exec garminsupla-api \
+      python -m scripts.reset_admin_2fa
+  ```
+- Added local emergency administrator password reset:
+  ```bash
+  docker compose exec garminsupla-api \
+      python -m scripts.reset_admin_password
+  ```
+- Added atomic password reset support in `AdminStore`.
+
+### Improved
+- Security-sensitive administrator authentication changes now rotate `session_version` and invalidate existing sessions.
+- Recovery-code authentication consumes each recovery code exactly once.
+- TOTP counters are persisted and protected against code reuse.
+- Emergency password reset preserves the existing 2FA configuration.
+- Emergency 2FA reset removes the TOTP secret, recovery codes, and used-counter state without changing the administrator password.
+- Added a `Copy all codes` action for newly generated recovery codes.
+- Authentication pages now follow the configured dashboard `Auto`, `Light`, or `Dark` theme.
+- The login page receives the saved theme from the backend and does not require access to the protected setup API.
+
+### Fixed
+- Fixed loading of the shared dashboard JavaScript behind an HTTPS reverse proxy by using a root-relative static resource path.
+- Fixed the login page remaining permanently in light mode when the dashboard was configured for dark mode.
+- Updated authentication test fixtures to include the dashboard theme setting.
+
+### Verification
+- Manually verified administrator 2FA enrollment, TOTP login, recovery-code login, and 2FA disable flow.
+- Manually verified emergency 2FA reset from the container console.
+- Manually verified emergency administrator password reset with both 2FA disabled and enabled.
+- Verified that password reset invalidates existing sessions while preserving 2FA configuration.
+- Backend regression suite: 135 tests passed.
+
+### Versioning
+- Backend/dashboard version: `0.5.0`.
+- Connect IQ application version remains `0.11.0`.
+
+---
+
 ## [Connect IQ 0.11.0] - 2026-09-27
 
 ### Improved

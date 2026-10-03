@@ -302,14 +302,16 @@
 
 # Dashboard Authentication
 
-- [ ] Add two-factor authentication for dashboard administrators.
+- [X] Add two-factor authentication for dashboard administrators.
   - Use TOTP compatible with standard authenticator applications.
   - Add QR-code enrollment.
   - Require password confirmation before enabling or disabling 2FA.
   - Generate one-time recovery codes.
   - Store recovery codes securely.
   - Protect the TOTP secret from accidental exposure and logging.
-  - Define a secure recovery procedure if the authenticator is lost.
+  - Provide a local emergency 2FA reset procedure if the authenticator is lost.
+  - Provide a local emergency administrator password reset procedure.
+  - Preserve 2FA configuration when resetting only the administrator password.
   - Invalidate or rotate existing sessions when security-sensitive authentication settings change.
 
 

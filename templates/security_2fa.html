@@ -1,0 +1,504 @@
+{% extends "base.html" %}
+
+{% if language == "pl" %}
+    {% set heading = "Uwierzytelnianie dwuskładnikowe" %}
+    {% set description = "Zwiększ bezpieczeństwo konta administratora za pomocą aplikacji uwierzytelniającej." %}
+    {% set enabled_title = "2FA jest włączone" %}
+    {% set enabled_description = "Logowanie administratora wymaga hasła oraz kodu z aplikacji uwierzytelniającej." %}
+    {% set password_title = "Potwierdź hasło" %}
+    {% set password_description = "Przed konfiguracją 2FA potwierdź aktualne hasło administratora." %}
+    {% set password_label = "Hasło" %}
+    {% set continue_label = "Kontynuuj" %}
+    {% set setup_title = "Konfiguracja aplikacji uwierzytelniającej" %}
+    {% set setup_description = "Zeskanuj poniższy kod QR w aplikacji uwierzytelniającej." %}
+    {% set retry_description = "Konfiguracja oczekuje na potwierdzenie. Wpisz nowy kod z aplikacji uwierzytelniającej." %}
+    {% set qr_alt = "Kod QR konfiguracji uwierzytelniania dwuskładnikowego" %}
+    {% set manual_label = "Nie możesz zeskanować kodu? Pokaż adres konfiguracji" %}
+    {% set uri_label = "Provisioning URI" %}
+    {% set uri_warning = "Nie udostępniaj kodu QR ani tego adresu. Zawierają sekret Twojego drugiego składnika." %}
+    {% set code_label = "Kod uwierzytelniający" %}
+    {% set activate_label = "Włącz 2FA" %}
+    {% set restart_label = "Rozpocznij konfigurację od początku" %}
+    {% set recovery_title = "Zapisz kody odzyskiwania" %}
+    {% set recovery_description = "2FA zostało włączone. Zapisz poniższe kody w bezpiecznym miejscu. Każdy kod może zostać użyty tylko raz." %}
+    {% set recovery_warning = "Te kody są wyświetlane tylko teraz. Nie będzie można ich ponownie odczytać." %}
+    {% set login_label = "Przejdź do logowania" %}
+    {% set back_label = "Wróć do panelu" %}
+    {% set disable_title = "Wyłącz uwierzytelnianie dwuskładnikowe" %}
+    {% set disable_description = "Aby wyłączyć 2FA, potwierdź aktualne hasło administratora." %}
+    {% set disable_warning = "Wyłączenie 2FA usunie sekret aplikacji uwierzytelniającej oraz wszystkie pozostałe kody odzyskiwania." %}
+    {% set disable_label = "Wyłącz 2FA" %}
+    {% set disabled_title = "2FA zostało wyłączone" %}
+    {% set disabled_description = "Uwierzytelnianie dwuskładnikowe zostało wyłączone. Ze względów bezpieczeństwa zaloguj się ponownie." %}
+    {% set recovery_copy_label = "Kopiuj wszystkie kody" %}
+    {% set recovery_copied_label = "Skopiowano" %}
+    {% set recovery_copy_failed_label = "Nie udało się skopiować" %}
+{% else %}
+    {% set heading = "Two-factor authentication" %}
+    {% set description = "Increase administrator account security with an authenticator application." %}
+    {% set enabled_title = "2FA is enabled" %}
+    {% set enabled_description = "Administrator login requires both the password and a code from the authenticator application." %}
+    {% set password_title = "Confirm password" %}
+    {% set password_description = "Confirm the current administrator password before configuring 2FA." %}
+    {% set password_label = "Password" %}
+    {% set continue_label = "Continue" %}
+    {% set setup_title = "Authenticator application setup" %}
+    {% set setup_description = "Scan the QR code below with your authenticator application." %}
+    {% set retry_description = "Setup is waiting for confirmation. Enter a new code from your authenticator application." %}
+    {% set qr_alt = "QR code for two-factor authentication setup" %}
+    {% set manual_label = "Cannot scan the code? Show the setup address" %}
+    {% set uri_label = "Provisioning URI" %}
+    {% set uri_warning = "Do not share the QR code or this address. They contain the secret for your second authentication factor." %}
+    {% set code_label = "Authentication code" %}
+    {% set activate_label = "Enable 2FA" %}
+    {% set restart_label = "Start setup again" %}
+    {% set recovery_title = "Save your recovery codes" %}
+    {% set recovery_description = "2FA is now enabled. Store these codes in a safe place. Each code can be used only once." %}
+    {% set recovery_warning = "These codes are displayed only now. They cannot be retrieved again." %}
+    {% set login_label = "Continue to login" %}
+    {% set back_label = "Back to dashboard" %}
+    {% set disable_title = "Disable two-factor authentication" %}
+    {% set disable_description = "Confirm the current administrator password to disable 2FA." %}
+    {% set disable_warning = "Disabling 2FA removes the authenticator secret and all remaining recovery codes." %}
+    {% set disable_label = "Disable 2FA" %}
+    {% set disabled_title = "2FA has been disabled" %}
+    {% set disabled_description = "Two-factor authentication has been disabled. Sign in again to continue." %}
+    {% set recovery_copy_label = "Copy all codes" %}
+    {% set recovery_copied_label = "Copied" %}
+    {% set recovery_copy_failed_label = "Copy failed" %}
+{% endif %}
+
+{% block content %}
+
+<div class="row justify-content-center w-100">
+    <div class="col-12 col-md-9 col-lg-7 col-xl-6">
+
+        <div class="card shadow-sm rounded-4 border-0">
+            <div class="card-body p-4 p-lg-5">
+
+                <div class="text-center mb-4">
+
+                    <i class="bi bi-shield-lock fs-1 app-title"></i>
+
+                    <h2 class="mt-3 mb-1">
+                        {{ heading }}
+                    </h2>
+
+                    <p class="text-muted mb-0">
+                        {{ description }}
+                    </p>
+
+                </div>
+
+                {% if error %}
+
+                <div
+                    class="alert alert-danger"
+                    role="alert"
+                >
+                    {{ error }}
+                </div>
+
+                {% endif %}
+
+                {% if recovery_codes %}
+
+                <div
+                    class="alert alert-success"
+                    role="status"
+                >
+                    <h5 class="alert-heading">
+                        <i class="bi bi-shield-check me-2"></i>
+                        {{ recovery_title }}
+                    </h5>
+
+                    <p class="mb-0">
+                        {{ recovery_description }}
+                    </p>
+                </div>
+
+                <button
+                    type="button"
+                    id="copy-recovery-codes"
+                    class="btn btn-outline-secondary w-100 mb-3"
+                    data-copy-label="{{ recovery_copy_label }}"
+                    data-copied-label="{{ recovery_copied_label }}"
+                    data-copy-failed-label="{{ recovery_copy_failed_label }}"
+                >
+                    <i class="bi bi-clipboard me-2"></i>
+                    <span id="copy-recovery-codes-label">
+                        {{ recovery_copy_label }}
+                    </span>
+                </button>
+
+                <div
+                    id="recovery-codes"
+                    class="border rounded-3 p-3 mb-3"
+                >
+
+                    <div class="row g-2">
+
+                        {% for recovery_code in recovery_codes %}
+
+                        <div class="col-12 col-sm-6">
+                            <code
+                                class="
+                                    recovery-code
+                                    d-block
+                                    border
+                                    rounded-3
+                                    p-2
+                                    text-center
+                                    user-select-all
+                                "
+                            >{{ recovery_code }}</code>
+                        </div>
+
+                        {% endfor %}
+
+                    </div>
+
+                </div>
+
+                <div
+                    class="alert alert-warning"
+                    role="alert"
+                >
+                    <i class="bi bi-exclamation-triangle me-2"></i>
+                    {{ recovery_warning }}
+                </div>
+
+                <a
+                    href="/login"
+                    class="btn btn-primary btn-lg w-100"
+                >
+                    <i class="bi bi-box-arrow-in-right me-2"></i>
+                    {{ login_label }}
+                </a>
+
+                {% elif totp_disabled %}
+
+                <div
+                    class="alert alert-success"
+                    role="status"
+                >
+                    <h5 class="alert-heading">
+                        <i class="bi bi-shield-check me-2"></i>
+                        {{ disabled_title }}
+                    </h5>
+
+                    <p class="mb-0">
+                        {{ disabled_description }}
+                    </p>
+                </div>
+
+                <a
+                    href="/login"
+                    class="btn btn-primary btn-lg w-100"
+                >
+                    <i class="bi bi-box-arrow-in-right me-2"></i>
+                    {{ login_label }}
+                </a>
+
+                {% elif totp_enabled %}
+
+                <div
+                    class="alert alert-success mb-4"
+                    role="status"
+                >
+                    <h5 class="alert-heading">
+                        <i class="bi bi-shield-check me-2"></i>
+                        {{ enabled_title }}
+                    </h5>
+
+                    <p class="mb-0">
+                        {{ enabled_description }}
+                    </p>
+                </div>
+
+                <div class="mt-4">
+
+                    <h5 class="mb-2">
+                        {{ disable_title }}
+                    </h5>
+
+                    <p class="text-muted">
+                        {{ disable_description }}
+                    </p>
+
+                    <div
+                        class="alert alert-warning"
+                        role="alert"
+                    >
+                        <i class="bi bi-exclamation-triangle me-2"></i>
+                        {{ disable_warning }}
+                    </div>
+
+                    <form
+                        method="post"
+                        action="/security/2fa/disable"
+                    >
+
+                        <input
+                            type="hidden"
+                            name="csrf_token"
+                            value="{{ csrf_token }}"
+                        >
+
+                        <div class="mb-3">
+
+                            <label
+                                for="disable-password"
+                                class="form-label"
+                            >
+                                {{ password_label }}
+                            </label>
+
+                            <input
+                                type="password"
+                                class="form-control form-control-lg"
+                                id="disable-password"
+                                name="password"
+                                autocomplete="current-password"
+                                required
+                            >
+
+                        </div>
+
+                        <button
+                            type="submit"
+                            class="
+                                btn
+                                btn-outline-danger
+                                btn-lg
+                                w-100
+                            "
+                        >
+                            <i class="bi bi-shield-x me-2"></i>
+                            {{ disable_label }}
+                        </button>
+
+                    </form>
+
+                </div>
+
+                {% elif enrollment_pending %}
+
+                <div class="mb-4">
+
+                    <h5 class="mb-2">
+                        <i class="bi bi-qr-code me-2"></i>
+                        {{ setup_title }}
+                    </h5>
+
+                    {% if provisioning_uri %}
+
+                    <p class="text-muted">
+                        {{ setup_description }}
+                    </p>
+
+                    <div class="text-center my-4">
+
+                        <img
+                            id="totp-qr-code"
+                            src="{{ qr_data_uri }}"
+                            alt="{{ qr_alt }}"
+                            class="
+                                img-fluid
+                                bg-white
+                                border
+                                rounded-3
+                                p-2
+                            "
+                            style="max-width: 320px;"
+                        >
+
+                    </div>
+
+                    <details class="mb-3">
+
+                        <summary class="mb-3">
+                            {{ manual_label }}
+                        </summary>
+
+                        <label
+                            for="totp-provisioning-uri"
+                            class="form-label"
+                        >
+                            {{ uri_label }}
+                        </label>
+
+                        <div
+                            id="totp-provisioning-uri"
+                            class="
+                                border
+                                rounded-3
+                                p-3
+                                bg-body-tertiary
+                                font-monospace
+                                small
+                                text-break
+                                user-select-all
+                            "
+                        >{{ provisioning_uri }}</div>
+
+                    </details>
+
+                    <div
+                        class="alert alert-warning mt-3"
+                        role="alert"
+                    >
+                        <i class="bi bi-exclamation-triangle me-2"></i>
+                        {{ uri_warning }}
+                    </div>
+
+                    {% else %}
+
+                    <p class="text-muted">
+                        {{ retry_description }}
+                    </p>
+
+                    {% endif %}
+
+                    <form
+                        method="post"
+                        action="/security/2fa/confirm"
+                    >
+
+                        <input
+                            type="hidden"
+                            name="csrf_token"
+                            value="{{ csrf_token }}"
+                        >
+
+                        <div class="mb-3">
+
+                            <label
+                                for="code"
+                                class="form-label"
+                            >
+                                {{ code_label }}
+                            </label>
+
+                            <input
+                                type="text"
+                                class="
+                                    form-control
+                                    form-control-lg
+                                    text-center
+                                "
+                                id="code"
+                                name="code"
+                                inputmode="numeric"
+                                autocomplete="one-time-code"
+                                pattern="[0-9]{6}"
+                                minlength="6"
+                                maxlength="6"
+                                required
+                                autofocus
+                            >
+
+                        </div>
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary btn-lg w-100"
+                        >
+                            <i class="bi bi-shield-check me-2"></i>
+                            {{ activate_label }}
+                        </button>
+
+                    </form>
+
+                    <div class="text-center mt-3">
+                        <a
+                            href="/security/2fa"
+                            class="text-decoration-none"
+                        >
+                            {{ restart_label }}
+                        </a>
+                    </div>
+
+                </div>
+
+                {% else %}
+
+                <div class="mb-4">
+
+                    <h5 class="mb-2">
+                        {{ password_title }}
+                    </h5>
+
+                    <p class="text-muted">
+                        {{ password_description }}
+                    </p>
+
+                </div>
+
+                <form
+                    method="post"
+                    action="/security/2fa/verify-password"
+                >
+
+                    <input
+                        type="hidden"
+                        name="csrf_token"
+                        value="{{ csrf_token }}"
+                    >
+
+                    <div class="mb-4">
+
+                        <label
+                            for="password"
+                            class="form-label"
+                        >
+                            {{ password_label }}
+                        </label>
+
+                        <input
+                            type="password"
+                            class="form-control form-control-lg"
+                            id="password"
+                            name="password"
+                            autocomplete="current-password"
+                            required
+                            autofocus
+                        >
+
+                    </div>
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary btn-lg w-100"
+                    >
+                        <i class="bi bi-arrow-right-circle me-2"></i>
+                        {{ continue_label }}
+                    </button>
+
+                </form>
+
+                {% endif %}
+
+                {% if not recovery_codes and not totp_disabled %}
+
+                <div class="text-center mt-4">
+
+                    <a
+                        href="/dashboard"
+                        class="text-decoration-none"
+                    >
+                        <i class="bi bi-arrow-left me-1"></i>
+                        {{ back_label }}
+                    </a>
+
+                </div>
+
+                {% endif %}
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

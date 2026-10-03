@@ -1,0 +1,190 @@
+{% extends "base.html" %}
+
+{% if language == "pl" %}
+    {% set login_heading = "Weryfikacja dwuetapowa" %}
+    {% set login_description = "Wpisz 6-cyfrowy kod z aplikacji uwierzytelniającej." %}
+    {% set code_label = "Kod uwierzytelniający" %}
+    {% set verify_label = "Zweryfikuj" %}
+    {% set recovery_toggle = "Użyj kodu odzyskiwania" %}
+    {% set recovery_description = "Jeśli nie masz dostępu do aplikacji uwierzytelniającej, użyj jednego z zapisanych kodów odzyskiwania." %}
+    {% set recovery_label = "Kod odzyskiwania" %}
+    {% set recovery_verify_label = "Użyj kodu odzyskiwania" %}
+    {% set back_label = "Wróć do logowania" %}
+{% else %}
+    {% set login_heading = "Two-factor authentication" %}
+    {% set login_description = "Enter the 6-digit code from your authenticator application." %}
+    {% set code_label = "Authentication code" %}
+    {% set verify_label = "Verify" %}
+    {% set recovery_toggle = "Use a recovery code" %}
+    {% set recovery_description = "If you cannot access your authenticator application, use one of your saved recovery codes." %}
+    {% set recovery_label = "Recovery code" %}
+    {% set recovery_verify_label = "Use recovery code" %}
+    {% set back_label = "Back to login" %}
+{% endif %}
+
+{% block content %}
+
+<div class="row justify-content-center w-100">
+    <div class="col-12 col-sm-10 col-md-7 col-lg-5 col-xl-4">
+
+        <div class="card shadow-sm rounded-4 border-0">
+            <div class="card-body p-4 p-lg-5">
+
+                <div class="text-center mb-4">
+
+                    <i class="bi bi-shield-check fs-1 app-title"></i>
+
+                    <h2 class="mt-3 mb-1">
+                        {{ login_heading }}
+                    </h2>
+
+                    <p class="text-muted mb-0">
+                        {{ login_description }}
+                    </p>
+
+                </div>
+
+                {% if error %}
+
+                <div
+                    class="alert alert-danger"
+                    role="alert"
+                >
+                    {{ error }}
+                </div>
+
+                {% endif %}
+
+                <form
+                    method="post"
+                    action="/login/totp"
+                >
+
+                    <div class="mb-4">
+
+                        <label
+                            for="code"
+                            class="form-label"
+                        >
+                            {{ code_label }}
+                        </label>
+
+                        <input
+                            type="text"
+                            class="form-control form-control-lg text-center"
+                            id="code"
+                            name="code"
+                            inputmode="numeric"
+                            autocomplete="one-time-code"
+                            pattern="[0-9]{6}"
+                            minlength="6"
+                            maxlength="6"
+                            required
+                            {% if not recovery_mode %}
+                            autofocus
+                            {% endif %}
+                        >
+
+                    </div>
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary btn-lg w-100"
+                    >
+                        <i class="bi bi-shield-check me-2"></i>
+                        {{ verify_label }}
+                    </button>
+
+                </form>
+
+                {% if recovery_available %}
+
+                <details
+                    class="mt-4"
+                    {% if recovery_mode %}open{% endif %}
+                >
+
+                    <summary class="text-center">
+                        {{ recovery_toggle }}
+                    </summary>
+
+                    <div class="mt-3">
+
+                        <p class="text-muted small">
+                            {{ recovery_description }}
+                        </p>
+
+                        <form
+                            method="post"
+                            action="/login/totp/recovery"
+                        >
+
+                            <div class="mb-3">
+
+                                <label
+                                    for="recovery-code"
+                                    class="form-label"
+                                >
+                                    {{ recovery_label }}
+                                </label>
+
+                                <input
+                                    type="text"
+                                    class="
+                                        form-control
+                                        form-control-lg
+                                        text-center
+                                        font-monospace
+                                    "
+                                    id="recovery-code"
+                                    name="recovery_code"
+                                    autocomplete="off"
+                                    spellcheck="false"
+                                    maxlength="40"
+                                    required
+                                    {% if recovery_mode %}
+                                    autofocus
+                                    {% endif %}
+                                >
+
+                            </div>
+
+                            <button
+                                type="submit"
+                                class="
+                                    btn
+                                    btn-outline-primary
+                                    btn-lg
+                                    w-100
+                                "
+                            >
+                                <i class="bi bi-key me-2"></i>
+                                {{ recovery_verify_label }}
+                            </button>
+
+                        </form>
+
+                    </div>
+
+                </details>
+
+                {% endif %}
+
+                <div class="text-center mt-4">
+
+                    <a
+                        href="/login"
+                        class="text-decoration-none"
+                    >
+                        {{ back_label }}
+                    </a>
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

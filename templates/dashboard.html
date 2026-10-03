@@ -7,6 +7,8 @@
     {% set theme_label = "Motyw" %}
     {% set theme_light_label = "Jasny" %}
     {% set theme_dark_label = "Ciemny" %}
+    {% set security_label = "2FA" %}
+    {% set security_title = "Uwierzytelnianie dwuskładnikowe" %}
     {% set logout_label = "Wyloguj" %}
     {% set watch_title = "Zegarek Garmin" %}
     {% set loading_label = "Ładowanie..." %}
@@ -18,6 +20,8 @@
     {% set theme_label = "Theme" %}
     {% set theme_light_label = "Light" %}
     {% set theme_dark_label = "Dark" %}
+    {% set security_label = "2FA" %}
+    {% set security_title = "Two-factor authentication" %}
     {% set logout_label = "Logout" %}
     {% set watch_title = "Garmin Watch" %}
     {% set loading_label = "Loading..." %}
@@ -75,21 +79,43 @@
                         <option value="auto">
                             Auto
                         </option>
+
                         <option value="light">
                             {{ theme_light_label }}
                         </option>
+
                         <option value="dark">
                             {{ theme_dark_label }}
                         </option>
                     </select>
                 </div>
 
-                <div class="col-12 col-sm-auto">
+                <div class="col-6 col-sm-auto">
+
+                    <a
+                        href="/security/2fa"
+                        class="
+                            btn
+                            btn-outline-secondary
+                            btn-sm
+                            w-100
+                        "
+                        title="{{ security_title }}"
+                    >
+                        <i class="bi bi-shield-lock me-1"></i>
+                        {{ security_label }}
+                    </a>
+
+                </div>
+
+                <div class="col-6 col-sm-auto">
+
                     <form
                         method="post"
                         action="/logout"
                         class="mb-0"
                     >
+
                         <input
                             type="hidden"
                             name="csrf_token"
@@ -107,7 +133,9 @@
                             <i class="bi bi-box-arrow-right me-1"></i>
                             {{ logout_label }}
                         </button>
+
                     </form>
+
                 </div>
 
             </div>
