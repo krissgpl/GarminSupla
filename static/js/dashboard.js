@@ -251,6 +251,17 @@ const uiText = {
     },
 };
 
+function escapeHtml(value) {
+
+    const element =
+        document.createElement("div");
+
+    element.textContent =
+        String(value ?? "");
+
+    return element.innerHTML;
+}
+
 function t(key) {
     return uiText[uiLanguage][key]
         ?? uiText.en[key]
@@ -613,7 +624,7 @@ function renderWatchItems(items) {
 
                             <div>
                                 <strong>
-                                    ${item.name}
+                                    ${escapeHtml(item.name)}
                                 </strong>
 
                                 <div class="small text-muted mt-1">
@@ -1140,7 +1151,7 @@ async function showAddFromSupla(
                                     <option
                                         value="${item.type}:${item.supla_id}"
                                     >
-                                        ${item.name} (${formatItemType(item.type)})
+                                        ${escapeHtml(item.name)} (${formatItemType(item.type)})
                                     </option>
                                 `)
                                 .join("")
@@ -1935,8 +1946,10 @@ function renderWatch(
                     </small>
 
                     <strong>
-                        ${formatMetadataValue(
-                            watch.device_model
+                        ${escapeHtml(
+                            formatMetadataValue(
+                                watch.device_model
+                            )
                         )}
                     </strong>
                 </div>
@@ -1947,8 +1960,10 @@ function renderWatch(
                     </small>
 
                     <strong>
-                        ${formatMetadataValue(
-                            watch.part_number
+                        ${escapeHtml(
+                            formatMetadataValue(
+                                watch.part_number
+                            )
                         )}
                     </strong>
                 </div>
@@ -1959,8 +1974,10 @@ function renderWatch(
                     </small>
 
                     <strong class="text-break">
-                        ${formatMetadataValue(
-                            watch.device_id
+                        ${escapeHtml(
+                            formatMetadataValue(
+                                watch.device_id
+                            )
                         )}
                     </strong>
                 </div>
@@ -1971,8 +1988,10 @@ function renderWatch(
                     </small>
 
                     <strong>
-                        ${formatMetadataValue(
-                            watch.firmware_version
+                        ${escapeHtml(
+                            formatMetadataValue(
+                                watch.firmware_version
+                            )
                         )}
                     </strong>
                 </div>
@@ -1983,8 +2002,10 @@ function renderWatch(
                     </small>
 
                     <strong>
-                        ${formatMetadataValue(
-                            watch.connect_iq_version
+                        ${escapeHtml(
+                            formatMetadataValue(
+                                watch.connect_iq_version
+                            )
                         )}
                     </strong>
                 </div>
@@ -1995,8 +2016,10 @@ function renderWatch(
                     </small>
 
                     <strong>
-                        ${formatMetadataValue(
-                            watch.app_version
+                        ${escapeHtml(
+                            formatMetadataValue(
+                                watch.app_version
+                            )
                         )}
                     </strong>
                 </div>
@@ -2007,8 +2030,10 @@ function renderWatch(
                     </small>
 
                     <strong>
-                        ${formatSystemLanguage(
-                            watch.system_language
+                        ${escapeHtml(
+                            formatSystemLanguage(
+                                watch.system_language
+                            )
                         )}
                     </strong>
                 </div>

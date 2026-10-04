@@ -18,7 +18,6 @@ class AdminTotpTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         test_env = {
-            "API_KEY": "test-api-key",
             "ADMIN_SESSION_SECRET":
                 "test-session-secret-do-not-use",
             "SUPLA_CLIENT_ID": "test-client",

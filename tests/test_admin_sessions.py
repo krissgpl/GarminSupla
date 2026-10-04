@@ -144,8 +144,8 @@ class AdminSessionTests(unittest.TestCase):
             )
         )
 
-    def test_rejects_legacy_unversioned_session(self):
-        legacy_session = (
+    def test_rejects_unversioned_session(self):
+        unversioned_session = (
             self.service._serializer.dumps(
                 {
                     "username": "test-admin",
@@ -155,7 +155,7 @@ class AdminSessionTests(unittest.TestCase):
 
         self.assertIsNone(
             self.service.verify_session(
-                legacy_session
+                unversioned_session
             )
         )
 

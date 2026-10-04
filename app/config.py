@@ -7,9 +7,6 @@ class AppSettings(BaseSettings):
     app_name: str = "GarminSupla"
     app_version: str = "0.5.1"
 
-    api_key: str
-    api_port: int = 8008
-
     admin_session_secret: str
 
     # Optional until administrator 2FA is configured.

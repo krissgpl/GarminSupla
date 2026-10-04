@@ -128,48 +128,57 @@ class PairingService:
         pairing_id: str,
         name: str = "Garmin Watch",
     ) -> PairingResult | None:
-        """Complete an approved pairing and issue watch credentials."""
+        """Atomically consume an approved pairing session."""
 
-        session = self.get_pairing(
+        session = self._store.claim_approved(
             pairing_id
         )
 
         if session is None:
             return None
 
-        if not session.approved:
-            return None
-
-        if session.target_watch_id is None:
-            registered = (
-                self._watch_service.register_watch(
-                    name=name,
-                    copy_from_watch_id=(
-                        session.copy_from_watch_id
-                    ),
+        try:
+            if session.target_watch_id is None:
+                registered = (
+                    self._watch_service.register_watch(
+                        name=name,
+                        copy_from_watch_id=(
+                            session.copy_from_watch_id
+                        ),
+                    )
                 )
+
+                if registered is None:
+                    self._store.save(
+                        session
+                    )
+
+                    return None
+
+                watch, token = registered
+
+            else:
+                reissued = (
+                    self._watch_service.reissue_token(
+                        session.target_watch_id
+                    )
+                )
+
+                if reissued is None:
+                    self._store.save(
+                        session
+                    )
+
+                    return None
+
+                watch, token = reissued
+
+        except Exception:
+            self._store.save(
+                session
             )
 
-            if registered is None:
-                return None
-
-            watch, token = registered
-
-        else:
-            reissued = (
-                self._watch_service.reissue_token(
-                    session.target_watch_id
-                )
-            )
-
-            if reissued is None:
-                return None
-
-            watch, token = reissued
-
-        self._store.delete(
-            pairing_id
-        )
+            raise
 
         return PairingResult(
             watch_id=watch.id,

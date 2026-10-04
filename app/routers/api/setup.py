@@ -1,11 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 
-from app.models.api import SetupStatus, GateSummary, SelectGateRequest, WatchStatus
+from app.models.api import WatchStatus
 
-from app.models.settings import (
-    SelectedGate,
-    WatchItem,
-)
+from app.models.settings import WatchItem
 
 from app.services.setup_service import SetupService
 
@@ -32,17 +29,6 @@ router = APIRouter(
 
 setup_service = SetupService()
 pairing_service = PairingService()
-
-@router.get(
-    "",
-    response_model=SetupStatus,
-)
-
-def get_status() -> SetupStatus:
-    """Return the current setup status."""
-
-    return setup_service.get_status()
-
 
 @router.get(
     "/ui/language",
@@ -115,55 +101,6 @@ def update_ui_language(
 
 
 @router.get(
-    "/gates",
-    response_model=list[GateSummary],
-    responses={
-        401: {
-            "description": "OAuth authorization expired",
-            "content": {
-                "application/json": {
-                    "example": {
-                        "error": "oauth_expired",
-                        "message": "Authorization has expired. Please authorize GarminSupla again.",
-                    }
-                }
-            },
-        },
-        502: {
-            "description": "SUPLA API error",
-        },
-    },
-)
-
-def get_available_gates() -> list[GateSummary]:
-    """Return available gate channels."""
-
-    return setup_service.get_available_gates()
-
-@router.post(
-    "/gate",
-    response_model=SelectedGate,
-)
-def select_gate(
-    request: SelectGateRequest,
-    admin: AdminAccount = Depends(require_admin_csrf),
-) -> SelectedGate:
-    """Save the selected gate."""
-
-    return setup_service.save_selected_gate(
-        request.channel_id,
-    )
-
-@router.get(
-    "/watch",
-    response_model=WatchStatus,
-)
-def get_watch_status() -> WatchStatus:
-    """Return Garmin watch setup status."""
-
-    return setup_service.get_watch_status()
-
-@router.get(
     "/watches",
     response_model=list[WatchStatus],
 )
@@ -172,27 +109,6 @@ def get_watch_statuses() -> list[WatchStatus]:
 
     return setup_service.get_watch_statuses()
 
-
-@router.get(
-    "/watches/{watch_id}",
-    response_model=WatchStatus,
-)
-def get_watch_status_by_id(
-    watch_id: str,
-) -> WatchStatus:
-    """Return one configured Garmin watch."""
-
-    watch = setup_service.get_watch_status(
-        watch_id
-    )
-
-    if not watch.configured:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Garmin watch not found.",
-        )
-
-    return watch
 
 @router.patch(
     "/watches/{watch_id}",
@@ -372,62 +288,6 @@ def delete_watch_by_id(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Garmin watch not found.",
         )
-
-@router.patch(
-    "/watch",
-    response_model=WatchStatus,
-)
-def update_watch_name(
-    request: WatchNameUpdate,
-    admin: AdminAccount = Depends(
-        require_admin_csrf
-    ),
-) -> WatchStatus:
-    """Update the user-defined Garmin watch name."""
-
-    watch = setup_service.save_watch_name(
-        request.name
-    )
-
-    if watch is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Garmin watch is not configured.",
-        )
-
-    return watch
-
-@router.get(
-    "/watch/items",
-    response_model=list[WatchItem],
-)
-def get_watch_items() -> list[WatchItem]:
-    """Return Garmin watch item configuration."""
-
-    return setup_service.get_watch_items()
-
-@router.put(
-    "/watch/items",
-    response_model=list[WatchItem],
-)
-def update_watch_items(
-    request: WatchItemsUpdateRequest,
-    admin: AdminAccount = Depends(
-        require_admin_csrf
-    ),
-) -> list[WatchItem]:
-    """Replace Garmin watch item configuration."""
-
-    items = [
-        WatchItem.model_validate(
-            item.model_dump()
-        )
-        for item in request.items
-    ]
-
-    return setup_service.save_watch_items(
-        items
-    )
 
 @router.post(
     "/watch/pair",

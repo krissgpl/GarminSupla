@@ -79,14 +79,6 @@ async function apiRequest(
     return body;
 }
 
-export async function getSetupStatus() {
-
-    return apiRequest(
-        "/api/v1/setup",
-    );
-
-}
-
 export async function getUILanguage() {
 
     return apiRequest(
@@ -131,42 +123,10 @@ export async function updateUITheme(theme) {
 
 }
 
-export async function getWatchStatus() {
-
-    return apiRequest(
-        "/api/v1/setup/watch",
-    );
-
-}
-
 export async function getWatchStatuses() {
 
     return apiRequest(
         "/api/v1/setup/watches",
-    );
-
-}
-
-export async function getWatchStatusById(
-    watchId,
-) {
-
-    return apiRequest(
-        `/api/v1/setup/watches/${encodeURIComponent(watchId)}`,
-    );
-
-}
-
-export async function updateWatchName(name) {
-
-    return apiRequest(
-        "/api/v1/setup/watch",
-        {
-            method: "PATCH",
-            body: JSON.stringify({
-                name: name,
-            }),
-        },
     );
 
 }
@@ -205,34 +165,12 @@ export async function updateWatchApplicationLanguageById(
 
 }
 
-export async function getWatchItems() {
-
-    return apiRequest(
-        "/api/v1/setup/watch/items",
-    );
-
-}
-
 export async function getWatchItemsById(
     watchId,
 ) {
 
     return apiRequest(
         `/api/v1/setup/watches/${encodeURIComponent(watchId)}/items`,
-    );
-
-}
-
-export async function updateWatchItems(items) {
-
-    return apiRequest(
-        "/api/v1/setup/watch/items",
-        {
-            method: "PUT",
-            body: JSON.stringify({
-                items: items,
-            }),
-        },
     );
 
 }
@@ -292,24 +230,6 @@ export async function startWatchRePair(
         `/api/v1/setup/watches/${encodeURIComponent(watchId)}/re-pair`,
         {
             method: "POST",
-        },
-    );
-
-}
-
-export async function getAvailableGates() {
-    return apiRequest("/api/v1/setup/gates");
-}
-
-export async function selectGate(channelId) {
-
-    return apiRequest(
-        "/api/v1/setup/gate",
-        {
-            method: "POST",
-            body: JSON.stringify({
-                channel_id: channelId,
-            }),
         },
     );
 

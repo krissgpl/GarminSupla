@@ -1,13 +1,12 @@
 from typing import Literal
 
 from app.services.supla_service import SuplaService
-from app.models.api import SetupStatus, GateSummary, WatchStatus
+from app.models.api import SetupStatus, WatchStatus
 from app.models.setup import SetupForm
 from app.models.api.setup import SuplaAvailableItem
 
 from app.models.settings import (
     Settings,
-    SelectedGate,
     WatchDevice,
     WatchItem,
 )
@@ -44,7 +43,6 @@ class SetupService:
             settings.supla.server = new_server
             settings.supla.access_token = None
             settings.supla.refresh_token = None
-            settings.supla.selected_gate = None
         else:
             settings.supla.server = new_server
 
@@ -110,36 +108,24 @@ class SetupService:
         return SetupStatus(
             server=settings.supla.server,
             authorized=authorized,
-        selected_gate=settings.supla.selected_gate,
         setup_completed=setup_completed,
         )
 
     @staticmethod
     def _find_watch(
         settings: Settings,
-        watch_id: str | None = None,
+        watch_id: str,
     ) -> WatchDevice | None:
-        """Find a Garmin watch by ID or use the legacy current watch."""
+        """Find a Garmin watch by ID."""
 
-        target_id = watch_id
-
-        if target_id is None:
-            if settings.watch is None:
-                return None
-
-            target_id = settings.watch.id
-
-        for watch in settings.watches:
-            if watch.id == target_id:
-                return watch
-
-        if (
-            settings.watch is not None
-            and settings.watch.id == target_id
-        ):
-            return settings.watch
-
-        return None
+        return next(
+            (
+                watch
+                for watch in settings.watches
+                if watch.id == watch_id
+            ),
+            None,
+        )
 
     @staticmethod
     def _build_watch_status(
@@ -174,23 +160,6 @@ class SetupService:
             ),
         )
 
-    def get_watch_status(
-        self,
-        watch_id: str | None = None,
-    ) -> WatchStatus:
-        """Return safe Garmin watch status information."""
-
-        settings = self._store.load()
-
-        watch = self._find_watch(
-            settings,
-            watch_id,
-        )
-
-        return self._build_watch_status(
-            watch
-        )
-
     def get_watch_statuses(
         self,
     ) -> list[WatchStatus]:
@@ -208,7 +177,7 @@ class SetupService:
     def save_watch_name(
         self,
         name: str,
-        watch_id: str | None = None,
+        watch_id: str,
     ) -> WatchStatus | None:
         """Persist the user-defined Garmin watch name."""
 
@@ -224,13 +193,9 @@ class SetupService:
 
         watch.name = name
 
-        if (
-            settings.watch is not None
-            and settings.watch.id == watch.id
-        ):
-            settings.watch = watch
-
-        self._store.save(settings)
+        self._store.save(
+            settings
+        )
 
         return self._build_watch_status(
             watch
@@ -257,15 +222,13 @@ class SetupService:
         if watch is None:
             return None
 
-        watch.application_language = language
+        watch.application_language = (
+            language
+        )
 
-        if (
-            settings.watch is not None
-            and settings.watch.id == watch.id
-        ):
-            settings.watch = watch
-
-        self._store.save(settings)
+        self._store.save(
+            settings
+        )
 
         return self._build_watch_status(
             watch
@@ -279,13 +242,9 @@ class SetupService:
 
         settings = self._store.load()
 
-        watch = next(
-            (
-                candidate
-                for candidate in settings.watches
-                if candidate.id == watch_id
-            ),
-            None,
+        watch = self._find_watch(
+            settings,
+            watch_id,
         )
 
         if watch is None:
@@ -297,48 +256,17 @@ class SetupService:
             if candidate.id != watch_id
         ]
 
-        current_id = (
-            settings.watch.id
-            if settings.watch is not None
-            else None
+        self._store.save(
+            settings
         )
-
-        remaining_ids = {
-            candidate.id
-            for candidate in settings.watches
-        }
-
-        if current_id not in remaining_ids:
-            settings.watch = (
-                settings.watches[-1]
-                if settings.watches
-                else None
-            )
-
-        self._store.save(settings)
 
         return True
 
-    def save_selected_gate(
-        self,
-        channel_id: int,
-    ) -> SelectedGate:
-        """Save the selected gate."""
-
-        return self._supla_service.select_gate(
-            channel_id,
-        )
-
-    def get_available_gates(self) -> list[GateSummary]:
-        """Return available gate channels."""
-
-        return self._supla_service.get_available_gates()
-
     def get_watch_items(
         self,
-        watch_id: str | None = None,
+        watch_id: str,
     ) -> list[WatchItem] | None:
-        """Return configured Garmin watch items."""
+        """Return one Garmin watch item configuration."""
 
         settings = self._store.load()
 
@@ -348,13 +276,7 @@ class SetupService:
         )
 
         if watch is None:
-            if watch_id is not None:
-                return None
-
-            return sorted(
-                settings.watch_settings.items,
-                key=lambda item: item.order,
-            )
+            return None
 
         return sorted(
             watch.items,
@@ -364,16 +286,11 @@ class SetupService:
     def save_watch_items(
         self,
         items: list[WatchItem],
-        watch_id: str | None = None,
+        watch_id: str,
     ) -> list[WatchItem] | None:
-        """Replace Garmin watch item configuration."""
+        """Replace one Garmin watch item configuration."""
 
         settings = self._store.load()
-
-        sorted_items = sorted(
-            items,
-            key=lambda item: item.order,
-        )
 
         watch = self._find_watch(
             settings,
@@ -381,32 +298,18 @@ class SetupService:
         )
 
         if watch is None:
-            if watch_id is not None:
-                return None
+            return None
 
-            settings.watch_settings.items = (
-                sorted_items
-            )
-
-            self._store.save(settings)
-
-            return sorted_items
+        sorted_items = sorted(
+            items,
+            key=lambda item: item.order,
+        )
 
         watch.items = sorted_items
 
-        if (
-            settings.watch is not None
-            and settings.watch.id == watch.id
-        ):
-            settings.watch = watch
-
-            # Keep the legacy dashboard representation
-            # synchronized with the current watch.
-            settings.watch_settings.items = (
-                sorted_items
-            )
-
-        self._store.save(settings)
+        self._store.save(
+            settings
+        )
 
         return sorted_items
 
@@ -442,23 +345,13 @@ class SetupService:
             for item in source_watch.items
         ]
 
-        target_watch.items = copied_items
+        target_watch.items = (
+            copied_items
+        )
 
-        if (
-            settings.watch is not None
-            and settings.watch.id
-                == target_watch.id
-        ):
-            settings.watch = target_watch
-
-            settings.watch_settings.items = [
-                item.model_copy(
-                    deep=True
-                )
-                for item in copied_items
-            ]
-
-        self._store.save(settings)
+        self._store.save(
+            settings
+        )
 
         return copied_items
 

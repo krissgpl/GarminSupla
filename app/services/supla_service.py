@@ -1,8 +1,5 @@
 from app.clients.supla_client import SuplaClient
 from app.exceptions import GateStateUnavailableError
-from app.models.supla import GateChannel
-from app.models.settings import SelectedGate
-from app.models.api import GateSummary
 from app.models.api.setup import SuplaAvailableItem
 from app.services.oauth_service import OAuthService
 from app.stores.settings_store import SettingsStore
@@ -40,55 +37,6 @@ class SuplaService:
         return self._oauth_service.execute_with_token_refresh(
             self._client().get_scenes,
         )
-
-    def get_gate_channels(self) -> list[GateChannel]:
-        channels = self.get_channels()
-
-        gates = [
-            GateChannel.model_validate(channel)
-            for channel in channels
-        ]
-
-        return [
-            gate
-            for gate in gates
-            if gate.function.name == "CONTROLLINGTHEGATE"
-        ]
-
-    def select_gate(self, channel_id: int) -> SelectedGate:
-        settings = self._settings_store.load()
-
-        gates = self.get_gate_channels()
-
-        gate = next(
-            (gate for gate in gates if gate.id == channel_id),
-            None,
-        )
-
-        if gate is None:
-            raise ValueError(f"Gate channel {channel_id} not found.")
-
-        selected_gate = SelectedGate(
-            id=gate.id,
-            caption=gate.caption or f"Gate {gate.id}",
-            sensor_channel_id=gate.sensor_channel_id,
-        )
-
-        settings.supla.selected_gate = selected_gate
-
-        self._settings_store.save(settings)
-
-        return selected_gate
-
-    def get_available_gates(self) -> list[GateSummary]:
-        return [
-            GateSummary(
-                id=gate.id,
-                caption=gate.caption or f"Gate {gate.id}",
-                sensor_channel_id=gate.sensor_channel_id,
-            )
-            for gate in self.get_gate_channels()
-        ]
 
     def get_available_watch_items(
         self,

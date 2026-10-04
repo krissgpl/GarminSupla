@@ -1,6 +1,13 @@
-import json
+from contextlib import contextmanager
 from datetime import datetime, timezone
 from pathlib import Path
+from threading import Lock
+from typing import Iterator
+
+import fcntl
+import json
+import os
+import secrets
 
 from app.models.pairing import PairingSession
 
@@ -13,19 +20,61 @@ class PairingStore:
         path: str = "data/pairing.json",
     ) -> None:
         self._path = Path(path)
+        self._lock = Lock()
 
-    def load(self) -> PairingSession | None:
-        """Load the first active pairing session."""
+    @contextmanager
+    def _exclusive_lock(self) -> Iterator[None]:
+        """Lock pairing storage across threads and Linux processes."""
 
-        sessions = self.load_all()
+        with self._lock:
+            self._path.parent.mkdir(
+                parents=True,
+                exist_ok=True,
+            )
 
-        if not sessions:
-            return None
+            lock_path = Path(
+                str(self._path) + ".lock"
+            )
 
-        return sessions[0]
+            fd = os.open(
+                lock_path,
+                os.O_CREAT | os.O_RDWR,
+                0o600,
+            )
+
+            os.fchmod(
+                fd,
+                0o600,
+            )
+
+            with os.fdopen(
+                fd,
+                "r+",
+            ) as lock_file:
+                fcntl.flock(
+                    lock_file.fileno(),
+                    fcntl.LOCK_EX,
+                )
+
+                try:
+                    yield
+
+                finally:
+                    fcntl.flock(
+                        lock_file.fileno(),
+                        fcntl.LOCK_UN,
+                    )
 
     def load_all(self) -> list[PairingSession]:
         """Load all active pairing sessions."""
+
+        with self._exclusive_lock():
+            return self._load_all_unlocked()
+
+    def _load_all_unlocked(
+        self,
+    ) -> list[PairingSession]:
+        """Load active pairing sessions while storage is locked."""
 
         if not self._path.exists():
             return []
@@ -44,24 +93,23 @@ class PairingStore:
             return []
 
         if (
-            isinstance(data, dict)
-            and "sessions" in data
+            not isinstance(data, dict)
+            or "sessions" not in data
         ):
-            raw_sessions = data["sessions"]
+            return []
 
-            if not isinstance(
-                raw_sessions,
-                list,
-            ):
-                return []
+        raw_sessions = data["sessions"]
 
-        else:
-            # Legacy single-session format.
-            raw_sessions = [
-                data
-            ]
+        if not isinstance(
+            raw_sessions,
+            list,
+        ):
+            return []
 
-        now = datetime.now(timezone.utc)
+        now = datetime.now(
+            timezone.utc
+        )
+
         sessions = []
 
         for raw_session in raw_sessions:
@@ -88,74 +136,99 @@ class PairingStore:
         self,
         session: PairingSession,
     ) -> None:
-        """Save or update a pairing session."""
+        """Save or update a pairing session atomically."""
 
-        sessions = self.load_all()
-
-        replaced = False
-
-        for index, existing in enumerate(
-            sessions
-        ):
-            if (
-                existing.pairing_id
-                == session.pairing_id
-            ):
-                sessions[index] = session
-                replaced = True
-                break
-
-        if not replaced:
-            sessions.append(
-                session
+        with self._exclusive_lock():
+            sessions = (
+                self._load_all_unlocked()
             )
 
-        self._write_sessions(
-            sessions
-        )
+            replaced = False
 
-    def delete(
+            for index, existing in enumerate(
+                sessions
+            ):
+                if (
+                    existing.pairing_id
+                    == session.pairing_id
+                ):
+                    sessions[index] = session
+                    replaced = True
+                    break
+
+            if not replaced:
+                sessions.append(
+                    session
+                )
+
+            self._write_sessions_unlocked(
+                sessions
+            )
+
+    def claim_approved(
         self,
-        pairing_id: str | None = None,
+        pairing_id: str,
+    ) -> PairingSession | None:
+        """
+        Atomically claim one approved pairing session.
+
+        A successfully claimed session is removed from persistent
+        storage before it is returned, so concurrent consumers
+        cannot receive the same pairing session.
+        """
+
+        with self._exclusive_lock():
+            sessions = (
+                self._load_all_unlocked()
+            )
+
+            claimed = None
+            remaining = []
+
+            for session in sessions:
+                if (
+                    claimed is None
+                    and session.approved
+                    and secrets.compare_digest(
+                        session.pairing_id,
+                        pairing_id,
+                    )
+                ):
+                    claimed = session
+                    continue
+
+                remaining.append(
+                    session
+                )
+
+            if claimed is None:
+                return None
+
+            if remaining:
+                self._write_sessions_unlocked(
+                    remaining
+                )
+            else:
+                self._delete_file_unlocked()
+
+            return claimed
+
+    def _delete_file_unlocked(
+        self,
     ) -> None:
-        """Delete one pairing session or all sessions."""
+        """Delete pairing storage while it is locked."""
 
-        if pairing_id is None:
-            try:
-                self._path.unlink()
-            except FileNotFoundError:
-                pass
+        try:
+            self._path.unlink()
 
-            return
+        except FileNotFoundError:
+            pass
 
-        sessions = [
-            session
-            for session in self.load_all()
-            if session.pairing_id != pairing_id
-        ]
-
-        if not sessions:
-            try:
-                self._path.unlink()
-            except FileNotFoundError:
-                pass
-
-            return
-
-        self._write_sessions(
-            sessions
-        )
-
-    def _write_sessions(
+    def _write_sessions_unlocked(
         self,
         sessions: list[PairingSession],
     ) -> None:
-        """Persist pairing sessions."""
-
-        self._path.parent.mkdir(
-            parents=True,
-            exist_ok=True,
-        )
+        """Persist pairing sessions while storage is locked."""
 
         data = {
             "sessions": [
@@ -166,11 +239,41 @@ class PairingStore:
             ]
         }
 
-        self._path.write_text(
-            json.dumps(
+        tmp_path = Path(
+            str(self._path) + ".tmp"
+        )
+
+        fd = os.open(
+            tmp_path,
+            os.O_WRONLY
+            | os.O_CREAT
+            | os.O_TRUNC,
+            0o600,
+        )
+
+        os.fchmod(
+            fd,
+            0o600,
+        )
+
+        with os.fdopen(
+            fd,
+            "w",
+            encoding="utf-8",
+        ) as file:
+            json.dump(
                 data,
+                file,
                 indent=2,
                 ensure_ascii=False,
-            ),
-            encoding="utf-8",
+            )
+
+            file.flush()
+
+            os.fsync(
+                file.fileno()
+            )
+
+        tmp_path.replace(
+            self._path
         )

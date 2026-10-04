@@ -14,7 +14,6 @@ class AdminAuthServiceTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         test_env = {
-            "API_KEY": "test-api-key",
             "ADMIN_SESSION_SECRET":
                 "test-session-secret-do-not-use",
             "SUPLA_CLIENT_ID": "test-client",
@@ -163,8 +162,8 @@ class AdminAuthServiceTests(unittest.TestCase):
             )
         )
 
-    def test_legacy_admin_uses_two_factor_defaults(self):
-        legacy_admin = {
+    def test_incomplete_admin_configuration_is_rejected(self):
+        incomplete_admin = {
             "username": "test-admin",
             "password_hash": self.admin.password_hash,
             "created_at": "2026-09-27T00:00:00+00:00",
@@ -176,34 +175,14 @@ class AdminAuthServiceTests(unittest.TestCase):
             encoding="utf-8",
         ) as file:
             json.dump(
-                legacy_admin,
+                incomplete_admin,
                 file,
             )
 
         loaded = self.store.load()
 
-        self.assertIsNotNone(loaded)
-
-        self.assertFalse(
-            loaded.totp_enabled
-        )
-
         self.assertIsNone(
-            loaded.totp_secret_encrypted
-        )
-
-        self.assertEqual(
-            loaded.recovery_code_hashes,
-            [],
-        )
-
-        self.assertIsNone(
-            loaded.totp_last_used_counter
-        )
-
-        self.assertEqual(
-            loaded.session_version,
-            0,
+            loaded
         )
 
     def test_two_factor_metadata_persists(self):

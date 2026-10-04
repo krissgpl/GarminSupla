@@ -38,25 +38,6 @@ class OAuthService:
             state=state,
         )
 
-    def exchange_code(
-        self,
-        code: str,
-    ) -> OAuthToken:
-        """Exchange an authorization code for OAuth tokens."""
-
-        settings = self._settings_store.load()
-
-        client = SuplaClient(
-            server=settings.supla.server,
-        )
-
-        return client.exchange_code(
-            code=code,
-            client_id=app_settings.supla_client_id,
-            client_secret=app_settings.supla_client_secret,
-            redirect_uri=app_settings.supla_redirect_uri,
-        )
-
     def complete_authorization(
         self,
         code: str,

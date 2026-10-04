@@ -37,7 +37,16 @@ class WatchConfig(BaseModel):
     )
 
 
-class WatchMetadataUpdate(BaseModel):
+class WatchMetadataRequest(BaseModel):
+    device_id: str | None = None
+    part_number: str | None = None
+    firmware_version: str | None = None
+    connect_iq_version: str | None = None
+    system_language: str | None = None
+    app_version: str | None = None
+
+
+class WatchMetadataResponse(BaseModel):
     device_model: str | None = None
     device_id: str | None = None
     part_number: str | None = None

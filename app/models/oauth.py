@@ -8,10 +8,3 @@ class OAuthToken(BaseModel):
     refresh_token: str
     token_type: str
     expires_in: int
-
-
-class OAuthError(BaseModel):
-    """OAuth error response."""
-
-    error: str
-    error_description: str | None = None

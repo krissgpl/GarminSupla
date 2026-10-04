@@ -39,7 +39,9 @@ class WatchService:
 
         settings = self._store.load()
 
-        token_hash = self._hash_token(token)
+        token_hash = self._hash_token(
+            token
+        )
 
         for watch in settings.watches:
             if not watch.enabled:
@@ -73,7 +75,9 @@ class WatchService:
         if watch is None:
             return None
 
-        token = secrets.token_urlsafe(32)
+        token = secrets.token_urlsafe(
+            32
+        )
 
         watch.token_hash = self._hash_token(
             token
@@ -81,13 +85,9 @@ class WatchService:
 
         watch.credential_revision += 1
 
-        if (
-            settings.watch is not None
-            and settings.watch.id == watch.id
-        ):
-            settings.watch = watch
-
-        self._store.save(settings)
+        self._store.save(
+            settings
+        )
 
         return watch, token
 
@@ -100,12 +100,14 @@ class WatchService:
 
         settings = self._store.load()
 
-        watch = None
-
-        for candidate in settings.watches:
-            if candidate.id == watch_id:
-                watch = candidate
-                break
+        watch = next(
+            (
+                candidate
+                for candidate in settings.watches
+                if candidate.id == watch_id
+            ),
+            None,
+        )
 
         if watch is None:
             return None
@@ -137,16 +139,14 @@ class WatchService:
             )
 
         watch.last_seen_at = (
-            datetime.now(timezone.utc).isoformat()
+            datetime.now(
+                timezone.utc
+            ).isoformat()
         )
 
-        if (
-            settings.watch is not None
-            and settings.watch.id == watch.id
-        ):
-            settings.watch = watch
-
-        self._store.save(settings)
+        self._store.save(
+            settings
+        )
 
         return watch
 
@@ -177,10 +177,14 @@ class WatchService:
             if source is None:
                 return None
 
-        token = secrets.token_urlsafe(32)
+        token = secrets.token_urlsafe(
+            32
+        )
 
         watch = WatchDevice(
-            id=str(uuid.uuid4()),
+            id=str(
+                uuid.uuid4()
+            ),
             name=name,
             token_hash=self._hash_token(
                 token
@@ -206,17 +210,8 @@ class WatchService:
             watch
         )
 
-        settings.watch = watch
-
-        # Keep the legacy current-watch
-        # configuration synchronized.
-        settings.watch_settings.items = [
-            item.model_copy(
-                deep=True
-            )
-            for item in watch.items
-        ]
-
-        self._store.save(settings)
+        self._store.save(
+            settings
+        )
 
         return watch, token

@@ -13,7 +13,8 @@ from app.models.api.watch import (
     WatchActionResponse,
     WatchConfig,
     WatchItemConfig,
-    WatchMetadataUpdate,
+    WatchMetadataRequest,
+    WatchMetadataResponse,
 )
 
 from app.services.watch_config_service import (
@@ -55,14 +56,14 @@ def get_watch(
 
 @router.put(
     "/metadata",
-    response_model=WatchMetadataUpdate,
+    response_model=WatchMetadataResponse,
 )
 def update_watch_metadata(
-    request: WatchMetadataUpdate,
+    request: WatchMetadataRequest,
     watch: WatchDevice = Depends(
         authenticate_watch
     ),
-) -> WatchMetadataUpdate:
+) -> WatchMetadataResponse:
     """Update metadata for the authenticated Garmin watch."""
 
     updated = watch_service.update_metadata(
@@ -78,7 +79,7 @@ def update_watch_metadata(
             detail="Watch no longer registered.",
         )
 
-    return WatchMetadataUpdate(
+    return WatchMetadataResponse(
         device_model=updated.device_model,
         device_id=updated.device_id,
         part_number=updated.part_number,

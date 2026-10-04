@@ -550,6 +550,32 @@ class AdminStore:
                     file
                 )
 
+            if not isinstance(
+                data,
+                dict,
+            ):
+                logger.error(
+                    "Administrator configuration is invalid."
+                )
+
+                return None
+
+            missing_fields = (
+                set(AdminAccount.model_fields)
+                - set(data)
+            )
+
+            if missing_fields:
+                logger.error(
+                    "Administrator configuration is incomplete. "
+                    "Missing fields: %s",
+                    ", ".join(
+                        sorted(missing_fields)
+                    ),
+                )
+
+                return None
+
             return AdminAccount.model_validate(
                 data
             )

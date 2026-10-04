@@ -517,10 +517,6 @@ class GarminSuplaApi {
 			"PUT " + url
 		);
 
-		System.println(
-			"Watch metadata: "
-			+ params
-		);
 
 		Communications.makeWebRequest(
 			url,
@@ -1063,10 +1059,6 @@ class GarminSuplaApi {
             + responseCode
         );
 
-        System.println(
-            "Pairing response: "
-            + data
-        );
 
         if (
             responseCode == 200
@@ -1156,7 +1148,7 @@ class GarminSuplaApi {
         };
 
         System.println(
-            "GET " + url
+            "GET pairing status"
         );
 
         Communications.makeWebRequest(
@@ -1194,7 +1186,7 @@ class GarminSuplaApi {
 		};
 
 		System.println(
-			"POST " + url
+			"POST pairing consume"
 		);
 
 		Communications.makeWebRequest(
@@ -1215,10 +1207,6 @@ class GarminSuplaApi {
 			+ responseCode
 		);
 
-		System.println(
-			"Consume response: "
-			+ data
-		);
 
 		if (responseCode == 404) {
 

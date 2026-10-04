@@ -10,16 +10,11 @@ venv/
 .env
 
 # Runtime data
-config/*
-!config/.gitkeep
-
 data/*
 !data/.gitkeep
 
 # Logs
 *.log
-logs/*
-!logs/.gitkeep
 
 # Pytest
 .pytest_cache/

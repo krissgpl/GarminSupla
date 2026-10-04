@@ -12,7 +12,6 @@ from app.config import settings
 from app.routers.api import (
     pairing,
     setup,
-    supla,
     watch,
 )
 
@@ -48,12 +47,6 @@ API_PREFIX = "/api/v1"
 
 app.include_router(
     admin_auth.router,
-)
-
-app.include_router(
-    supla.router,
-    prefix=API_PREFIX,
-    dependencies=[Depends(require_admin)],
 )
 
 app.include_router(

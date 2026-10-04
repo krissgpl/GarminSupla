@@ -6,19 +6,6 @@ from pydantic import (
     model_validator,
 )
 
-from app.models.settings import SelectedGate
-
-
-class GateSummary(BaseModel):
-    id: int
-    caption: str
-    sensor_channel_id: int | None
-
-
-class SelectGateRequest(BaseModel):
-    channel_id: int
-
-
 class UILanguageSettings(BaseModel):
     language: Literal[
         "auto",
@@ -38,7 +25,6 @@ class UIThemeSettings(BaseModel):
 class SetupStatus(BaseModel):
     server: str
     authorized: bool
-    selected_gate: SelectedGate | None
     setup_completed: bool
 
 

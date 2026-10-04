@@ -1,6 +1,6 @@
 import secrets
 
-from fastapi import APIRouter, Depends, Request
+from fastapi import APIRouter, Depends, HTTPException, Request, status
 from fastapi.responses import RedirectResponse
 
 from app.api.admin_auth import require_admin_web
@@ -50,6 +50,9 @@ def callback(
     request: Request,
     code: str,
     state: str,
+    admin: AdminAccount = Depends(
+        require_admin_web
+    ),
 ) -> RedirectResponse:
     """Handle the SUPLA OAuth callback."""
 
