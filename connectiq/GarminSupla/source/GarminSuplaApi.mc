@@ -751,10 +751,6 @@ class GarminSuplaApi {
 					+ " item(s)"
 				);
 
-				System.println(
-					"Watch config first item: "
-					+ items[0]
-				);
 
 				_view.setConfiguredItems(
 					items
