@@ -61,9 +61,9 @@ async def dashboard(request: Request):
     )
 
     return templates.TemplateResponse(
-        "dashboard.html",
-        {
-            "request": request,
+        request=request,
+        name="dashboard.html",
+        context={
             "title": page_title,
             "version": app_settings.app_version,
             "csrf_token": csrf_token,
