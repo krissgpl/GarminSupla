@@ -25,6 +25,9 @@ from app.routers.web import (
 app = FastAPI(
     title=settings.app_name,
     version=settings.app_version,
+    docs_url=None,
+    redoc_url=None,
+    openapi_url=None,
 )
 
 register_exception_handlers(app)

@@ -1,6 +1,7 @@
 from pydantic import (
     BaseModel,
     Field,
+    PrivateAttr,
 )
 from typing import Literal
 
@@ -76,6 +77,10 @@ class WatchDevice(BaseModel):
 
 
 class Settings(BaseModel):
+    _storage_signature: str | None = PrivateAttr(
+        default=None
+    )
+
     ui: UISettings = Field(
         default_factory=UISettings
     )

@@ -5,6 +5,7 @@ from threading import Lock
 from typing import Iterator
 
 import fcntl
+import hashlib
 import json
 import logging
 import os
@@ -33,6 +34,16 @@ class SettingsStore:
         """Return True if the configuration file exists."""
 
         return self.path.exists()
+
+    @staticmethod
+    def _content_signature(
+        content: str,
+    ) -> str:
+        """Return a stable signature of persisted configuration."""
+
+        return hashlib.sha256(
+            content.encode("utf-8")
+        ).hexdigest()
 
     @contextmanager
     def _exclusive_lock(self) -> Iterator[None]:
@@ -88,7 +99,24 @@ class SettingsStore:
                 self._load_existing_unlocked()
             )
 
-            if current is not None:
+            if current is None:
+                if (
+                    settings._storage_signature
+                    is not None
+                ):
+                    raise ValueError(
+                        "Stale configuration write."
+                    )
+
+            else:
+                if (
+                    settings._storage_signature
+                    != current._storage_signature
+                ):
+                    raise ValueError(
+                        "Stale configuration write."
+                    )
+
                 self._protect_watch_credentials(
                     settings,
                     current,
@@ -146,17 +174,25 @@ class SettingsStore:
     ) -> Settings:
         """Read configuration while storage is locked."""
 
-        with self.path.open(
-            "r",
+        content = self.path.read_text(
             encoding="utf-8",
-        ) as file:
-            data = json.load(
-                file
-            )
+        )
 
-        return Settings.model_validate(
+        data = json.loads(
+            content
+        )
+
+        settings = Settings.model_validate(
             data
         )
+
+        settings._storage_signature = (
+            self._content_signature(
+                content
+            )
+        )
+
+        return settings
 
     def _load_existing_unlocked(
         self,
@@ -247,6 +283,14 @@ class SettingsStore:
             ".tmp"
         )
 
+        content = json.dumps(
+            settings.model_dump(
+                mode="json"
+            ),
+            indent=4,
+            ensure_ascii=False,
+        )
+
         fd = os.open(
             tmp_path,
             os.O_WRONLY
@@ -265,13 +309,8 @@ class SettingsStore:
             "w",
             encoding="utf-8",
         ) as file:
-            json.dump(
-                settings.model_dump(
-                    mode="json"
-                ),
-                file,
-                indent=4,
-                ensure_ascii=False,
+            file.write(
+                content
             )
 
             file.flush()
@@ -282,6 +321,12 @@ class SettingsStore:
 
         tmp_path.replace(
             self.path
+        )
+
+        settings._storage_signature = (
+            self._content_signature(
+                content
+            )
         )
 
     def _backup_corrupted_unlocked(

@@ -50,7 +50,7 @@ class SettingsStoreCredentialTests(unittest.TestCase):
             settings
         )
 
-    def test_stale_save_cannot_restore_old_watch_token(
+    def test_stale_save_is_rejected_after_watch_token_rotation(
         self,
     ):
         stale = self.second_store.load()
@@ -73,15 +73,19 @@ class SettingsStoreCredentialTests(unittest.TestCase):
 
         stale.ui.theme = "dark"
 
-        self.second_store.save(
-            stale
-        )
+        with self.assertRaisesRegex(
+            ValueError,
+            "Stale configuration write",
+        ):
+            self.second_store.save(
+                stale
+            )
 
         saved = self.first_store.load()
 
         self.assertEqual(
             saved.ui.theme,
-            "dark",
+            "auto",
         )
 
         self.assertEqual(
@@ -94,54 +98,72 @@ class SettingsStoreCredentialTests(unittest.TestCase):
             2,
         )
 
-    def test_conflicting_same_revision_token_is_rejected(
+    def test_same_revision_token_change_is_rejected(
         self,
     ):
-        first = self.first_store.load()
-        second = self.second_store.load()
+        current = self.first_store.load()
 
-        first_watch = (
-            first.watches[0]
+        current_watch = (
+            current.watches[0]
         )
 
-        first_watch.token_hash = (
-            "first-new-token-hash"
+        current_watch.token_hash = (
+            "unexpected-token-hash"
         )
-
-        first_watch.credential_revision = 2
-
-        self.first_store.save(
-            first
-        )
-
-        second_watch = (
-            second.watches[0]
-        )
-
-        second_watch.token_hash = (
-            "second-new-token-hash"
-        )
-
-        second_watch.credential_revision = 2
 
         with self.assertRaisesRegex(
             ValueError,
             "Conflicting Garmin watch credentials",
         ):
-            self.second_store.save(
-                second
+            self.first_store.save(
+                current
             )
 
         saved = self.first_store.load()
 
         self.assertEqual(
             saved.watches[0].token_hash,
-            "first-new-token-hash",
+            "old-token-hash",
         )
 
         self.assertEqual(
             saved.watches[0].credential_revision,
-            2,
+            1,
+        )
+
+    def test_stale_save_cannot_restore_deleted_watch(
+        self,
+    ):
+        stale = self.second_store.load()
+
+        current = self.first_store.load()
+
+        current.watches = []
+
+        self.first_store.save(
+            current
+        )
+
+        stale.ui.theme = "dark"
+
+        with self.assertRaisesRegex(
+            ValueError,
+            "Stale configuration write",
+        ):
+            self.second_store.save(
+                stale
+            )
+
+        saved = self.first_store.load()
+
+        self.assertEqual(
+            saved.ui.theme,
+            "auto",
+        )
+
+        self.assertEqual(
+            saved.watches,
+            [],
         )
 
 

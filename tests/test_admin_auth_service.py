@@ -185,6 +185,52 @@ class AdminAuthServiceTests(unittest.TestCase):
             loaded
         )
 
+    def test_invalid_admin_configuration_does_not_log_values(
+        self,
+    ):
+        sensitive_value = (
+            "SENSITIVE-INVALID-ADMIN-VALUE"
+        )
+
+        invalid_admin = {
+            "username": "test-admin",
+            "password_hash": self.admin.password_hash,
+            "created_at": "2026-09-27T00:00:00+00:00",
+            "enabled": True,
+            "totp_enabled": True,
+            "totp_secret_encrypted":
+                "encrypted-test-secret",
+            "recovery_code_hashes": [
+                "test-recovery-hash",
+            ],
+            "totp_last_used_counter": None,
+            "session_version": sensitive_value,
+        }
+
+        with self.store.path.open(
+            "w",
+            encoding="utf-8",
+        ) as file:
+            json.dump(
+                invalid_admin,
+                file,
+            )
+
+        with self.assertLogs(
+            "app.stores.admin_store",
+            level="ERROR",
+        ) as captured:
+            loaded = self.store.load()
+
+        self.assertIsNone(
+            loaded
+        )
+
+        self.assertNotIn(
+            sensitive_value,
+            "\n".join(captured.output),
+        )
+
     def test_two_factor_metadata_persists(self):
         updated = self.admin.model_copy(
             update={

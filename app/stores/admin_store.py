@@ -584,7 +584,7 @@ class AdminStore:
             JSONDecodeError,
             ValidationError,
         ):
-            logger.exception(
+            logger.error(
                 "Administrator configuration is invalid."
             )
 
