@@ -46,3 +46,6 @@ data/config.json
 
 # Garmin Connect IQ
 connectiq/GarminSupla/bin/
+
+# Private DNS provider credentials for Caddy
+deploy/caddy/secrets/
