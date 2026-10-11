@@ -12,6 +12,13 @@ import secrets
 from app.models.pairing import PairingSession
 
 
+MAX_ACTIVE_PAIRINGS = 60
+
+
+class PairingCapacityExceeded(Exception):
+    """Maximum number of active pairing sessions reached."""
+
+
 class PairingStore:
     """Store temporary Garmin watch pairing sessions."""
 
@@ -157,6 +164,11 @@ class PairingStore:
                     break
 
             if not replaced:
+                if len(sessions) >= MAX_ACTIVE_PAIRINGS:
+                    raise PairingCapacityExceeded(
+                        "Maximum active pairing sessions reached."
+                    )
+
                 sessions.append(
                     session
                 )
