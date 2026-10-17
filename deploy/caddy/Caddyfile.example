@@ -1,0 +1,30 @@
+{
+    admin off
+    auto_https disable_redirects
+}
+
+# Internal HTTP endpoint.
+# Do not publish port 8080 to the Internet.
+:8080 {
+    handle /api/v1/watch/* {
+        reverse_proxy garminsupla-watch:8008
+    }
+
+    handle {
+        respond "Not Found" 404
+    }
+}
+
+# Replace watch.example.com with your Watch API domain.
+# Mount your certificate and private key read-only.
+https://watch.example.com:8008 {
+    tls /run/garminsupla-watch-certs/fullchain.pem /run/garminsupla-watch-certs/private.key
+
+    handle /api/v1/watch/* {
+        reverse_proxy garminsupla-watch:8008
+    }
+
+    handle {
+        respond "Not Found" 404
+    }
+}
