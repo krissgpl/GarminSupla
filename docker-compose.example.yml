@@ -1,0 +1,53 @@
+services:
+
+  garminsupla-api:
+    build: .
+    container_name: garminsupla-api
+    restart: unless-stopped
+
+    ports:
+      - "${GARMIN_SUPLA_ADMIN_BIND_IP:-127.0.0.1}:${GARMIN_SUPLA_ADMIN_PORT:-8009}:8008"
+
+    env_file:
+      - .env
+
+    volumes:
+      - .:/app
+
+  garminsupla-watch:
+    build: .
+    restart: unless-stopped
+
+    command:
+      - uvicorn
+      - app.watch_app:watch_app
+      - --host
+      - 0.0.0.0
+      - --port
+      - "8008"
+
+    env_file:
+      - .env
+
+    volumes:
+      - .:/app
+
+  garminsupla-watch-proxy:
+    image: ghcr.io/krissgpl/garminsupla-caddy-dns@sha256:7192684f73e455edc1567a2bd679013428f79d29cb8db5ff2ea0bbd8bf1a0fc9
+    restart: unless-stopped
+
+    depends_on:
+      - garminsupla-watch
+
+    ports:
+      - "${GARMIN_SUPLA_WATCH_BIND_IP:-127.0.0.1}:8008:8008/tcp"
+
+    volumes:
+      - ./deploy/caddy:/etc/caddy:ro
+      - "${GARMIN_SUPLA_CERT_DIR:?Set GARMIN_SUPLA_CERT_DIR}:/run/garminsupla-watch-certs:ro"
+      - garminsupla_caddy_data:/data
+      - garminsupla_caddy_config:/config
+
+volumes:
+  garminsupla_caddy_data:
+  garminsupla_caddy_config:
