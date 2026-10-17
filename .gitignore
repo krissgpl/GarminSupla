@@ -49,3 +49,6 @@ connectiq/GarminSupla/bin/
 
 # Private DNS provider credentials for Caddy
 deploy/caddy/secrets/
+
+# Local Caddy configuration specific to this installation
+deploy/caddy/Caddyfile
