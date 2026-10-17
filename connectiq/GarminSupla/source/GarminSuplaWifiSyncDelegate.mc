@@ -188,9 +188,11 @@ class GarminSuplaWifiSyncDelegate
             return;
         }
 
+
         var baseUrl =
             serverUrl.toString();
 
+        // Remove trailing slashes.
         while (
             baseUrl.length() > 0
             && baseUrl.substring(
@@ -205,8 +207,20 @@ class GarminSuplaWifiSyncDelegate
                 );
         }
 
+        // Add Watch API port only if not already present.
+        if (
+            baseUrl.length() < 5
+            || !baseUrl.substring(
+                baseUrl.length() - 5,
+                baseUrl.length()
+            ).equals(":8008")
+        ) {
+            baseUrl = baseUrl + ":8008";
+        }
+
         _baseUrl =
             baseUrl + "/api/v1";
+
 
         _token =
             token.toString();

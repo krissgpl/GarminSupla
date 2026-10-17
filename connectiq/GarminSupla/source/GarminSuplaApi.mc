@@ -30,37 +30,48 @@ class GarminSuplaApi {
 	private var _wifiRefreshStartedAt = null;
 	private var _wifiAvailable = null;
 
-	function reloadServerUrl() as Void {
 
-		var serverUrl =
-			Application.Properties.getValue(
-				"serverUrl"
-			);
+function reloadServerUrl() as Void {
 
-		var value =
-			serverUrl.toString();
+    var serverUrl =
+        Application.Properties.getValue(
+            "serverUrl"
+        );
 
-		while (
-			value.length() > 0
-			&& value.substring(
-				value.length() - 1,
-				value.length()
-			).equals("/")
-		) {
-			value =
-				value.substring(
-					0,
-					value.length() - 1
-				);
-		}
+    var value = serverUrl.toString();
 
-		if (value.length() == 0) {
-			_baseUrl = null;
-		} else {
-			_baseUrl =
-				value + "/api/v1";
-		}
-	}
+    while (
+        value.length() > 0
+        && value.substring(
+            value.length() - 1,
+            value.length()
+        ).equals("/")
+    ) {
+        value = value.substring(
+            0,
+            value.length() - 1
+        );
+    }
+
+    if (value.length() == 0) {
+        _baseUrl = null;
+        return;
+    }
+
+    // Watch API uses HTTPS port 8008.
+    // Avoid appending the port twice.
+    if (
+        value.length() < 5
+        || !value.substring(
+            value.length() - 5,
+            value.length()
+        ).equals(":8008")
+    ) {
+        value = value + ":8008";
+    }
+
+    _baseUrl = value + "/api/v1";
+}
 
     function initialize(view) {
         _view = view;
