@@ -42,6 +42,9 @@ services:
     ports:
       - "${GARMIN_SUPLA_WATCH_BIND_IP:-127.0.0.1}:8008:8008/tcp"
 
+    environment:
+      GARMIN_SUPLA_WATCH_DOMAIN: "${GARMIN_SUPLA_WATCH_DOMAIN:?Set GARMIN_SUPLA_WATCH_DOMAIN}"
+
     volumes:
       - ./deploy/caddy:/etc/caddy:ro
       - "${GARMIN_SUPLA_CERT_DIR:?Set GARMIN_SUPLA_CERT_DIR}:/run/garminsupla-watch-certs:ro"

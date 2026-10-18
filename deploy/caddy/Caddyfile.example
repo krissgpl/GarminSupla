@@ -15,9 +15,9 @@
     }
 }
 
-# Replace watch.example.com with your Watch API domain.
-# Mount your certificate and private key read-only.
-https://watch.example.com:8008 {
+# Domain is supplied through GARMIN_SUPLA_WATCH_DOMAIN.
+# Certificate and private key must be mounted read-only.
+https://{$GARMIN_SUPLA_WATCH_DOMAIN}:8008 {
     tls /run/garminsupla-watch-certs/fullchain.pem /run/garminsupla-watch-certs/private.key
 
     handle /api/v1/watch/* {
