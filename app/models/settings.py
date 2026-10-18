@@ -42,6 +42,10 @@ class WatchItem(BaseModel):
 
 class SuplaSettings(BaseModel):
     server: str = "https://supla.krissg.ovh"
+
+    client_id: str | None = None
+    client_secret: str | None = None
+
     access_token: str | None = None
     refresh_token: str | None = None
 
