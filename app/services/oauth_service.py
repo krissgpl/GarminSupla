@@ -1,11 +1,13 @@
-from app.config import settings as app_settings
-from app.clients.supla_client import SuplaClient
-from app.stores.settings_store import SettingsStore
-from app.models.oauth import OAuthToken
+
 from collections.abc import Callable
 from typing import TypeVar
 
+from app.clients.supla_client import SuplaClient
+from app.config import settings as app_settings
 from app.exceptions.supla import UnauthorizedError
+from app.models.oauth import OAuthToken
+from app.models.settings import Settings
+from app.stores.settings_store import SettingsStore
 
 
 T = TypeVar("T")
@@ -22,6 +24,28 @@ class OAuthService:
             store if store is not None else SettingsStore()
         )
 
+    @staticmethod
+    def _client_credentials(
+        settings: Settings,
+    ) -> tuple[str, str]:
+        """Resolve saved credentials or legacy environment settings."""
+
+        client_id = settings.supla.client_id
+        client_secret = settings.supla.client_secret
+
+        if client_id and client_secret:
+            return client_id, client_secret
+
+        if client_id or client_secret:
+            raise ValueError(
+                "Incomplete SUPLA OAuth client credentials."
+            )
+
+        return (
+            app_settings.supla_client_id,
+            app_settings.supla_client_secret,
+        )
+
     def begin_authorization(
         self,
         state: str,
@@ -30,12 +54,17 @@ class OAuthService:
 
         settings = self._settings_store.load()
 
+        client_id, _ = self._client_credentials(
+            settings
+        )
+
         client = SuplaClient(
             server=settings.supla.server,
         )
 
         return client.build_authorize_url(
             state=state,
+            client_id=client_id,
         )
 
     def complete_authorization(
@@ -46,14 +75,18 @@ class OAuthService:
 
         settings = self._settings_store.load()
 
+        client_id, client_secret = (
+            self._client_credentials(settings)
+        )
+
         client = SuplaClient(
             server=settings.supla.server,
         )
 
         token = client.exchange_code(
             code=code,
-            client_id=app_settings.supla_client_id,
-            client_secret=app_settings.supla_client_secret,
+            client_id=client_id,
+            client_secret=client_secret,
             redirect_uri=app_settings.supla_redirect_uri,
         )
 
@@ -68,14 +101,18 @@ class OAuthService:
         if not settings.supla.refresh_token:
             raise ValueError("Refresh token is missing.")
 
+        client_id, client_secret = (
+            self._client_credentials(settings)
+        )
+
         client = SuplaClient(
             server=settings.supla.server,
         )
 
         token = client.refresh_token(
             refresh_token=settings.supla.refresh_token,
-            client_id=app_settings.supla_client_id,
-            client_secret=app_settings.supla_client_secret,
+            client_id=client_id,
+            client_secret=client_secret,
         )
 
         settings.supla.access_token = token.access_token
@@ -99,8 +136,6 @@ class OAuthService:
         *args,
         **kwargs,
     ) -> T:
-        """Execute a SUPLA API operation with automatic OAuth token refresh."""
-
         access_token = self.get_access_token()
 
         try:

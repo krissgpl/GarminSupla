@@ -35,14 +35,16 @@ class SuplaClient:
                 raise UnauthorizedError() from exc
             raise
 
+
     def build_authorize_url(
         self,
         state: str,
+        client_id: str,
     ) -> str:
         """Build the SUPLA OAuth authorization URL."""
 
         params = {
-            "client_id": settings.supla_client_id,
+            "client_id": client_id,
             "redirect_uri": settings.supla_redirect_uri,
             "response_type": "code",
             "state": state,
@@ -50,6 +52,7 @@ class SuplaClient:
         }
 
         return f"{self._url('/oauth/v2/auth')}?{urlencode(params)}"
+
 
     def exchange_code(
         self,
