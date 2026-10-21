@@ -1,5 +1,6 @@
 from typing import Literal
 
+from app.config import settings as app_settings
 from app.services.supla_service import SuplaService
 from app.models.api import SetupStatus, WatchStatus
 from app.models.setup import SetupForm
@@ -45,6 +46,55 @@ class SetupService:
             settings.supla.refresh_token = None
         else:
             settings.supla.server = new_server
+
+        self._store.save(settings)
+
+        return settings
+
+    def save_oauth_credentials(
+        self,
+        *,
+        client_id: str,
+        client_secret: str,
+    ) -> Settings:
+        """Save SUPLA OAuth credentials safely."""
+
+        client_id = client_id.strip()
+        client_secret = client_secret.strip()
+
+        if not client_id or not client_secret:
+            raise ValueError(
+                "Both SUPLA OAuth credentials are required."
+            )
+
+        settings = self._store.load()
+
+        existing_id = settings.supla.client_id
+        existing_secret = settings.supla.client_secret
+
+        if bool(existing_id) != bool(existing_secret):
+            raise ValueError(
+                "Existing SUPLA OAuth credentials are incomplete."
+            )
+
+        old_client_id = (
+            existing_id or app_settings.supla_client_id
+        )
+        old_client_secret = (
+            existing_secret or app_settings.supla_client_secret
+        )
+
+        credentials_changed = (
+            client_id != old_client_id
+            or client_secret != old_client_secret
+        )
+
+        settings.supla.client_id = client_id
+        settings.supla.client_secret = client_secret
+
+        if credentials_changed:
+            settings.supla.access_token = None
+            settings.supla.refresh_token = None
 
         self._store.save(settings)
 
