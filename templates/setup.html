@@ -1,24 +1,30 @@
 {% extends "base.html" %}
 
 {% if language == "pl" %}
-    {% set setup_title = "Konfiguracja GarminSupla" %}
-    {% set server_prompt = "Wpisz adres serwera SUPLA:" %}
-    {% set server_label = "Serwer SUPLA" %}
-    {% set server_help = "Wpisz adres URL swojego serwera SUPLA." %}
-    {% set continue_label = "Kontynuuj" %}
+    {% set setup_title = "Konfiguracja SUPLA" %}
+    {% set server_label = "Adres serwera SUPLA" %}
+    {% set server_help = "Wpisz adres swojego serwera SUPLA Cloud." %}
+    {% set secret_help = "Pozostaw puste, aby zachować obecny sekret. Przy zmianie Client ID wpisz nowy Client Secret." %}
+    {% set guide_title = "Jak uzyskać Client ID i Client Secret?" %}
+    {% set guide_text = "Zaloguj się do swojego SUPLA Cloud, przejdź do integracji i utwórz aplikację OAuth. Skopiuj jej identyfikator i sekret do pól powyżej." %}
+    {% set callback_text = "Adres przekierowania OAuth do wpisania podczas rejestracji aplikacji:" %}
+    {% set continue_label = "Zapisz i kontynuuj" %}
     {% set language_label = "Język" %}
 {% else %}
-    {% set setup_title = "GarminSupla Setup" %}
-    {% set server_prompt = "Enter the address of your SUPLA server:" %}
-    {% set server_label = "SUPLA Server" %}
-    {% set server_help = "Enter the URL of your SUPLA server." %}
-    {% set continue_label = "Continue" %}
+    {% set setup_title = "SUPLA Configuration" %}
+    {% set server_label = "SUPLA Server URL" %}
+    {% set server_help = "Enter your SUPLA Cloud server URL." %}
+    {% set secret_help = "Leave blank to keep the current secret. Enter a new secret if you change Client ID." %}
+    {% set guide_title = "How to obtain Client ID and Client Secret?" %}
+    {% set guide_text = "Sign in to your SUPLA Cloud, open integrations and register an OAuth application. Copy its client identifier and secret into the fields above." %}
+    {% set callback_text = "OAuth redirect URI to register with the application:" %}
+    {% set continue_label = "Save and continue" %}
     {% set language_label = "Language" %}
 {% endif %}
 
 {% block content %}
 <div class="row justify-content-center w-100">
-    <div class="col-12 col-md-8 col-lg-7 col-xl-5">
+    <div class="col-12 col-md-8 col-lg-7">
 
         <div class="card shadow-sm rounded-4 border-0">
             <div class="card-body p-4 p-lg-5">
@@ -36,46 +42,39 @@
                     </select>
                 </div>
 
-                <div class="mb-5">
+                <div class="mb-4">
                     {% include "components/wizard_progress.html" %}
                 </div>
 
-                <h2 class="h3 mb-2">
+                <h2 class="h3 mb-4">
                     {{ setup_title }}
                 </h2>
 
-                <p class="text-muted mb-3">
-                    {{ server_prompt }}
-                </p>
-
                 <form method="post" novalidate>
 
-                <input
-                    type="hidden"
-                    name="csrf_token"
-                    value="{{ csrf_token }}"
-                >
+                    <input
+                        type="hidden"
+                        name="csrf_token"
+                        value="{{ csrf_token }}"
+                    >
 
-                    <div class="mb-4">
-                        <label
-                            for="server"
-                            class="form-label fw-semibold"
-                        >
+                    <div class="mb-3">
+                        <label for="server" class="form-label fw-semibold">
                             {{ server_label }}
                         </label>
 
                         <input
                             type="url"
-                            class="form-control form-control-lg {% if errors and errors.server %}is-invalid{% endif %}"
+                            class="form-control {% if errors.server %}is-invalid{% endif %}"
                             id="server"
                             name="server"
-                            placeholder="https://supla.example.com"
-                            value="{{ form.server if form else '' }}"
+                            placeholder="https://svrXX.supla.org"
+                            value="{{ form.server }}"
+                            autocomplete="url"
                             required
-                            autofocus
                         >
 
-                        {% if errors and errors.server %}
+                        {% if errors.server %}
                         <div class="invalid-feedback">
                             {{ errors.server }}
                         </div>
@@ -86,15 +85,88 @@
                         </div>
                     </div>
 
-                    <div class="d-grid mt-3">
-                        <button
-                            type="submit"
-                            class="btn btn-success btn-lg"
+                    <div class="mb-3">
+                        <label for="client_id" class="form-label fw-semibold">
+                            Client ID
+                        </label>
+
+                        <input
+                            type="text"
+                            class="form-control {% if errors.client_id %}is-invalid{% endif %}"
+                            id="client_id"
+                            name="client_id"
+                            value="{{ form.client_id }}"
+                            autocomplete="off"
+                            required
                         >
+
+                        {% if errors.client_id %}
+                        <div class="invalid-feedback">
+                            {{ errors.client_id }}
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="client_secret" class="form-label fw-semibold">
+                            Client Secret
+                        </label>
+
+                        <input
+                            type="password"
+                            class="form-control {% if errors.client_secret %}is-invalid{% endif %}"
+                            id="client_secret"
+                            name="client_secret"
+                            autocomplete="new-password"
+                        >
+
+                        {% if errors.client_secret %}
+                        <div class="invalid-feedback">
+                            {{ errors.client_secret }}
+                        </div>
+                        {% endif %}
+
+                        <div class="form-text">
+                            {{ secret_help }}
+                        </div>
+                    </div>
+
+                    <div class="alert alert-info mb-4">
+                        <h3 class="h6 fw-semibold">
+                            {{ guide_title }}
+                        </h3>
+
+                        <p class="small mb-2">
+                            {{ guide_text }}
+                        </p>
+
+                        <p class="small mb-1">
+                            {{ callback_text }}
+                        </p>
+
+                        <code class="small text-break">
+                            {{ redirect_uri }}
+                        </code>
+
+                        <div class="mt-2">
+                            <a
+                                href="https://github.com/SUPLA/api-client-php#oauth2"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="small"
+                            >
+                                SUPLA OAuth2 — dokumentacja
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-success btn-lg">
                             {{ continue_label }}
                             <i class="bi bi-arrow-right ms-2"></i>
                         </button>
                     </div>
+
                 </form>
             </div>
         </div>

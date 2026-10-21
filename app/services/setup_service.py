@@ -100,6 +100,76 @@ class SetupService:
 
         return settings
 
+    def save_setup(
+        self,
+        form: SetupForm,
+        *,
+        client_id: str,
+        client_secret: str,
+    ) -> Settings:
+        """Atomically save SUPLA server and OAuth credentials."""
+
+        client_id = client_id.strip()
+        client_secret = client_secret.strip()
+
+        if not client_id:
+            raise ValueError(
+                "SUPLA Client ID is required."
+            )
+
+        settings = self._store.load()
+
+        stored_id = settings.supla.client_id
+        stored_secret = settings.supla.client_secret
+
+        complete_stored_pair = (
+            bool(stored_id) == bool(stored_secret)
+        )
+
+        if complete_stored_pair:
+            previous_id = (
+                stored_id or app_settings.supla_client_id
+            )
+            previous_secret = (
+                stored_secret or app_settings.supla_client_secret
+            )
+        else:
+            previous_id = stored_id
+            previous_secret = stored_secret
+
+        if not client_secret:
+            if (
+                not complete_stored_pair
+                or not previous_secret
+                or client_id != previous_id
+            ):
+                raise ValueError(
+                    "SUPLA Client Secret is required "
+                    "when changing Client ID."
+                )
+
+            client_secret = previous_secret
+
+        new_server = str(form.server).rstrip("/")
+
+        configuration_changed = (
+            settings.supla.server != new_server
+            or client_id != previous_id
+            or client_secret != previous_secret
+        )
+
+        settings.supla.server = new_server
+        settings.supla.client_id = client_id
+        settings.supla.client_secret = client_secret
+
+        if configuration_changed:
+            settings.supla.access_token = None
+            settings.supla.refresh_token = None
+
+        self._store.save(settings)
+
+        return settings
+
     def load_settings(self) -> Settings:
         """Load current application settings."""
 
