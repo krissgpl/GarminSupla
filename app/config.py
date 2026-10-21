@@ -12,8 +12,10 @@ class AppSettings(BaseSettings):
     # Optional until administrator 2FA is configured.
     totp_encryption_key: str | None = None
 
-    supla_client_id: str
-    supla_client_secret: str
+    # Optional: configured through the setup wizard.
+    # Existing installations can still use .env.
+    supla_client_id: str | None = None
+    supla_client_secret: str | None = None
     supla_redirect_uri: str
     supla_scope: str
 

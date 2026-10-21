@@ -41,9 +41,21 @@ class OAuthService:
                 "Incomplete SUPLA OAuth client credentials."
             )
 
-        return (
-            app_settings.supla_client_id,
-            app_settings.supla_client_secret,
+        legacy_id = app_settings.supla_client_id
+        legacy_secret = app_settings.supla_client_secret
+
+        if legacy_id and legacy_secret:
+            return legacy_id, legacy_secret
+
+        if legacy_id or legacy_secret:
+            raise ValueError(
+                "Incomplete legacy SUPLA OAuth "
+                "client credentials."
+            )
+
+        raise ValueError(
+            "SUPLA OAuth client credentials "
+            "are not configured."
         )
 
     def begin_authorization(

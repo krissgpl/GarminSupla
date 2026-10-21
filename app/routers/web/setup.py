@@ -43,6 +43,7 @@ async def setup_page(request: Request):
                 "client_id": (
                     current.supla.client_id
                     or settings.supla_client_id
+                    or ""
                 ),
             },
             "redirect_uri": settings.supla_redirect_uri,
