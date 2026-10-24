@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% set errors = errors | default({}) %}
+
 {% if language == "pl" %}
     {% set setup_title = "Konfiguracja SUPLA" %}
     {% set server_label = "Adres serwera SUPLA" %}
@@ -131,6 +133,65 @@
                         </div>
                     </div>
 
+                    <div class="mb-4">
+                        <label
+                            for="redirect_uri"
+                            class="form-label fw-semibold"
+                        >
+                            {% if language == "pl" %}
+                                Adres przekierowania OAuth
+                            {% else %}
+                                OAuth Redirect URI
+                            {% endif %}
+                        </label>
+
+                        <input
+                            type="url"
+                            class="form-control {% if errors.redirect_uri %}is-invalid{% endif %}"
+                            id="redirect_uri"
+                            name="redirect_uri"
+                            value="{{ form.redirect_uri }}"
+                            autocomplete="url"
+                            placeholder="https://garmin.example.com/oauth/callback"
+                            required
+                        >
+
+                        {% if errors.redirect_uri %}
+                        <div class="invalid-feedback">
+                            {{ errors.redirect_uri }}
+                        </div>
+                        {% endif %}
+
+                        <div class="form-text">
+                            {% if language == "pl" %}
+                                Wpisz publiczny adres HTTPS dashboardu zakończony
+                                /oauth/callback. Nie używaj portu Watch API 8008.
+                            {% else %}
+                                Enter the public HTTPS dashboard address ending
+                                in /oauth/callback. Do not use Watch API port 8008.
+                            {% endif %}
+                        </div>
+
+                        <div
+                            id="callback-suggestion"
+                            class="small text-muted mt-2 text-break"
+                            data-prefix="{% if language == 'pl' %}Sugerowany adres:{% else %}Suggested address:{% endif %}"
+                        ></div>
+
+                        <button
+                            id="use-current-dashboard-callback"
+                            type="button"
+                            class="btn btn-outline-secondary btn-sm mt-2"
+                            hidden
+                        >
+                            {% if language == "pl" %}
+                                Użyj adresu tego panelu
+                            {% else %}
+                                Use this dashboard address
+                            {% endif %}
+                        </button>
+                    </div>
+
                     <div class="alert alert-info mb-4">
                         <h3 class="h6 fw-semibold">
                             {{ guide_title }}
@@ -144,9 +205,10 @@
                             {{ callback_text }}
                         </p>
 
-                        <code class="small text-break">
-                            {{ redirect_uri }}
-                        </code>
+                        <code
+                            id="oauth-callback-preview"
+                            class="small text-break"
+                        >{{ form.redirect_uri }}</code>
 
                         <div class="mt-2">
                             <a

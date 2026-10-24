@@ -87,3 +87,70 @@ document.addEventListener(
     "DOMContentLoaded",
     initializeUILanguageSelector,
 );
+
+
+function initializeOAuthCallbackSuggestion() {
+
+    const input =
+        document.getElementById("redirect_uri");
+
+    const button =
+        document.getElementById(
+            "use-current-dashboard-callback"
+        );
+
+    const suggestion =
+        document.getElementById(
+            "callback-suggestion"
+        );
+
+    const preview =
+        document.getElementById(
+            "oauth-callback-preview"
+        );
+
+    if (!input || !button) {
+        return;
+    }
+
+    function updatePreview() {
+        if (preview) {
+            preview.textContent = input.value.trim();
+        }
+    }
+
+    input.addEventListener("input", updatePreview);
+    updatePreview();
+
+    // Never suggest an HTTP callback.
+    if (window.location.protocol !== "https:") {
+        return;
+    }
+
+    const suggestedUri = new URL(
+        "/oauth/callback",
+        window.location.origin,
+    ).href;
+
+    if (suggestion) {
+        suggestion.textContent =
+            `${suggestion.dataset.prefix} ${suggestedUri}`;
+    }
+
+    button.hidden = false;
+
+    button.addEventListener("click", () => {
+
+        // An explicit click is required. Never
+        // overwrite a previously saved callback.
+        input.value = suggestedUri;
+
+        updatePreview();
+        input.focus();
+    });
+}
+
+document.addEventListener(
+    "DOMContentLoaded",
+    initializeOAuthCallbackSuggestion,
+);

@@ -8,6 +8,7 @@ from app.models.api.setup import SuplaAvailableItem
 
 from app.models.settings import (
     Settings,
+    SuplaSettings,
     WatchDevice,
     WatchItem,
 )
@@ -106,8 +107,9 @@ class SetupService:
         *,
         client_id: str,
         client_secret: str,
+        redirect_uri: str | None = None,
     ) -> Settings:
-        """Atomically save SUPLA server and OAuth credentials."""
+        """Atomically save SUPLA OAuth configuration."""
 
         client_id = client_id.strip()
         client_secret = client_secret.strip()
@@ -150,17 +152,50 @@ class SetupService:
 
             client_secret = previous_secret
 
+        # Resolve the callback currently used by OAuth.
+        previous_redirect_uri = (
+            str(settings.supla.redirect_uri)
+            if settings.supla.redirect_uri is not None
+            else app_settings.supla_redirect_uri
+        )
+
+        # None means the caller did not provide a new
+        # callback. This preserves existing integrations.
+        new_redirect_uri = settings.supla.redirect_uri
+
+        if redirect_uri is not None:
+            validated = SuplaSettings.model_validate(
+                {
+                    "redirect_uri": redirect_uri.strip(),
+                }
+            )
+
+            if validated.redirect_uri is None:
+                raise ValueError(
+                    "SUPLA OAuth redirect URI is required."
+                )
+
+            new_redirect_uri = validated.redirect_uri
+
+        effective_redirect_uri = (
+            str(new_redirect_uri)
+            if new_redirect_uri is not None
+            else app_settings.supla_redirect_uri
+        )
+
         new_server = str(form.server).rstrip("/")
 
         configuration_changed = (
             settings.supla.server != new_server
             or client_id != previous_id
             or client_secret != previous_secret
+            or effective_redirect_uri != previous_redirect_uri
         )
 
         settings.supla.server = new_server
         settings.supla.client_id = client_id
         settings.supla.client_secret = client_secret
+        settings.supla.redirect_uri = new_redirect_uri
 
         if configuration_changed:
             settings.supla.access_token = None

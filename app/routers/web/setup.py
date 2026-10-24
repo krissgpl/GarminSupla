@@ -45,8 +45,12 @@ async def setup_page(request: Request):
                     or settings.supla_client_id
                     or ""
                 ),
+                "redirect_uri": (
+                    str(current.supla.redirect_uri)
+                    if current.supla.redirect_uri is not None
+                    else settings.supla_redirect_uri
+                ),
             },
-            "redirect_uri": settings.supla_redirect_uri,
             "errors": {},
             "csrf_token": request.cookies.get(
                 "garminsupla_csrf"
@@ -61,6 +65,7 @@ async def setup_submit(
     server: str = Form(...),
     client_id: str = Form(""),
     client_secret: str = Form(""),
+    redirect_uri: str | None = Form(None),
     csrf_token: str = Form(...),
 ):
     verify_admin_csrf(
@@ -75,9 +80,24 @@ async def setup_submit(
         current.ui.language,
     )
 
+    callback_submitted = (
+        "redirect_uri" in (await request.form())
+    )
+
+    current_redirect_uri = (
+        str(current.supla.redirect_uri)
+        if current.supla.redirect_uri is not None
+        else settings.supla_redirect_uri
+    )
+
     form_data = {
         "server": server,
         "client_id": client_id.strip(),
+        "redirect_uri": (
+            (redirect_uri or "").strip()
+            if callback_submitted
+            else current_redirect_uri
+        ),
     }
 
     errors = {}
@@ -103,12 +123,34 @@ async def setup_submit(
             else "Client ID is required."
         )
 
+    if callback_submitted and not form_data["redirect_uri"]:
+        errors["redirect_uri"] = (
+            "Podaj adres przekierowania OAuth."
+            if language == "pl"
+            else "Enter the OAuth redirect URI."
+        )
+
     if not errors and form is not None:
         try:
             saved_settings = setup_service.save_setup(
                 form,
                 client_id=client_id,
                 client_secret=client_secret,
+                redirect_uri=(
+                    form_data["redirect_uri"]
+                    if callback_submitted
+                    else None
+                ),
+            )
+
+        except ValidationError:
+            errors["redirect_uri"] = (
+                "Podaj prawidłowy adres HTTPS "
+                "zakończony /oauth/callback."
+                if language == "pl"
+                else
+                "Enter a valid HTTPS URL "
+                "ending in /oauth/callback."
             )
 
         except ValueError:
