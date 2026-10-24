@@ -16,7 +16,9 @@ class AppSettings(BaseSettings):
     # Existing installations can still use .env.
     supla_client_id: str | None = None
     supla_client_secret: str | None = None
-    supla_redirect_uri: str
+    # Optional: configured through the setup wizard.
+    # Legacy installations can still use .env.
+    supla_redirect_uri: str | None = None
     supla_scope: str
 
     @field_validator("totp_encryption_key")

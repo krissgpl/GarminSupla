@@ -62,12 +62,22 @@ class OAuthService:
     def _redirect_uri(
         settings: Settings,
     ) -> str:
-        """Resolve configured or legacy OAuth callback."""
+        """Resolve saved or legacy OAuth callback."""
 
         if settings.supla.redirect_uri is not None:
             return str(settings.supla.redirect_uri)
 
-        return app_settings.supla_redirect_uri
+        legacy_redirect_uri = (
+            app_settings.supla_redirect_uri
+        )
+
+        if legacy_redirect_uri:
+            return legacy_redirect_uri
+
+        raise ValueError(
+            "SUPLA OAuth redirect URI "
+            "is not configured."
+        )
 
     def begin_authorization(
         self,

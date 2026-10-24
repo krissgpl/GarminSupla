@@ -183,6 +183,11 @@ class SetupService:
             else app_settings.supla_redirect_uri
         )
 
+        if not effective_redirect_uri:
+            raise ValueError(
+                "SUPLA OAuth redirect URI is required."
+            )
+
         new_server = str(form.server).rstrip("/")
 
         configuration_changed = (

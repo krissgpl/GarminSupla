@@ -48,7 +48,7 @@ async def setup_page(request: Request):
                 "redirect_uri": (
                     str(current.supla.redirect_uri)
                     if current.supla.redirect_uri is not None
-                    else settings.supla_redirect_uri
+                    else (settings.supla_redirect_uri or "")
                 ),
             },
             "errors": {},
@@ -87,7 +87,7 @@ async def setup_submit(
     current_redirect_uri = (
         str(current.supla.redirect_uri)
         if current.supla.redirect_uri is not None
-        else settings.supla_redirect_uri
+        else (settings.supla_redirect_uri or "")
     )
 
     form_data = {
@@ -123,7 +123,7 @@ async def setup_submit(
             else "Client ID is required."
         )
 
-    if callback_submitted and not form_data["redirect_uri"]:
+    if not form_data["redirect_uri"]:
         errors["redirect_uri"] = (
             "Podaj adres przekierowania OAuth."
             if language == "pl"
