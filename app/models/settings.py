@@ -1,7 +1,9 @@
 from pydantic import (
     BaseModel,
     Field,
+    HttpUrl,
     PrivateAttr,
+    field_validator,
 )
 from typing import Literal
 
@@ -46,8 +48,36 @@ class SuplaSettings(BaseModel):
     client_id: str | None = None
     client_secret: str | None = None
 
+    # Public HTTPS callback confirmed in the setup wizard.
+    # None preserves legacy .env configuration.
+    redirect_uri: HttpUrl | None = None
+
     access_token: str | None = None
     refresh_token: str | None = None
+
+    @field_validator("redirect_uri")
+    @classmethod
+    def validate_redirect_uri(
+        cls,
+        value: HttpUrl | None,
+    ) -> HttpUrl | None:
+        if value is None:
+            return None
+
+        if (
+            value.scheme != "https"
+            or value.path != "/oauth/callback"
+            or value.query is not None
+            or value.fragment is not None
+            or value.username is not None
+            or value.password is not None
+        ):
+            raise ValueError(
+                "SUPLA OAuth redirect URI must be "
+                "an HTTPS URL ending in /oauth/callback."
+            )
+
+        return value
 
 
 class WatchDevice(BaseModel):

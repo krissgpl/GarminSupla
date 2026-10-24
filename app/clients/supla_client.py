@@ -40,12 +40,13 @@ class SuplaClient:
         self,
         state: str,
         client_id: str,
+        redirect_uri: str,
     ) -> str:
         """Build the SUPLA OAuth authorization URL."""
 
         params = {
             "client_id": client_id,
-            "redirect_uri": settings.supla_redirect_uri,
+            "redirect_uri": redirect_uri,
             "response_type": "code",
             "state": state,
             "scope": settings.supla_scope,

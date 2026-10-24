@@ -58,6 +58,17 @@ class OAuthService:
             "are not configured."
         )
 
+    @staticmethod
+    def _redirect_uri(
+        settings: Settings,
+    ) -> str:
+        """Resolve configured or legacy OAuth callback."""
+
+        if settings.supla.redirect_uri is not None:
+            return str(settings.supla.redirect_uri)
+
+        return app_settings.supla_redirect_uri
+
     def begin_authorization(
         self,
         state: str,
@@ -77,6 +88,7 @@ class OAuthService:
         return client.build_authorize_url(
             state=state,
             client_id=client_id,
+            redirect_uri=self._redirect_uri(settings),
         )
 
     def complete_authorization(
@@ -99,7 +111,7 @@ class OAuthService:
             code=code,
             client_id=client_id,
             client_secret=client_secret,
-            redirect_uri=app_settings.supla_redirect_uri,
+            redirect_uri=self._redirect_uri(settings),
         )
 
         settings.supla.access_token = token.access_token
