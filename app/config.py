@@ -19,7 +19,12 @@ class AppSettings(BaseSettings):
     # Optional: configured through the setup wizard.
     # Legacy installations can still use .env.
     supla_redirect_uri: str | None = None
-    supla_scope: str
+    # Minimum permissions required by GarminSupla.
+    # Can be overridden by SUPLA_SCOPE in .env.
+    supla_scope: str = (
+        "iodevices_r channels_r channels_ea "
+        "scenes_r scenes_ea offline_access"
+    )
 
     @field_validator("totp_encryption_key")
     @classmethod
