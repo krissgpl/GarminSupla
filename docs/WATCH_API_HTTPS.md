@@ -145,21 +145,70 @@ hostname.
 
 ## 7. Validate before starting
 
-Check that both certificate files exist and are readable
-from the Docker host.
+Run the HTTPS preflight check on the Docker host, from the
+GarminSupla repository directory.
 
-Validate the Docker Compose configuration without displaying
-resolved environment values:
+The preflight script requires Python packages `cryptography`
+and `python-dotenv`.
+
+If these packages are not installed on the host, prepare an
+isolated Python environment:
+
+```bash
+python3 -m venv .venv
+
+.venv/bin/python -m pip install \
+  'cryptography>=50.0.2,<51.0.0' \
+  'python-dotenv==1.2.4'
+```
+
+The `.venv` directory is excluded from Git.
+
+Validate the configuration:
+
+```bash
+.venv/bin/python -m scripts.check_deploy
+```
+
+If the required packages are already installed in the host
+Python environment, you can instead run:
+
+```bash
+python3 -m scripts.check_deploy
+```
+
+The checker reads `.env` and verifies:
+
+- Required configuration settings.
+- Watch API DNS hostname format.
+- Existing absolute certificate directory.
+- Presence of `fullchain.pem` and `private.key`.
+- Certificate validity dates.
+- Certificate DNS subjectAltName coverage.
+- Matching certificate and private key.
+
+Success is reported as:
+
+```text
+OK: Watch API HTTPS preflight passed (local checks only).
+```
+
+The script returns exit code 0 on success and 1 on a
+validation error. It does not modify the configuration.
+
+Then validate the Docker Compose configuration:
 
 ```bash
 docker compose config --quiet
 ```
 
-If validation succeeds, follow the installation instructions
-for starting the services and creating the administrator.
+These checks do not establish certificate chain trust,
+container access to certificate files, DNS resolution,
+public network reachability or end-to-end HTTPS operation.
 
-Do not change a running production deployment solely to
-test this guide.
+Do not start the deployment until configuration validation
+passes. Do not change an existing production deployment
+solely to test this guide.
 
 ## 8. Security notes
 
