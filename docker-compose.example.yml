@@ -12,7 +12,8 @@ services:
       - .env
 
     volumes:
-      - .:/app
+      - .:/app:ro
+      - ./data:/app/data:rw
 
   garminsupla-watch:
     build: .
@@ -30,7 +31,8 @@ services:
       - .env
 
     volumes:
-      - .:/app
+      - .:/app:ro
+      - ./data:/app/data:rw
 
   garminsupla-watch-proxy:
     image: ghcr.io/krissgpl/garminsupla-caddy-dns@sha256:7192684f73e455edc1567a2bd679013428f79d29cb8db5ff2ea0bbd8bf1a0fc9
