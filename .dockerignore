@@ -1,0 +1,37 @@
+# Git metadata
+.git/
+
+# Environment configuration and secrets
+.env
+.env.*
+!.env.example
+
+# Persistent application data
+data/
+
+# Local Docker and Caddy configuration
+docker-compose.yml
+deploy/caddy/Caddyfile
+deploy/caddy/secrets/
+
+# Certificates and private keys
+**/*.pem
+**/*.key
+**/*.p12
+**/*.pfx
+
+# Python cache and virtual environments
+**/__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Development artifacts
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+build/
+dist/
+*.egg-info/
