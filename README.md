@@ -128,3 +128,4 @@ container and should be treated as privileged administrative operations.
 - CHANGELOG.md
 - ARCHITECTURE.md
 - TODO.md
+- [Watch API HTTPS deployment](docs/WATCH_API_HTTPS.md)
