@@ -13,6 +13,12 @@ USER_SETTING = (
     '${GARMIN_SUPLA_RUN_GID:-1000}"'
 )
 
+MOUNT_SECTION = (
+    "    volumes:\n"
+    "      - .:/app:ro\n"
+    "      - ./data:/app/data:rw"
+)
+
 
 class ComposeNonrootTests(unittest.TestCase):
 
@@ -22,7 +28,7 @@ class ComposeNonrootTests(unittest.TestCase):
             encoding="utf-8"
         )
 
-    def test_both_application_services_use_nonroot(self):
+    def test_both_services_use_nonroot(self):
         for service in (
             "garminsupla-api",
             "garminsupla-watch",
@@ -30,7 +36,8 @@ class ComposeNonrootTests(unittest.TestCase):
             with self.subTest(service=service):
                 self.assertIn(
                     f"  {service}:\n"
-                    f"{USER_SETTING}",
+                    f"{USER_SETTING}\n"
+                    f"{MOUNT_SECTION}",
                     self.content,
                 )
 
@@ -39,15 +46,29 @@ class ComposeNonrootTests(unittest.TestCase):
             2,
         )
 
-    def test_proxy_is_not_modified(self):
+    def test_both_services_protect_code_and_data(self):
+        self.assertEqual(
+            self.content.count(
+                "      - .:/app:ro"
+            ),
+            2,
+        )
+
+        self.assertEqual(
+            self.content.count(
+                "      - ./data:/app/data:rw"
+            ),
+            2,
+        )
+
         self.assertNotIn(
-            "garminsupla-watch-proxy:",
+            "      - .:/app\n",
             self.content,
         )
 
-    def test_override_does_not_change_mounts_or_ports(self):
+    def test_proxy_and_ports_are_unchanged(self):
         for forbidden in (
-            "    volumes:",
+            "garminsupla-watch-proxy:",
             "    ports:",
             "    build:",
             "    image:",

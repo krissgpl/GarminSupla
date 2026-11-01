@@ -1,13 +1,23 @@
 # Optional non-root deployment override.
 #
-# Do not enable on an existing installation until all
-# persistent data files are accessible to the chosen UID/GID.
-#
 # This file is not loaded automatically by Docker Compose.
+#
+# Existing installations must back up and migrate all
+# persistent data files to the chosen UID/GID before use.
+# Root-owned files with mode 0600 are not accessible to UID 1000.
+#
+# The mounts also protect older deployments where the main
+# docker-compose.yml still mounts /app read-write.
 
 services:
   garminsupla-api:
     user: "${GARMIN_SUPLA_RUN_UID:-1000}:${GARMIN_SUPLA_RUN_GID:-1000}"
+    volumes:
+      - .:/app:ro
+      - ./data:/app/data:rw
 
   garminsupla-watch:
     user: "${GARMIN_SUPLA_RUN_UID:-1000}:${GARMIN_SUPLA_RUN_GID:-1000}"
+    volumes:
+      - .:/app:ro
+      - ./data:/app/data:rw
