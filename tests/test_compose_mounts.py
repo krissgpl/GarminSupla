@@ -132,5 +132,18 @@ class ComposeMountTests(unittest.TestCase):
         )
 
 
+    def test_caddy_disallows_new_privileges(self):
+        proxy = self.compose.split(
+            "  garminsupla-watch-proxy:\n",
+            1,
+        )[1].split("\nvolumes:\n", 1)[0]
+
+        self.assertIn(
+            "    security_opt:\n"
+            "      - no-new-privileges:true\n",
+            proxy,
+        )
+
+
 if __name__ == "__main__":
     unittest.main()
