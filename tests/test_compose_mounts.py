@@ -145,5 +145,27 @@ class ComposeMountTests(unittest.TestCase):
         )
 
 
+    def test_caddy_root_filesystem_is_read_only(self):
+        proxy = self.compose.split(
+            "  garminsupla-watch-proxy:\n",
+            1,
+        )[1].split("\nvolumes:\n", 1)[0]
+
+        self.assertIn(
+            "    read_only: true\n",
+            proxy,
+        )
+
+        self.assertIn(
+            "      - garminsupla_caddy_data:/data\n",
+            proxy,
+        )
+
+        self.assertIn(
+            "      - garminsupla_caddy_config:/config\n",
+            proxy,
+        )
+
+
 if __name__ == "__main__":
     unittest.main()
