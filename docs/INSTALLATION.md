@@ -33,6 +33,7 @@ Run the remaining commands from the repository directory.
 ## 3. Generate local configuration
 
 ```bash
+mkdir -p data
 python3 -m scripts.init_env
 python3 -m scripts.init_deploy
 ```
@@ -50,6 +51,57 @@ automatically. Do not replace the generated value after
 administrator sessions have been established.
 
 SUPLA OAuth credentials do not need to be entered into `.env`.
+
+### Non-root installation permissions
+
+Clone the repository and initialize GarminSupla as a regular
+Linux user. Do not run the setup commands with `sudo`.
+
+During first initialization, `scripts.init_env` detects the
+current user's UID and GID and saves them in `.env`:
+
+```dotenv
+GARMIN_SUPLA_RUN_UID=1000
+GARMIN_SUPLA_RUN_GID=1000
+```
+
+These are example values. Actual values are determined from
+the user running the initializer.
+
+The initializer rejects UID 0 or GID 0 for a new configuration
+unless non-root identifiers are explicitly supplied.
+
+The generated `.env` has permissions `0600` and must remain
+readable by the configured application user.
+
+The `data/` directory must be owned by and writable to the
+configured application UID. On a fresh clone created by the
+installing user, `mkdir -p data` prepares this directory.
+
+Check the installation user and file ownership:
+
+```bash
+id -u
+id -g
+stat -c '%u:%g %a %n' .env data
+test -r .env
+test -w data
+```
+
+The UID/GID shown for `.env` and `data/` should match the
+installing user's identifiers. If they do not, correct the
+ownership before starting the containers.
+
+Do not make configuration files world-readable or use
+`chmod 777` to resolve permission problems.
+
+Both Python services run as the configured non-root UID/GID.
+The application code is mounted read-only at `/app`, while
+persistent data is mounted read-write at `/app/data`.
+
+Existing `.env` files are preserved by the initializer.
+Changing UID/GID on an existing installation requires
+separate verification of persistent file ownership.
 
 ## 4. Configure Watch API HTTPS
 
@@ -302,8 +354,10 @@ Do not disable TLS certificate verification as a workaround.
 
 ## 14. Protect persistent data
 
-The current example Compose mounts the repository directory
-into the application containers.
+The example Compose mounts the repository read-only at
+`/app` and persistent application data read-write at
+`/app/data`. Both Python services use the non-root UID/GID
+configured during installation.
 
 Persistent application data includes:
 
