@@ -36,12 +36,24 @@ services:
       - .:/app:ro
       - ./data:/app/data:rw
 
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import socket; socket.create_connection(('127.0.0.1', 8008), timeout=2).close()"
+      interval: 5s
+      timeout: 3s
+      retries: 12
+      start_period: 10s
+
   garminsupla-watch-proxy:
     image: ghcr.io/krissgpl/garminsupla-caddy-dns@sha256:7192684f73e455edc1567a2bd679013428f79d29cb8db5ff2ea0bbd8bf1a0fc9
     restart: unless-stopped
 
     depends_on:
-      - garminsupla-watch
+      garminsupla-watch:
+        condition: service_healthy
 
     ports:
       - "${GARMIN_SUPLA_WATCH_BIND_IP:-127.0.0.1}:8008:8008/tcp"

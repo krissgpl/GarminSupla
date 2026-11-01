@@ -109,5 +109,28 @@ class ComposeMountTests(unittest.TestCase):
         )
 
 
+    def test_caddy_waits_for_watch_health(self):
+        self.assertIn(
+            "    healthcheck:\n"
+            "      test:\n"
+            "        - CMD\n"
+            "        - python\n"
+            "        - -c\n",
+            self.compose,
+        )
+
+        self.assertIn(
+            "socket.create_connection",
+            self.compose,
+        )
+
+        self.assertIn(
+            "    depends_on:\n"
+            "      garminsupla-watch:\n"
+            "        condition: service_healthy\n",
+            self.compose,
+        )
+
+
 if __name__ == "__main__":
     unittest.main()
