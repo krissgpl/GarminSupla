@@ -167,5 +167,23 @@ class ComposeMountTests(unittest.TestCase):
         )
 
 
+    def test_python_services_disallow_new_privileges(self):
+        for service in (
+            "garminsupla-api",
+            "garminsupla-watch",
+        ):
+            with self.subTest(service=service):
+                block = self.compose.split(
+                    f"  {service}:\n",
+                    1,
+                )[1].split("\n  garminsupla-", 1)[0]
+
+                self.assertIn(
+                    "    security_opt:\n"
+                    "      - no-new-privileges:true\n",
+                    block,
+                )
+
+
 if __name__ == "__main__":
     unittest.main()

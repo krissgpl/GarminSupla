@@ -6,6 +6,9 @@ services:
     container_name: garminsupla-api
     restart: unless-stopped
 
+    security_opt:
+      - no-new-privileges:true
+
     ports:
       - "${GARMIN_SUPLA_ADMIN_BIND_IP:-127.0.0.1}:${GARMIN_SUPLA_ADMIN_PORT:-8009}:8008"
 
@@ -20,6 +23,9 @@ services:
     build: .
     user: "${GARMIN_SUPLA_RUN_UID:-1000}:${GARMIN_SUPLA_RUN_GID:-1000}"
     restart: unless-stopped
+
+    security_opt:
+      - no-new-privileges:true
 
     command:
       - uvicorn
