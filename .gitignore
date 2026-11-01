@@ -52,3 +52,6 @@ deploy/caddy/secrets/
 
 # Local Caddy configuration specific to this installation
 deploy/caddy/Caddyfile
+
+# Local Docker Compose deployment configuration
+docker-compose.yml
