@@ -85,5 +85,29 @@ class ComposeMountTests(unittest.TestCase):
         )
 
 
+    def test_new_install_uses_nonroot(self):
+        user_line = (
+            '    user: "${GARMIN_SUPLA_RUN_UID:-1000}:'
+            '${GARMIN_SUPLA_RUN_GID:-1000}"'
+        )
+
+        for service in (
+            "garminsupla-api",
+            "garminsupla-watch",
+        ):
+            with self.subTest(service=service):
+                self.assertIn(
+                    f"  {service}:\n"
+                    f"    build: .\n"
+                    f"{user_line}\n",
+                    self.compose,
+                )
+
+        self.assertEqual(
+            self.compose.count(user_line),
+            2,
+        )
+
+
 if __name__ == "__main__":
     unittest.main()

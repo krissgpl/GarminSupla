@@ -2,6 +2,7 @@ services:
 
   garminsupla-api:
     build: .
+    user: "${GARMIN_SUPLA_RUN_UID:-1000}:${GARMIN_SUPLA_RUN_GID:-1000}"
     container_name: garminsupla-api
     restart: unless-stopped
 
@@ -17,6 +18,7 @@ services:
 
   garminsupla-watch:
     build: .
+    user: "${GARMIN_SUPLA_RUN_UID:-1000}:${GARMIN_SUPLA_RUN_GID:-1000}"
     restart: unless-stopped
 
     command:
