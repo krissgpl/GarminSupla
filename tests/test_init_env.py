@@ -25,18 +25,22 @@ class InitEnvTests(unittest.TestCase):
         self.target = self.directory / ".env"
 
     def run_init(self, target=None):
+        command = [
+            sys.executable,
+            "-m",
+            "scripts.init_env",
+            "--output",
+            str(target if target is not None else self.target),
+        ]
+
+        if os.getuid() == 0 or os.getgid() == 0:
+            command.extend([
+                "--run-uid", "1000",
+                "--run-gid", "1000",
+            ])
+
         return subprocess.run(
-            [
-                sys.executable,
-                "-m",
-                "scripts.init_env",
-                "--output",
-                str(
-                    target
-                    if target is not None
-                    else self.target
-                ),
-            ],
+            command,
             cwd=ROOT_DIR,
             capture_output=True,
             text=True,
@@ -59,6 +63,55 @@ class InitEnvTests(unittest.TestCase):
         self.assertEqual(len(values), 1)
 
         return values[0]
+
+    def test_generated_runtime_uid_and_gid(self):
+        self.run_init()
+
+        lines = self.target.read_text(
+            encoding="utf-8"
+        ).splitlines()
+
+        expected_uid = os.getuid() or 1000
+        expected_gid = os.getgid() or 1000
+
+        self.assertEqual(
+            [
+                line
+                for line in lines
+                if line.startswith("GARMIN_SUPLA_RUN_UID=")
+            ],
+            [f"GARMIN_SUPLA_RUN_UID={expected_uid}"],
+        )
+
+        self.assertEqual(
+            [
+                line
+                for line in lines
+                if line.startswith("GARMIN_SUPLA_RUN_GID=")
+            ],
+            [f"GARMIN_SUPLA_RUN_GID={expected_gid}"],
+        )
+
+    def test_root_runtime_identity_is_rejected(self):
+        result = subprocess.run(
+            [
+                sys.executable,
+                "-m",
+                "scripts.init_env",
+                "--output",
+                str(self.target),
+                "--run-uid",
+                "0",
+                "--run-gid",
+                "0",
+            ],
+            cwd=ROOT_DIR,
+            capture_output=True,
+            text=True,
+        )
+
+        self.assertNotEqual(result.returncode, 0)
+        self.assertFalse(self.target.exists())
 
     def test_creates_strong_session_secret(self):
         result = self.run_init()

@@ -109,10 +109,17 @@ class InstallationFlowTests(unittest.TestCase):
 
     def test_complete_fresh_installation(self):
         # 1. Initialize an isolated environment.
+        runtime_ids = (
+            ("--run-uid", "1000", "--run-gid", "1000")
+            if os.getuid() == 0 or os.getgid() == 0
+            else ()
+        )
+
         self.run_module(
             "scripts.init_env",
             "--output",
             self.env,
+            *runtime_ids,
         )
 
         self.assertTrue(self.env.is_file())
