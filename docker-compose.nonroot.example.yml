@@ -1,0 +1,13 @@
+# Optional non-root deployment override.
+#
+# Do not enable on an existing installation until all
+# persistent data files are accessible to the chosen UID/GID.
+#
+# This file is not loaded automatically by Docker Compose.
+
+services:
+  garminsupla-api:
+    user: "${GARMIN_SUPLA_RUN_UID:-1000}:${GARMIN_SUPLA_RUN_GID:-1000}"
+
+  garminsupla-watch:
+    user: "${GARMIN_SUPLA_RUN_UID:-1000}:${GARMIN_SUPLA_RUN_GID:-1000}"
