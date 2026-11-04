@@ -254,5 +254,30 @@ class ComposeMountTests(unittest.TestCase):
         )
 
 
+    def test_admin_root_filesystem_is_read_only(self):
+        admin = self.compose.split(
+            "  garminsupla-api:\n",
+            1,
+        )[1].split(
+            "\n  garminsupla-watch:",
+            1,
+        )[0]
+
+        self.assertIn(
+            "    read_only: true\n",
+            admin,
+        )
+
+        self.assertIn(
+            "      - .:/app:ro\n",
+            admin,
+        )
+
+        self.assertIn(
+            "      - ./data:/app/data:rw\n",
+            admin,
+        )
+
+
 if __name__ == "__main__":
     unittest.main()
