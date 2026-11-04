@@ -185,5 +185,27 @@ class ComposeMountTests(unittest.TestCase):
                 )
 
 
+    def test_watch_drops_all_linux_capabilities(self):
+        watch = self.compose.split(
+            "  garminsupla-watch:\n",
+            1,
+        )[1].split(
+            "\n  garminsupla-watch-proxy:",
+            1,
+        )[0]
+
+        self.assertIn(
+            "    cap_drop:\n"
+            "      - ALL\n",
+            watch,
+        )
+
+        self.assertIn(
+            "    security_opt:\n"
+            "      - no-new-privileges:true\n",
+            watch,
+        )
+
+
 if __name__ == "__main__":
     unittest.main()
