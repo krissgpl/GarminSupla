@@ -207,5 +207,27 @@ class ComposeMountTests(unittest.TestCase):
         )
 
 
+    def test_admin_api_drops_all_linux_capabilities(self):
+        admin = self.compose.split(
+            "  garminsupla-api:\n",
+            1,
+        )[1].split(
+            "\n  garminsupla-watch:",
+            1,
+        )[0]
+
+        self.assertIn(
+            "    cap_drop:\n"
+            "      - ALL\n",
+            admin,
+        )
+
+        self.assertIn(
+            "    security_opt:\n"
+            "      - no-new-privileges:true\n",
+            admin,
+        )
+
+
 if __name__ == "__main__":
     unittest.main()

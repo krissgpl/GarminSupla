@@ -6,6 +6,9 @@ services:
     container_name: garminsupla-api
     restart: unless-stopped
 
+    cap_drop:
+      - ALL
+
     security_opt:
       - no-new-privileges:true
 
