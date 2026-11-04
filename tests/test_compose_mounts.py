@@ -229,5 +229,30 @@ class ComposeMountTests(unittest.TestCase):
         )
 
 
+    def test_watch_root_filesystem_is_read_only(self):
+        watch = self.compose.split(
+            "  garminsupla-watch:\n",
+            1,
+        )[1].split(
+            "\n  garminsupla-watch-proxy:",
+            1,
+        )[0]
+
+        self.assertIn(
+            "    read_only: true\n",
+            watch,
+        )
+
+        self.assertIn(
+            "      - .:/app:ro\n",
+            watch,
+        )
+
+        self.assertIn(
+            "      - ./data:/app/data:rw\n",
+            watch,
+        )
+
+
 if __name__ == "__main__":
     unittest.main()

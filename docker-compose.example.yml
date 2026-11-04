@@ -27,6 +27,8 @@ services:
     user: "${GARMIN_SUPLA_RUN_UID:-1000}:${GARMIN_SUPLA_RUN_GID:-1000}"
     restart: unless-stopped
 
+    read_only: true
+
     cap_drop:
       - ALL
 
