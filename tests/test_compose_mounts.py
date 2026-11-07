@@ -279,5 +279,32 @@ class ComposeMountTests(unittest.TestCase):
         )
 
 
+    def test_admin_api_has_healthcheck(self):
+        admin = self.compose.split(
+            "  garminsupla-api:\n",
+            1,
+        )[1].split(
+            "\n  garminsupla-watch:",
+            1,
+        )[0]
+
+        expected = (
+            "    healthcheck:\n"
+            "      test:\n"
+            "        - CMD\n"
+            "        - python\n"
+            "        - -c\n"
+            '        - "import socket; socket.create_connection('
+            "('127.0.0.1', 8008), timeout=2).close()"
+            '"\n'
+            "      interval: 5s\n"
+            "      timeout: 3s\n"
+            "      retries: 12\n"
+            "      start_period: 10s\n"
+        )
+
+        self.assertIn(expected, admin)
+
+
 if __name__ == "__main__":
     unittest.main()

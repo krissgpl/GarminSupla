@@ -24,6 +24,17 @@ services:
       - .:/app:ro
       - ./data:/app/data:rw
 
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import socket; socket.create_connection(('127.0.0.1', 8008), timeout=2).close()"
+      interval: 5s
+      timeout: 3s
+      retries: 12
+      start_period: 10s
+
   garminsupla-watch:
     build: .
     user: "${GARMIN_SUPLA_RUN_UID:-1000}:${GARMIN_SUPLA_RUN_GID:-1000}"
