@@ -6,6 +6,8 @@ services:
     container_name: garminsupla-api
     restart: unless-stopped
 
+    pids_limit: 256
+
     read_only: true
 
     cap_drop:

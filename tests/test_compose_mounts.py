@@ -306,7 +306,7 @@ class ComposeMountTests(unittest.TestCase):
         self.assertIn(expected, admin)
 
 
-    def test_watch_api_has_pid_limit(self):
+    def test_python_services_have_pid_limit(self):
         watch = self.compose.split(
             "  garminsupla-watch:\n",
             1,
@@ -328,8 +328,8 @@ class ComposeMountTests(unittest.TestCase):
             1,
         )[0]
 
-        self.assertNotIn(
-            "    pids_limit:",
+        self.assertIn(
+            "    pids_limit: 256\n",
             admin,
         )
 
