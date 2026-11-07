@@ -356,5 +356,26 @@ class ComposeMountTests(unittest.TestCase):
         )
 
 
+    def test_watch_api_has_memory_limit(self):
+        watch = self.compose.split(
+            "  garminsupla-watch:\n",
+            1,
+        )[1].split(
+            "\n  garminsupla-watch-proxy:",
+            1,
+        )[0]
+
+        self.assertIn(
+            "    pids_limit: 256\n"
+            "    mem_limit: 512m\n",
+            watch,
+        )
+
+        self.assertEqual(
+            self.compose.count("    mem_limit: 512m\n"),
+            1,
+        )
+
+
 if __name__ == "__main__":
     unittest.main()

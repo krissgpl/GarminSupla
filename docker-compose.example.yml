@@ -43,6 +43,7 @@ services:
     restart: unless-stopped
 
     pids_limit: 256
+    mem_limit: 512m
 
     read_only: true
 
