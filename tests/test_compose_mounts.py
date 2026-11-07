@@ -396,7 +396,7 @@ class ComposeMountTests(unittest.TestCase):
         )
 
 
-    def test_python_services_have_cpu_limit(self):
+    def test_all_services_have_cpu_limit(self):
         watch = self.compose.split(
             "  garminsupla-watch:\n",
             1,
@@ -414,7 +414,7 @@ class ComposeMountTests(unittest.TestCase):
 
         self.assertEqual(
             self.compose.count("    cpus: 1.0\n"),
-            2,
+            3,
         )
 
         admin = self.compose.split(
@@ -439,7 +439,12 @@ class ComposeMountTests(unittest.TestCase):
             "    cpus: 1.0\n",
             admin,
         )
-        self.assertNotIn("    cpus:", proxy)
+        self.assertIn(
+            "    pids_limit: 256\n"
+            "    mem_limit: 512m\n"
+            "    cpus: 1.0\n",
+            proxy,
+        )
 
 
 if __name__ == "__main__":
