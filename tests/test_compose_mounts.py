@@ -447,36 +447,29 @@ class ComposeMountTests(unittest.TestCase):
         )
 
 
-    def test_watch_api_has_docker_log_rotation(self):
-        watch = self.compose.split(
-            "  garminsupla-watch:\n",
-            1,
-        )[1].split(
-            "\n  garminsupla-watch-proxy:",
-            1,
-        )[0]
-
-        self.assertIn(
+    def test_python_services_have_docker_log_rotation(self):
+        expected = (
             '    logging:\n'
             '      driver: json-file\n'
             '      options:\n'
             '        max-size: "10m"\n'
-            '        max-file: "3"\n',
-            watch,
+            '        max-file: "3"\n'
         )
 
-        self.assertEqual(
-            self.compose.count("    logging:\n"),
-            1,
-        )
+        for service, next_service in (
+            ("garminsupla-api", "garminsupla-watch"),
+            ("garminsupla-watch", "garminsupla-watch-proxy"),
+        ):
+            with self.subTest(service=service):
+                block = self.compose.split(
+                    f"  {service}:\n",
+                    1,
+                )[1].split(
+                    f"\n  {next_service}:",
+                    1,
+                )[0]
 
-        admin = self.compose.split(
-            "  garminsupla-api:\n",
-            1,
-        )[1].split(
-            "\n  garminsupla-watch:",
-            1,
-        )[0]
+                self.assertIn(expected, block)
 
         proxy = self.compose.split(
             "  garminsupla-watch-proxy:\n",
@@ -486,9 +479,12 @@ class ComposeMountTests(unittest.TestCase):
             1,
         )[0]
 
-        self.assertNotIn("    logging:", admin)
         self.assertNotIn("    logging:", proxy)
 
+        self.assertEqual(
+            self.compose.count("    logging:\n"),
+            2,
+        )
 
 if __name__ == "__main__":
     unittest.main()
