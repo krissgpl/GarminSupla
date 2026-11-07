@@ -356,7 +356,7 @@ class ComposeMountTests(unittest.TestCase):
         )
 
 
-    def test_python_services_have_memory_limit(self):
+    def test_all_services_have_memory_limit(self):
         for service, next_service in (
             ("garminsupla-api", "garminsupla-watch"),
             ("garminsupla-watch", "garminsupla-watch-proxy"),
@@ -384,14 +384,15 @@ class ComposeMountTests(unittest.TestCase):
             1,
         )[0]
 
-        self.assertNotIn(
-            "    mem_limit:",
+        self.assertIn(
+            "    pids_limit: 256\n"
+            "    mem_limit: 512m\n",
             proxy,
         )
 
         self.assertEqual(
             self.compose.count("    mem_limit: 512m\n"),
-            2,
+            3,
         )
 
 
