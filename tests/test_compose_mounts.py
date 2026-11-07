@@ -334,5 +334,27 @@ class ComposeMountTests(unittest.TestCase):
         )
 
 
+    def test_caddy_has_pid_limit(self):
+        proxy = self.compose.split(
+            "  garminsupla-watch-proxy:\n",
+            1,
+        )[1].split(
+            "\nvolumes:\n",
+            1,
+        )[0]
+
+        self.assertIn(
+            "    pids_limit: 256\n",
+            proxy,
+        )
+
+        self.assertEqual(
+            self.compose.count(
+                "    pids_limit: 256\n"
+            ),
+            3,
+        )
+
+
 if __name__ == "__main__":
     unittest.main()
