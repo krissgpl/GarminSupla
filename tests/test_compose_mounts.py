@@ -396,5 +396,46 @@ class ComposeMountTests(unittest.TestCase):
         )
 
 
+    def test_watch_api_has_cpu_limit(self):
+        watch = self.compose.split(
+            "  garminsupla-watch:\n",
+            1,
+        )[1].split(
+            "\n  garminsupla-watch-proxy:",
+            1,
+        )[0]
+
+        self.assertIn(
+            "    pids_limit: 256\n"
+            "    mem_limit: 512m\n"
+            "    cpus: 1.0\n",
+            watch,
+        )
+
+        self.assertEqual(
+            self.compose.count("    cpus: 1.0\n"),
+            1,
+        )
+
+        admin = self.compose.split(
+            "  garminsupla-api:\n",
+            1,
+        )[1].split(
+            "\n  garminsupla-watch:",
+            1,
+        )[0]
+
+        proxy = self.compose.split(
+            "  garminsupla-watch-proxy:\n",
+            1,
+        )[1].split(
+            "\nvolumes:\n",
+            1,
+        )[0]
+
+        self.assertNotIn("    cpus:", admin)
+        self.assertNotIn("    cpus:", proxy)
+
+
 if __name__ == "__main__":
     unittest.main()
