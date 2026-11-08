@@ -406,6 +406,7 @@
   - [X] Inventory known local data stores, deployment files, TLS material and Caddy volumes.
   - [X] Add read-only backup preflight for required files and permissions.
   - [X] Add offline-only private file backup archive with SHA-256 manifest.
+  - [X] Add read-only Docker volume identity and offline-state preflight.
   - [ ] Add backup of persistent Caddy Docker volumes.
   - [ ] Verify complete backup and restore in an isolated environment.
   - Identify all persistent GarminSupla data that must be backed up.
