@@ -403,6 +403,8 @@
 # Reliability / Operations
 
 - [ ] Define backup and recovery procedures.
+  - [X] Inventory known local data stores, deployment files, TLS material and Caddy volumes.
+  - [X] Add read-only backup preflight for required files and permissions.
   - Identify all persistent GarminSupla data that must be backed up.
   - Document backup of configuration, administrator data and SUPLA-related state.
   - Define a restore procedure on a clean server.
