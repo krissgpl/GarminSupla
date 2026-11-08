@@ -447,7 +447,7 @@ class ComposeMountTests(unittest.TestCase):
         )
 
 
-    def test_python_services_have_docker_log_rotation(self):
+    def test_all_services_have_docker_log_rotation(self):
         expected = (
             '    logging:\n'
             '      driver: json-file\n'
@@ -479,11 +479,11 @@ class ComposeMountTests(unittest.TestCase):
             1,
         )[0]
 
-        self.assertNotIn("    logging:", proxy)
+        self.assertIn(expected, proxy)
 
         self.assertEqual(
             self.compose.count("    logging:\n"),
-            2,
+            3,
         )
 
 if __name__ == "__main__":
