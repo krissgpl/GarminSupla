@@ -132,6 +132,33 @@ class ComposeMountTests(unittest.TestCase):
         )
 
 
+    def test_caddy_has_healthcheck(self):
+        proxy = self.compose.split(
+            "  garminsupla-watch-proxy:\n",
+            1,
+        )[1].split(
+            "\nvolumes:\n",
+            1,
+        )[0]
+
+        expected = """    healthcheck:
+      test:
+        - CMD-SHELL
+        - 'test "$$(curl -sS -o /dev/null -w "%{http_code}" --connect-timeout 2 --max-time 3 --noproxy "*" http://127.0.0.1:8080/)" = "404"'
+      interval: 5s
+      timeout: 4s
+      retries: 12
+      start_period: 10s
+"""
+
+        self.assertIn(expected, proxy)
+
+        self.assertEqual(
+            self.compose.count("    healthcheck:\n"),
+            3,
+        )
+
+
     def test_caddy_disallows_new_privileges(self):
         proxy = self.compose.split(
             "  garminsupla-watch-proxy:\n",
