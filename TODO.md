@@ -409,6 +409,7 @@
   - [X] Add read-only Docker volume identity and offline-state preflight.
   - [X] Add offline backup of persistent Caddy Docker volumes with SHA-256 manifest.
   - [X] Add read-only Caddy volume archive verification before restore.
+  - [X] Add read-only restore-target preflight for new isolated Docker volumes.
   - [ ] Verify Caddy volume archive restore on isolated Docker volumes.
   - [ ] Verify complete backup and restore in an isolated environment.
   - Identify all persistent GarminSupla data that must be backed up.
