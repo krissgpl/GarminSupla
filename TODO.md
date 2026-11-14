@@ -412,6 +412,7 @@
   - [X] Add read-only restore-target preflight for new isolated Docker volumes.
   - [X] Implement guarded restore to new isolated Caddy Docker volumes.
   - [X] Verify Caddy volume archive restore on isolated Docker volumes.
+  - [X] Add read-only verification of GarminSupla file backup archives.
   - [ ] Verify complete backup and restore in an isolated environment.
   - Identify all persistent GarminSupla data that must be backed up.
   - Document backup of configuration, administrator data and SUPLA-related state.
