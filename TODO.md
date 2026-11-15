@@ -415,6 +415,7 @@
   - [X] Add read-only verification of GarminSupla file backup archives.
   - [X] Add read-only preflight for isolated GarminSupla file restore targets.
   - [X] Implement and test isolated GarminSupla file backup restoration.
+  - [X] Add repeatable synthetic integration test for isolated file and Caddy volume recovery.
   - [ ] Verify complete backup and restore in an isolated environment.
   - Identify all persistent GarminSupla data that must be backed up.
   - Document backup of configuration, administrator data and SUPLA-related state.
