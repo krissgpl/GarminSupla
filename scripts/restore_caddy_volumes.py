@@ -89,7 +89,9 @@ with tarfile.open(
                 member.isdir()
                 or member.isfile()
             )
-            or member.mode & ~0o777
+            or member.mode & ~(
+                0o1777 if member.isdir() else 0o777
+            )
             or member.size < 0
             or member.uid < 0
             or member.gid < 0
