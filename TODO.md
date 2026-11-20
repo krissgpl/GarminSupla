@@ -416,7 +416,13 @@
   - [X] Add read-only preflight for isolated GarminSupla file restore targets.
   - [X] Implement and test isolated GarminSupla file backup restoration.
   - [X] Add repeatable synthetic integration test for isolated file and Caddy volume recovery.
-  - [ ] Verify complete backup and restore in an isolated environment.
+  - [X] Verify restoration of all contents included in production backup set `set-01` in isolation: 7 GarminSupla files and 2 Caddy volumes, including SHA-256 (BACKUP-06B6H).
+  - [X] Verify recovery from the one-time encrypted Windows copy `set-01.tar.age`: age decryption, SSH transfer, isolated Linux/Docker restoration and cleanup (BACKUP-06B6J).
+  - [X] Verify encrypted age key recovery copy on USB (BACKUP-06B5).
+  - [X] Fix sticky-bit directory restore (`01777`) and verify UID/GID `0:0`; commit `4c3a16e`.
+  - [X] Pass full isolated regression suite: 404 tests, 0 failures (BACKUP-06B6D).
+  - Backup policy: daily Proxmox CT backups are managed separately. The Windows backup was a one-time recovery test, not a scheduled backup destination.
+  - Limitation: `complete_system_backup=false`; a complete clean-host disaster recovery and coverage of any additional Proxmox CT mount points have not been verified.
   - Identify all persistent GarminSupla data that must be backed up.
   - Document backup of configuration, administrator data and SUPLA-related state.
   - Define a restore procedure on a clean server.
