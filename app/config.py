@@ -1,5 +1,7 @@
+from ipaddress import ip_address
+
 from cryptography.fernet import Fernet
-from pydantic import field_validator
+from pydantic import field_validator, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -8,6 +10,10 @@ class AppSettings(BaseSettings):
     app_version: str = "0.5.1"
 
     admin_session_secret: str
+
+    # Enabled only after trusted proxy validation.
+    admin_login_rate_limit_enabled: bool = False
+    admin_login_trusted_proxy_ips: str = ""
 
     # Optional until administrator 2FA is configured.
     totp_encryption_key: str | None = None
@@ -25,6 +31,68 @@ class AppSettings(BaseSettings):
         "iodevices_r channels_r channels_ea "
         "scenes_r scenes_ea offline_access"
     )
+
+    @model_validator(mode="after")
+    def validate_admin_login_proxy_ips(self) -> "AppSettings":
+        """Validate proxy IPs before enabling login rate limiting."""
+
+        raw = self.admin_login_trusted_proxy_ips
+
+        if not raw.strip():
+            if self.admin_login_rate_limit_enabled:
+                raise ValueError(
+                    "Login rate limiting requires trusted proxy IPs."
+                )
+
+            self.admin_login_trusted_proxy_ips = ""
+            return self
+
+        entries = raw.split(",")
+
+        if len(entries) > 16:
+            raise ValueError(
+                "Too many trusted proxy IPs."
+            )
+
+        normalized = []
+        seen = set()
+
+        for entry in entries:
+            value = entry.strip()
+
+            if not value:
+                raise ValueError(
+                    "Trusted proxy IP list contains an empty entry."
+                )
+
+            try:
+                address = ip_address(value)
+            except ValueError:
+                raise ValueError(
+                    "Trusted proxy entries must be IP addresses."
+                ) from None
+
+            if address.is_unspecified or address.is_multicast:
+                raise ValueError(
+                    "Unspecified and multicast proxy IPs "
+                    "are not allowed."
+                )
+
+            canonical = str(address)
+
+            if canonical in seen:
+                raise ValueError(
+                    "Duplicate trusted proxy IP."
+                )
+
+            seen.add(canonical)
+            normalized.append(canonical)
+
+        self.admin_login_trusted_proxy_ips = ",".join(
+            normalized
+        )
+
+        return self
 
     @field_validator("totp_encryption_key")
     @classmethod

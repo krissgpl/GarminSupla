@@ -1,5 +1,5 @@
 import segno
-from fastapi import APIRouter, Form, Request
+from fastapi import APIRouter, Form, HTTPException, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 
@@ -8,6 +8,10 @@ from app.api.admin_auth import (
     verify_admin_csrf,
 )
 from app.config import settings
+from app.security.admin_login_rate_limit import (
+    AdminLoginRateLimiter,
+    resolve_client_key,
+)
 from app.core.ui_language import resolve_ui_language
 from app.services.admin_auth_service import (
     AdminAuthService,
@@ -32,6 +36,57 @@ TOTP_CHALLENGE_COOKIE = "garminsupla_totp_challenge"
 TOTP_ENROLLMENT_COOKIE = "garminsupla_totp_enrollment"
 
 SESSION_MAX_AGE = 8 * 60 * 60
+
+_admin_login_limiter = AdminLoginRateLimiter()
+
+
+def _admin_login_precheck(
+    request: Request,
+) -> str | None:
+    """Check the shared login failure budget if enabled."""
+
+    if not settings.admin_login_rate_limit_enabled:
+        return None
+
+    trusted = frozenset(
+        item.strip()
+        for item in (
+            settings.admin_login_trusted_proxy_ips.split(",")
+        )
+        if item.strip()
+    )
+
+    peer = (
+        request.client.host
+        if request.client is not None
+        else None
+    )
+
+    key = resolve_client_key(
+        peer,
+        request.headers.get("x-real-ip"),
+        trusted,
+    )
+
+    retry_after = _admin_login_limiter.retry_after(key)
+
+    if retry_after:
+        raise HTTPException(
+            status_code=429,
+            detail="Too many failed login attempts.",
+            headers={
+                "Retry-After": str(retry_after),
+            },
+        )
+
+    return key
+
+
+def _admin_login_record_failure(
+    key: str | None,
+) -> None:
+    if key is not None:
+        _admin_login_limiter.record_failure(key)
 
 
 def _resolve_login_language(
@@ -310,6 +365,8 @@ async def login(
 ):
     """Authenticate administrator password."""
 
+    key = _admin_login_precheck(request)
+
     language = _resolve_login_language(
         request
     )
@@ -322,6 +379,8 @@ async def login(
     )
 
     if admin is None:
+        _admin_login_record_failure(key)
+
         error = (
             "Nieprawidłowa nazwa użytkownika lub hasło."
             if language == "pl"
@@ -474,6 +533,8 @@ async def login_totp(
 ):
     """Verify administrator TOTP code."""
 
+    key = _admin_login_precheck(request)
+
     language = _resolve_login_language(
         request
     )
@@ -521,6 +582,8 @@ async def login_totp(
         )
 
     except ValueError:
+        _admin_login_record_failure(key)
+
         error = (
             "Nieprawidłowy lub wykorzystany kod uwierzytelniający."
             if language == "pl"
@@ -551,6 +614,8 @@ async def login_recovery_code(
     recovery_code: str = Form(...),
 ):
     """Verify a one-time administrator recovery code."""
+
+    key = _admin_login_precheck(request)
 
     language = _resolve_login_language(
         request
@@ -603,6 +668,8 @@ async def login_recovery_code(
         )
 
     except ValueError:
+        _admin_login_record_failure(key)
+
         error = (
             "Nieprawidłowy lub wykorzystany kod odzyskiwania."
             if language == "pl"
