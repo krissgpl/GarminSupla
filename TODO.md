@@ -317,6 +317,18 @@
 
 # Security
 
+- [X] Enable and verify administrator login rate limiting.
+  - Share the failure budget across password, TOTP and recovery-code verification.
+  - Require an explicitly trusted proxy before accepting forwarded client IPs.
+  - Verify HTTP `429` and `Retry-After` through production HTTPS and NPM.
+  - Verify spoofed `X-Real-IP` does not bypass the limit from the tested LAN source.
+  - Keep the rate limiter scoped per client IP and per application process.
+  - Document activation, verification, limitations and rollback in `docs/ADMIN_LOGIN_RATE_LIMIT.md`.
+
+- [ ] Review dashboard HSTS configuration.
+  - Production HTTPS responses did not include `Strict-Transport-Security`.
+  - Determine the intended browser policy before enabling HSTS.
+
 - [X] Restrict direct LAN access to the production administrator dashboard on port `8009`.
   - Permit the dedicated NPM host to reach the dashboard upstream.
   - Reject other inbound LAN connections to the dashboard upstream using Docker `DOCKER-USER` and conntrack.
