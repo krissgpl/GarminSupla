@@ -317,6 +317,14 @@
 
 # Security
 
+- [X] Restrict direct LAN access to the production administrator dashboard on port `8009`.
+  - Permit the dedicated NPM host to reach the dashboard upstream.
+  - Reject other inbound LAN connections to the dashboard upstream using Docker `DOCKER-USER` and conntrack.
+  - Install an idempotent systemd firewall service and a minutely watchdog timer.
+  - Verify Windows LAN blocking, NPM access, Watch API isolation and recurring watchdog execution.
+  - Document deployment-specific operation and rollback in `docs/ADMIN_DASHBOARD_FIREWALL.md`.
+  - Remaining: verify recovery after Docker/CT restart and deliberate rule loss.
+
 - [ ] Perform a complete GarminSupla security audit.
   - Review the dashboard authentication and authorization flow.
   - Review administrator sessions and expiration.
