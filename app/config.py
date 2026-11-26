@@ -7,7 +7,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class AppSettings(BaseSettings):
     app_name: str = "GarminSupla"
-    app_version: str = "0.5.1"
+    app_version: str = "0.6.0-beta.1"
 
     admin_session_secret: str
 

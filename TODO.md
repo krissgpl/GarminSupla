@@ -325,9 +325,20 @@
   - Keep the rate limiter scoped per client IP and per application process.
   - Document activation, verification, limitations and rollback in `docs/ADMIN_LOGIN_RATE_LIMIT.md`.
 
-- [ ] Review dashboard HSTS configuration.
-  - Production HTTPS responses did not include `Strict-Transport-Security`.
-  - Determine the intended browser policy before enabling HSTS.
+- [X] Review dashboard HSTS configuration for the test deployment.
+  - Enabled `Strict-Transport-Security: max-age=86400` on the dedicated NPM host.
+  - No `includeSubDomains` or `preload`.
+  - Verified the HTTPS response header and documented rollback.
+
+- [X] Configure and verify dashboard HTTP security headers and enforced CSP.
+  - Verified `X-Content-Type-Options`, `Referrer-Policy` and `X-Frame-Options`.
+  - Enabled enforced `Content-Security-Policy` on the dashboard NPM host.
+  - Verified HTTPS, HTTP redirects, static resources and HTTP 404 responses.
+  - Verified login, dashboard and selected UI interactions in Firefox and Edge.
+  - Confirmed Edge DevTools source-map warnings were diagnostic requests.
+  - Documented configuration, limitations and rollback in `docs/HTTP_SECURITY_HEADERS.md`.
+  - Scope: test dashboard NPM host only; not the Watch API or direct upstream.
+  - Remaining: test state-changing workflows and complete the broader security audit.
 
 - [X] Restrict direct LAN access to the production administrator dashboard on port `8009`.
   - Permit the dedicated NPM host to reach the dashboard upstream.

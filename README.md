@@ -130,3 +130,4 @@ container and should be treated as privileged administrative operations.
 - TODO.md
 - [First installation guide](docs/INSTALLATION.md)
 - [Watch API HTTPS deployment](docs/WATCH_API_HTTPS.md)
+- [Dashboard HTTP security headers (NPM test deployment)](docs/HTTP_SECURITY_HEADERS.md)
