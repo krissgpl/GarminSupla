@@ -10,6 +10,69 @@ This project follows conventions based on Keep a Changelog.
 
 ---
 
+## [0.6.0-beta.1] - Pending release
+
+### Added
+- Added administrator login rate limiting with a shared failure
+  budget for password, TOTP and recovery-code authentication.
+- Added trusted reverse-proxy configuration and validation for
+  administrator login client IP resolution.
+- Added dashboard setup support for SUPLA OAuth credentials,
+  configurable callback URI and default OAuth scope.
+- Added deployment initialization and preflight helpers.
+- Added offline file and Caddy volume backup, verification,
+  isolated restore and paired backup-set tooling.
+- Added documentation for first installation, Watch API HTTPS,
+  dashboard firewall protection and login rate limiting.
+
+### Improved
+- Hardened administrator authentication and persistent settings.
+- Hardened watch pairing endpoints and removed legacy code.
+- Separated the public Watch API from the dashboard application.
+- Improved SUPLA setup, OAuth and pairing workflows.
+- Hardened example Docker deployment configuration with
+  restricted mounts, read-only root filesystems, reduced
+  privileges, resource limits and health checks.
+- Added non-root deployment options for new installations.
+- Improved Docker log retention and deployment checks.
+
+### Fixed
+- Restored dashboard rendering with Starlette 1.x.
+- Prevented watch configuration payloads from being logged.
+- Improved Watch API startup dependency handling.
+- Preserved the sticky bit during isolated Caddy volume restore.
+
+### Test deployment security
+- Verified administrator login rate limiting behind the trusted
+  Nginx Proxy Manager host.
+- Verified dashboard upstream access restrictions.
+- Enabled and tested security response headers through NPM:
+  X-Content-Type-Options, Referrer-Policy and X-Frame-Options.
+- Tested HSTS with a 24-hour max-age on the dashboard host.
+- Enabled and tested enforced Content Security Policy in
+  Firefox and Microsoft Edge.
+- These reverse-proxy settings are deployment-specific and
+  are not enabled automatically by the application source.
+
+### Release validation
+- Isolated runtime smoke test passed for version `0.6.0-beta.1`
+  with Python 3.13.16, FastAPI 0.143.0 and Starlette 1.7.0.
+- Full isolated backend `unittest` regression suite passed:
+  435 tests, 0 failures and 0 errors, using a test-only
+  SUPLA OAuth redirect URI without network access.
+- The Starlette/httpx deprecation warning remains for a
+  separate dependency-compatibility review.
+- Further beta validation remains pending, including
+  state-changing pairing and 2FA enrollment operations
+  not covered by the recent enforced-CSP browser checks.
+- This entry does not certify production readiness.
+
+### Versioning
+- Backend/dashboard candidate version: `0.6.0-beta.1`.
+- Connect IQ application version remains `0.11.0`.
+
+---
+
 ## [0.5.1] - 2026-10-03
 
 ### Improved
